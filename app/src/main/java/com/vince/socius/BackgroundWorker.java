@@ -21,14 +21,17 @@ import java.net.URLEncoder;
 
 public class BackgroundWorker extends AsyncTask<String,Void,String> {
     Context context;
+    public AsyncResponse delegate = null;
     AlertDialog alertDialog;
     BackgroundWorker (Context ctx) {
         context = ctx;
     }
+
     @Override
     protected String doInBackground(String... params) {
         String type = params[0];
         String add_url = "http://128.237.179.162:8888/add.php";
+        String load_url = "http://128.237.179.162:8888/load.php";
         if(type.equals("add")) {
             try {
                 String address = params[1];
@@ -64,6 +67,34 @@ public class BackgroundWorker extends AsyncTask<String,Void,String> {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }else if(type.equals("load")) {
+            try {
+                URL url = new URL(load_url);
+                HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                outputStream.close();
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
+                String result="";
+                String line="";
+                while((line = bufferedReader.readLine())!= null) {
+                    result += line + ";";
+                }
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                return result;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return null;
     }
@@ -76,8 +107,12 @@ public class BackgroundWorker extends AsyncTask<String,Void,String> {
 
     @Override
     protected void onPostExecute(String result) {
-        alertDialog.setMessage(result);
-        alertDialog.show();
+        if (result.equals("Sharing Successful")){
+            alertDialog.setMessage(result);
+            alertDialog.show();
+        }else {
+            delegate.processFinish(result);
+        }
     }
 
     @Override

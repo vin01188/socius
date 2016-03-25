@@ -47,8 +47,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
-
+        implements NavigationView.OnNavigationItemSelectedListener, AsyncResponse {
+    BackgroundWorker asyncTask = new BackgroundWorker(this);
     NavigationView navigationView = null;
     Toolbar toolbar = null;
 
@@ -75,6 +75,8 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        asyncTask.delegate = this;
         /*MainFragment fragment = new MainFragment();
         android.support.v4.app.FragmentTransaction fragmentTransaction
                 = getSupportFragmentManager().beginTransaction();
@@ -168,6 +170,10 @@ public class MainActivity extends AppCompatActivity
                     return true;
                 }
             });
+            String type = "load";
+            asyncTask= new BackgroundWorker(this);
+            asyncTask.delegate=this;
+            asyncTask.execute(type);
 
 
         } catch (Exception e) {
@@ -282,9 +288,10 @@ public class MainActivity extends AppCompatActivity
                     String newAddress = addressEditText.getText().toString();
                     new PlaceAMarker().execute(newAddress);
                     String type = "add";
-                    BackgroundWorker backgroundWorker = new BackgroundWorker(this);
+                    asyncTask= new BackgroundWorker(this);
                     LatLng temp = getLocationFromAddress(newAddress);
-                    backgroundWorker.execute(type, newAddress, Double.toString(temp.latitude), Double.toString(temp.longitude));
+                    asyncTask.delegate=this;
+                    asyncTask.execute(type, newAddress, Double.toString(temp.latitude), Double.toString(temp.longitude));
                 }
             } else if (requestCode == 2){
                 boolean isConf = data.getBooleanExtra("Confirmation",false);
@@ -299,15 +306,32 @@ public class MainActivity extends AppCompatActivity
                         String country = addresses.get(0).getAddressLine(2);
                         String newAddress = address +" " + city ;
                         String type = "add";
-                        BackgroundWorker backgroundWorker = new BackgroundWorker(this);
-                        backgroundWorker.execute(type, newAddress, Double.toString(newLoc.latitude), Double.toString(newLoc.longitude));
+                        asyncTask= new BackgroundWorker(this);
+                        asyncTask.delegate=this;
+                        asyncTask.execute(type, newAddress, Double.toString(newLoc.latitude), Double.toString(newLoc.longitude));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    Marker newMark = googleMap.addMarker(new MarkerOptions()
+                    addressMarker = googleMap.addMarker(new MarkerOptions()
                             .position(newLoc)
                             .title("Person"));
                 }
+            }
+        }
+    }
+
+    @Override
+    public void processFinish(String output) {
+        String[] rows = output.split(";");
+        for(int i = 0; i < rows.length; i++){
+            String[] cols = rows[i].split(":");
+            if (cols.length >= 3) {
+                String lat = cols[1];
+                String lng = cols[2];
+                LatLng newLoc = new LatLng(Double.parseDouble(lat),Double.parseDouble(lng));
+                addressMarker = googleMap.addMarker(new MarkerOptions()
+                        .position(newLoc)
+                        .title(cols[0]));
             }
         }
     }
