@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity
 
     // Stores latitude and longitude data for addresses
     LatLng addressPos;
-
     // Used to place Marker on my map
     Marker addressMarker;
 
@@ -226,10 +225,6 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_manage) {
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -286,11 +281,29 @@ public class MainActivity extends AppCompatActivity
                 if (isConf) {
                     String newAddress = addressEditText.getText().toString();
                     new PlaceAMarker().execute(newAddress);
+                    String type = "add";
+                    BackgroundWorker backgroundWorker = new BackgroundWorker(this);
+                    LatLng temp = getLocationFromAddress(newAddress);
+                    backgroundWorker.execute(type, newAddress, Double.toString(temp.latitude), Double.toString(temp.longitude));
                 }
             } else if (requestCode == 2){
                 boolean isConf = data.getBooleanExtra("Confirmation",false);
                 if (isConf){
+
                     LatLng newLoc = googleMap.getCameraPosition().target;
+                    try {
+                        Geocoder geocoder = new Geocoder(this);
+                        List<Address> addresses = geocoder.getFromLocation(newLoc.latitude,newLoc.longitude,1);
+                        String address = addresses.get(0).getAddressLine(0);
+                        String city = addresses.get(0).getAddressLine(1);
+                        String country = addresses.get(0).getAddressLine(2);
+                        String newAddress = address +" " + city ;
+                        String type = "add";
+                        BackgroundWorker backgroundWorker = new BackgroundWorker(this);
+                        backgroundWorker.execute(type, newAddress, Double.toString(newLoc.latitude), Double.toString(newLoc.longitude));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     Marker newMark = googleMap.addMarker(new MarkerOptions()
                             .position(newLoc)
                             .title("Person"));
@@ -325,7 +338,9 @@ public class MainActivity extends AppCompatActivity
             addressMarker = googleMap.addMarker(new MarkerOptions()
                     .position(addressPos)
                     .title("Person"));
+
         }
+
 
     }
 
@@ -370,7 +385,8 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
-        double lat = 0.0, lng = 0.0;
+        double lat = 0.0;
+        double lng = 0.0;
 
         // Holds key value mappings
         JSONObject jsonObject;
@@ -399,5 +415,31 @@ public class MainActivity extends AppCompatActivity
         }
 
     }
+
+    public LatLng getLocationFromAddress(String strAddress){
+
+        Geocoder coder = new Geocoder(this);
+        List<Address> address;
+        LatLng p1 = null;
+
+        try {
+            address = coder.getFromLocationName(strAddress,5);
+            if (address==null) {
+                return null;
+            }
+            Address location=address.get(0);
+            location.getLatitude();
+            location.getLongitude();
+
+            p1 = new LatLng(location.getLatitude(),(location.getLongitude()));
+
+            return p1;
+
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        return p1;
+    }
+
 
 }

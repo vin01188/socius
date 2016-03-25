@@ -15,7 +15,8 @@ public class Confirmation extends AppCompatActivity {
         setContentView(R.layout.activity_confirmation);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         
         Intent intent = getIntent();
         String address = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
