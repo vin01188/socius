@@ -55,7 +55,7 @@
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyASHzOeeTEqk2c8WWzIuUfgWFc_xdPnlnU"/>
+            android:value="@string/API_key"/>
 
     </application>
 
