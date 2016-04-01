@@ -1,12 +1,6 @@
 /build
-.idea/
 .gradle
-/*/local.properties
-/*/out
-/*/*/build
-/*/*/production
-*.iml
-*.iws
-*.ipr
-*~
-*.swp
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
