@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity
 
     private String provider;
 
-    public final static String EXTRA_MESSAGE = "com.vince.map.MESSAGE";
+    public final static String EXTRA_MESSAGE = "com.vince.socius.MESSAGE";
 
     private Marker lastOpened = null;
 
