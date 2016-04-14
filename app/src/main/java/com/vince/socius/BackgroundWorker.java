@@ -30,13 +30,14 @@ public class BackgroundWorker extends AsyncTask<String,Void,String> {
     @Override
     protected String doInBackground(String... params) {
         String type = params[0];
-        String add_url = "http://128.237.128.123:8888/add.php";
-        String load_url = "http://128.237.128.123:8888/load.php";
+        String add_url = "http://128.237.191.49:8888/add.php";
+        String load_url = "http://128.237.191.49:8888/load.php";
         if(type.equals("add")) {
             try {
                 String address = params[1];
                 String lattitude = params[2];
                 String longitude = params[3];
+                String time = params[4];
                 URL url = new URL(add_url);
                 HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
                 httpURLConnection.setRequestMethod("POST");
@@ -46,7 +47,8 @@ public class BackgroundWorker extends AsyncTask<String,Void,String> {
                 BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
                 String post_data = URLEncoder.encode("address","UTF-8")+"="+URLEncoder.encode(address,"UTF-8")+"&"
                         +URLEncoder.encode("lattitude","UTF-8")+"="+URLEncoder.encode(lattitude,"UTF-8")+"&"
-                        +URLEncoder.encode("longitude","UTF-8")+"="+URLEncoder.encode(longitude,"UTF-8");
+                        +URLEncoder.encode("longitude","UTF-8")+"="+URLEncoder.encode(longitude,"UTF-8") + "&"
+                        +URLEncoder.encode("time","UTF-8")+"="+URLEncoder.encode(time,"UTF-8");
                 bufferedWriter.write(post_data);
                 bufferedWriter.flush();
                 bufferedWriter.close();

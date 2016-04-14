@@ -45,6 +45,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
@@ -286,6 +287,7 @@ public class MainActivity extends AppCompatActivity
                 Intent intent = new Intent(this, Confirmation.class);
                 intent.putExtra(EXTRA_MESSAGE, newAddress);
                 startActivityForResult(intent, 2);
+
             }
 
         } catch (IOException e) {
@@ -308,8 +310,22 @@ public class MainActivity extends AppCompatActivity
                     String type = "add";
                     asyncTask= new BackgroundWorker(this);
                     LatLng temp = getLocationFromAddress(newAddress);
+
+                    Calendar calendar = Calendar.getInstance();
+                    int day = calendar.get(Calendar.DAY_OF_MONTH);
+                    int month  = calendar.get(Calendar.MONTH);
+                    int year = calendar.get(Calendar.YEAR);
+                    int hour = calendar.get(Calendar.HOUR);
+                    int minute = calendar.get(Calendar.MINUTE);
+
+                    //time format YYYY/MM/DD/HOUR/MIN
+                    String time = year + "/" + month + "/" + day + "/" + hour + "/" + minute;
                     asyncTask.delegate=this;
-                    asyncTask.execute(type, newAddress, Double.toString(temp.latitude), Double.toString(temp.longitude));
+                    asyncTask.execute(type, newAddress, Double.toString(temp.latitude), Double.toString(temp.longitude),time);
+                    type = "load";
+                    asyncTask = new BackgroundWorker(this);
+                    asyncTask.delegate = this;
+                    asyncTask.execute(type);
                 }
             } else if (requestCode == 2){
                 boolean isConf = data.getBooleanExtra("Confirmation",false);
@@ -325,14 +341,33 @@ public class MainActivity extends AppCompatActivity
                         String newAddress = address +" " + city ;
                         String type = "add";
                         asyncTask= new BackgroundWorker(this);
+
+                        Calendar calendar = Calendar.getInstance();
+                        int day = calendar.get(Calendar.DAY_OF_MONTH);
+                        int month  = calendar.get(Calendar.MONTH);
+                        int year = calendar.get(Calendar.YEAR);
+                        int hour = calendar.get(Calendar.HOUR);
+                        int minute = calendar.get(Calendar.MINUTE);
+
+                        //time format YYYY/MM/DD/HOUR/MIN
+                        String time = year + "/" + month + "/" + day + "/" + hour + "/" + minute;
                         asyncTask.delegate=this;
-                        asyncTask.execute(type, newAddress, Double.toString(newLoc.latitude), Double.toString(newLoc.longitude));
+                        asyncTask.execute(type, newAddress, Double.toString(newLoc.latitude), Double.toString(newLoc.longitude),time);
+                        type = "load";
+                        asyncTask = new BackgroundWorker(this);
+                        asyncTask.delegate = this;
+                        asyncTask.execute(type);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                    String type = "load";
+                    asyncTask = new BackgroundWorker(this);
+                    asyncTask.delegate = this;
+                    asyncTask.execute(type);
+                    /*
                     addressMarker = googleMap.addMarker(new MarkerOptions()
                             .position(newLoc)
-                            .title("Person"));
+                            .title("Person"));*/
                 }
             }else if (requestCode == 3){
 
@@ -399,10 +434,23 @@ public class MainActivity extends AppCompatActivity
             if (cols.length >= 3) {
                 String lat = cols[1];
                 String lng = cols[2];
-                LatLng newLoc = new LatLng(Double.parseDouble(lat),Double.parseDouble(lng));
-                addressMarker = googleMap.addMarker(new MarkerOptions()
-                        .position(newLoc)
-                        .title(cols[0]));
+                String time = cols[3];
+                String[] times = time.split("/");
+                if (times.length >= 5){
+                    String year = times[0];
+                    String month = times[1];
+                    String day = times[2];
+                    String hour = times[3];
+                    String min = times[4];
+                    if (min.length() ==1){ min = "0" + min;}
+                    String markerTime = "Time posted: " + hour + ":" + min + "   Date Posted: " + month + "/" + day;
+                    LatLng newLoc = new LatLng(Double.parseDouble(lat),Double.parseDouble(lng));
+                    addressMarker = googleMap.addMarker(new MarkerOptions()
+                            .position(newLoc)
+                            .title(cols[0])
+                            .snippet(markerTime));
+                }
+
             }
         }
     }
@@ -430,9 +478,10 @@ public class MainActivity extends AppCompatActivity
             super.onPostExecute(s);
 
             // Draw the marker on the screen
-            addressMarker = googleMap.addMarker(new MarkerOptions()
+            /*addressMarker = googleMap.addMarker(new MarkerOptions()
                     .position(addressPos)
                     .title("Person"));
+            */
 
         }
 
