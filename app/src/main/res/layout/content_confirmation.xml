@@ -15,7 +15,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:id="@+id/linearLayout">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -35,27 +36,44 @@
             android:orientation="horizontal"
             android:gravity="center">
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:text="Yes"
-                android:id="@+id/yes_button"
-                android:onClick="yesMark"
-                />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="No"
-                android:textStyle="bold"
-                android:onClick="noMark"/>
-
         </LinearLayout>
 
     </LinearLayout>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:text="Yes"
+        android:id="@+id/yes_button"
+        android:onClick="yesMark"
+        android:layout_marginLeft="82dp"
+        android:layout_marginStart="82dp"
+        android:layout_marginTop="162dp"
+        android:layout_below="@+id/linearLayout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No"
+        android:textStyle="bold"
+        android:onClick="noMark"
+        android:id="@+id/button3"
+        android:layout_alignTop="@+id/yes_button"
+        android:layout_toRightOf="@+id/yes_button"
+        android:layout_toEndOf="@+id/yes_button" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/minutes"
+        android:layout_above="@+id/button3"
+        android:layout_centerHorizontal="true"
+        android:hint="Minutes" />
 
 
 </RelativeLayout>

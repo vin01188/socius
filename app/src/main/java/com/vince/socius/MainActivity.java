@@ -305,17 +305,20 @@ public class MainActivity extends AppCompatActivity
             if (requestCode == 1) {
                 boolean isConf = data.getBooleanExtra("Confirmation", false);
                 if (isConf) {
+
                     String newAddress = addressEditText.getText().toString();
                     new PlaceAMarker().execute(newAddress);
                     String type = "add";
                     asyncTask= new BackgroundWorker(this);
                     LatLng temp = getLocationFromAddress(newAddress);
 
+                    int minusmin = data.getIntExtra("Minutes",0);
                     Calendar calendar = Calendar.getInstance();
+                    calendar.add(Calendar.MINUTE, (-1 * minusmin));
                     int day = calendar.get(Calendar.DAY_OF_MONTH);
                     int month  = calendar.get(Calendar.MONTH);
                     int year = calendar.get(Calendar.YEAR);
-                    int hour = calendar.get(Calendar.HOUR);
+                    int hour = calendar.get(Calendar.HOUR_OF_DAY);
                     int minute = calendar.get(Calendar.MINUTE);
 
                     //time format YYYY/MM/DD/HOUR/MIN
@@ -342,11 +345,13 @@ public class MainActivity extends AppCompatActivity
                         String type = "add";
                         asyncTask= new BackgroundWorker(this);
 
+                        int minusmin = data.getIntExtra("Minutes",0);
                         Calendar calendar = Calendar.getInstance();
+                        calendar.add(Calendar.MINUTE, (-1 * minusmin));
                         int day = calendar.get(Calendar.DAY_OF_MONTH);
                         int month  = calendar.get(Calendar.MONTH);
                         int year = calendar.get(Calendar.YEAR);
-                        int hour = calendar.get(Calendar.HOUR);
+                        int hour = calendar.get(Calendar.HOUR_OF_DAY);
                         int minute = calendar.get(Calendar.MINUTE);
 
                         //time format YYYY/MM/DD/HOUR/MIN
