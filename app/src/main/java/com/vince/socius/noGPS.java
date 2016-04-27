@@ -3,7 +3,9 @@ package com.vince.socius;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
@@ -39,8 +41,32 @@ public class noGPS extends AppCompatActivity {
             Intent goingBack = new Intent();
             goingBack.putExtra("Lat",temp.latitude);
             goingBack.putExtra("Long",temp.longitude);
+            goingBack.putExtra("LocOn", false);
             setResult(RESULT_OK, goingBack);
             finish();
+        }
+    }
+
+    public void settings(View view){
+        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        startActivity(intent);
+
+    }
+
+    public void onResume(){
+        super.onResume();
+        LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
+        boolean enabledGPS = service
+                .isProviderEnabled(LocationManager.GPS_PROVIDER);
+        if (enabledGPS){
+            Intent goingBack = new Intent();
+            goingBack.putExtra("LocOn", true);
+            setResult(RESULT_OK,goingBack);
+            finish();
+        } else{
+            Toast toast = Toast.makeText(this, "Location not turned on", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER,0,0);
+            toast.show();
         }
     }
 

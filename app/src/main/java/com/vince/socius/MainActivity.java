@@ -376,57 +376,132 @@ public class MainActivity extends AppCompatActivity
                 }
             }else if (requestCode == 3){
 
+                boolean isLocationOn = data.getBooleanExtra("LocOn",false);
+                if (isLocationOn){
+                    locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                    // Define the criteria how to select the locatioin provider -> use
+                    // default
+                    Criteria criteria = new Criteria();
+                    provider = locationManager.getBestProvider(criteria, true);
+                    Location location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
 
-
-                double lat = data.getDoubleExtra("Lat",0);
-                double lng = data.getDoubleExtra("Long",0);
-                //Toast.makeText(getApplicationContext(), "Latitude " + lat + " Longitude " + lng,Toast.LENGTH_SHORT ).show();
-
-                LatLng coordinate = new LatLng(lat, lng);
-
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 18.0f));
-
-                googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
-                googleMap.setTrafficEnabled(false);
-
-
-                googleMap.setIndoorEnabled(false);
-
-                googleMap.setBuildingsEnabled(false);
-
-                googleMap.getUiSettings().setZoomControlsEnabled(true);
-
-
-                googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                    public boolean onMarkerClick(Marker marker) {
-                        // Check if there is an open info window
-                        if (lastOpened != null) {
-                            // Close the info window
-                            lastOpened.hideInfoWindow();
-
-                            // Is the marker the same marker that was already open
-                            if (lastOpened.equals(marker)) {
-                                // Nullify the lastOpened object
-                                lastOpened = null;
-                                // Return so that the info window isn't opened again
-                                return true;
-                            }
-                        }
-
-                        // Open the info window for the marker
-                        marker.showInfoWindow();
-                        // Re-assign the last opened such that we can close it later
-                        lastOpened = marker;
-
-                        // Event was handled by our code do not launch default behaviour.
-                        return true;
+                    // waits for a location from the location Manager
+                    while (location == null){
+                        location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
                     }
-                });
-                String type = "load";
-                asyncTask = new BackgroundWorker(this);
-                asyncTask.delegate = this;
-                asyncTask.execute(type);
+                    double lat = location.getLatitude();
+                    double lng = location.getLongitude();
+                    //Toast.makeText(getApplicationContext(), "Latitude " + lat + " Longitude " + lng,Toast.LENGTH_SHORT ).show();
+
+                    LatLng coordinate = new LatLng(lat, lng);
+
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 18.0f));
+
+                    googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+                    if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        return;
+                    }
+                    googleMap.setMyLocationEnabled(true);
+
+                    googleMap.setTrafficEnabled(false);
+
+
+                    googleMap.setIndoorEnabled(false);
+
+                    googleMap.setBuildingsEnabled(false);
+
+                    googleMap.getUiSettings().setZoomControlsEnabled(true);
+
+
+                    googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                        public boolean onMarkerClick(Marker marker) {
+                            // Check if there is an open info window
+                            if (lastOpened != null) {
+                                // Close the info window
+                                lastOpened.hideInfoWindow();
+
+                                // Is the marker the same marker that was already open
+                                if (lastOpened.equals(marker)) {
+                                    // Nullify the lastOpened object
+                                    lastOpened = null;
+                                    // Return so that the info window isn't opened again
+                                    return true;
+                                }
+                            }
+
+                            // Open the info window for the marker
+                            marker.showInfoWindow();
+                            // Re-assign the last opened such that we can close it later
+                            lastOpened = marker;
+
+                            // Event was handled by our code do not launch default behaviour.
+                            return true;
+                        }
+                    });
+                    String type = "load";
+                    asyncTask = new BackgroundWorker(this);
+                    asyncTask.delegate = this;
+                    asyncTask.execute(type);
+                }else {
+
+                    double lat = data.getDoubleExtra("Lat", 0);
+                    double lng = data.getDoubleExtra("Long", 0);
+                    //Toast.makeText(getApplicationContext(), "Latitude " + lat + " Longitude " + lng,Toast.LENGTH_SHORT ).show();
+
+                    LatLng coordinate = new LatLng(lat, lng);
+
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 18.0f));
+
+                    googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+                    googleMap.setTrafficEnabled(false);
+
+
+                    googleMap.setIndoorEnabled(false);
+
+                    googleMap.setBuildingsEnabled(false);
+
+                    googleMap.getUiSettings().setZoomControlsEnabled(true);
+
+
+                    googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                        public boolean onMarkerClick(Marker marker) {
+                            // Check if there is an open info window
+                            if (lastOpened != null) {
+                                // Close the info window
+                                lastOpened.hideInfoWindow();
+
+                                // Is the marker the same marker that was already open
+                                if (lastOpened.equals(marker)) {
+                                    // Nullify the lastOpened object
+                                    lastOpened = null;
+                                    // Return so that the info window isn't opened again
+                                    return true;
+                                }
+                            }
+
+                            // Open the info window for the marker
+                            marker.showInfoWindow();
+                            // Re-assign the last opened such that we can close it later
+                            lastOpened = marker;
+
+                            // Event was handled by our code do not launch default behaviour.
+                            return true;
+                        }
+                    });
+                    String type = "load";
+                    asyncTask = new BackgroundWorker(this);
+                    asyncTask.delegate = this;
+                    asyncTask.execute(type);
+                }
             }
         }
     }
