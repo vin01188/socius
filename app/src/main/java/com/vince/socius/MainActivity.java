@@ -1,7 +1,6 @@
 package com.vince.socius;
 
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -24,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -72,6 +72,8 @@ public class MainActivity extends AppCompatActivity
 
     private Marker lastOpened = null;
 
+    private ImageView imgMyLocation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,9 +116,9 @@ public class MainActivity extends AppCompatActivity
             if (!enabledGPS) {
                 Intent intent = new Intent(this, noGPS.class);
                 startActivityForResult(intent, 3);
-            }else {
-                locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                // Define the criteria how to select the locatioin provider -> use
+            } else {
+                locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                // Define the criteria how to select the location provider -> use
                 // default
                 Criteria criteria = new Criteria();
                 provider = locationManager.getBestProvider(criteria, true);
@@ -142,17 +144,32 @@ public class MainActivity extends AppCompatActivity
                     // for ActivityCompat#requestPermissions for more details.
                     return;
                 }
+                //googleMap.setPadding(0, 200,0,0);
                 googleMap.setMyLocationEnabled(true);
 
+                googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+                googleMap.getUiSettings().setCompassEnabled(true);
+
                 googleMap.setTrafficEnabled(false);
+                googleMap.getUiSettings().setRotateGesturesEnabled(false);
+                googleMap.getUiSettings().setTiltGesturesEnabled(false);
 
+                imgMyLocation = (ImageView) findViewById(R.id.myMapLocationButton);
 
+                imgMyLocation.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        getMyLocation();
+
+                    }
+                });
                 googleMap.setIndoorEnabled(false);
 
                 googleMap.setBuildingsEnabled(false);
 
-                googleMap.getUiSettings().setZoomControlsEnabled(true);
 
+                //googleMap.getUiSettings().setZoomControlsEnabled(true);
 
                 googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     public boolean onMarkerClick(Marker marker) {
@@ -179,6 +196,8 @@ public class MainActivity extends AppCompatActivity
                         return true;
                     }
                 });
+
+                //Database loading, replace this with firebase
                 String type = "load";
                 asyncTask = new BackgroundWorker(this);
                 asyncTask.delegate = this;
@@ -193,6 +212,7 @@ public class MainActivity extends AppCompatActivity
 
 
     }
+
 
     @Override
     public void onBackPressed() {
@@ -226,6 +246,7 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    //Add fragments here later for profile, etc
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -247,23 +268,22 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public void showAddressMarker(View view) {
 
         // Get the street address entered
         String newAddress = addressEditText.getText().toString();
         LatLng temp = getLocationFromAddress(newAddress);
-        if(getLocationFromAddress(newAddress)!=null){
+        if (getLocationFromAddress(newAddress) != null) {
             Intent intent = new Intent(this, Confirmation.class);
             final int result = 1;
-            intent.putExtra(EXTRA_MESSAGE,newAddress);
-            startActivityForResult(intent,result);
-            // Call for the AsyncTask to place a marker
+            intent.putExtra(EXTRA_MESSAGE, newAddress);
+            startActivityForResult(intent, result);
 
-
-        }else{
+        } else {
             Toast toast = Toast.makeText(this, "Not a valid address", Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER,0,0);
+            toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
         }
 
@@ -274,12 +294,12 @@ public class MainActivity extends AppCompatActivity
 
         try {
             Geocoder geocoder = new Geocoder(this);
-            List<Address> addresses = geocoder.getFromLocation(newLoc.latitude,newLoc.longitude,1);
-            if (addresses.size() == 0){
+            List<Address> addresses = geocoder.getFromLocation(newLoc.latitude, newLoc.longitude, 1);
+            if (addresses.size() == 0) {
                 Toast toast = Toast.makeText(this, "Not a valid address", Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.CENTER,0,0);
+                toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
-            }else {
+            } else {
                 String address = addresses.get(0).getAddressLine(0);
                 String city = addresses.get(0).getAddressLine(1);
                 String country = addresses.get(0).getAddressLine(2);
@@ -296,9 +316,10 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+
+    //most of the changes while migrating to database will be here
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             //request code for the address button press
@@ -309,56 +330,62 @@ public class MainActivity extends AppCompatActivity
                     String newAddress = addressEditText.getText().toString();
                     new PlaceAMarker().execute(newAddress);
                     String type = "add";
-                    asyncTask= new BackgroundWorker(this);
+                    asyncTask = new BackgroundWorker(this);
                     LatLng temp = getLocationFromAddress(newAddress);
 
-                    int minusmin = data.getIntExtra("Minutes",0);
+                    int minusmin = data.getIntExtra("Minutes", 0);
                     Calendar calendar = Calendar.getInstance();
                     calendar.add(Calendar.MINUTE, (-1 * minusmin));
                     int day = calendar.get(Calendar.DAY_OF_MONTH);
-                    int month  = calendar.get(Calendar.MONTH);
+                    int month = calendar.get(Calendar.MONTH);
                     int year = calendar.get(Calendar.YEAR);
                     int hour = calendar.get(Calendar.HOUR_OF_DAY);
                     int minute = calendar.get(Calendar.MINUTE);
 
                     //time format YYYY/MM/DD/HOUR/MIN
                     String time = year + "/" + month + "/" + day + "/" + hour + "/" + minute;
-                    asyncTask.delegate=this;
-                    asyncTask.execute(type, newAddress, Double.toString(temp.latitude), Double.toString(temp.longitude),time);
+                    //replace this part with firebase code
+                    asyncTask.delegate = this;
+                    asyncTask.execute(type, newAddress, Double.toString(temp.latitude), Double.toString(temp.longitude), time);
                     type = "load";
                     asyncTask = new BackgroundWorker(this);
                     asyncTask.delegate = this;
                     asyncTask.execute(type);
                 }
-            } else if (requestCode == 2){
-                boolean isConf = data.getBooleanExtra("Confirmation",false);
-                if (isConf){
+            } else if (requestCode == 2) {
+                boolean isConf = data.getBooleanExtra("Confirmation", false);
+                if (isConf) {
 
                     LatLng newLoc = googleMap.getCameraPosition().target;
                     try {
                         Geocoder geocoder = new Geocoder(this);
-                        List<Address> addresses = geocoder.getFromLocation(newLoc.latitude,newLoc.longitude,1);
+                        List<Address> addresses = geocoder.getFromLocation(newLoc.latitude, newLoc.longitude, 1);
                         String address = addresses.get(0).getAddressLine(0);
                         String city = addresses.get(0).getAddressLine(1);
                         String country = addresses.get(0).getAddressLine(2);
-                        String newAddress = address +" " + city ;
+                        String newAddress = address + " " + city;
                         String type = "add";
-                        asyncTask= new BackgroundWorker(this);
 
-                        int minusmin = data.getIntExtra("Minutes",0);
+                        //replace
+                        asyncTask = new BackgroundWorker(this);
+
+                        int minusmin = data.getIntExtra("Minutes", 0);
                         Calendar calendar = Calendar.getInstance();
                         calendar.add(Calendar.MINUTE, (-1 * minusmin));
                         int day = calendar.get(Calendar.DAY_OF_MONTH);
-                        int month  = calendar.get(Calendar.MONTH);
+                        int month = calendar.get(Calendar.MONTH);
                         int year = calendar.get(Calendar.YEAR);
                         int hour = calendar.get(Calendar.HOUR_OF_DAY);
                         int minute = calendar.get(Calendar.MINUTE);
 
                         //time format YYYY/MM/DD/HOUR/MIN
                         String time = year + "/" + month + "/" + day + "/" + hour + "/" + minute;
-                        asyncTask.delegate=this;
-                        asyncTask.execute(type, newAddress, Double.toString(newLoc.latitude), Double.toString(newLoc.longitude),time);
+
+                        //replace
+                        asyncTask.delegate = this;
+                        asyncTask.execute(type, newAddress, Double.toString(newLoc.latitude), Double.toString(newLoc.longitude), time);
                         type = "load";
+
                         asyncTask = new BackgroundWorker(this);
                         asyncTask.delegate = this;
                         asyncTask.execute(type);
@@ -374,11 +401,11 @@ public class MainActivity extends AppCompatActivity
                             .position(newLoc)
                             .title("Person"));*/
                 }
-            }else if (requestCode == 3){
+            } else if (requestCode == 3) {
 
-                boolean isLocationOn = data.getBooleanExtra("LocOn",false);
-                if (isLocationOn){
-                    locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                boolean isLocationOn = data.getBooleanExtra("LocOn", false);
+                if (isLocationOn) {
+                    locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
                     // Define the criteria how to select the locatioin provider -> use
                     // default
                     Criteria criteria = new Criteria();
@@ -386,7 +413,7 @@ public class MainActivity extends AppCompatActivity
                     Location location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
 
                     // waits for a location from the location Manager
-                    while (location == null){
+                    while (location == null) {
                         location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
                     }
                     double lat = location.getLatitude();
@@ -409,10 +436,26 @@ public class MainActivity extends AppCompatActivity
                         // for ActivityCompat#requestPermissions for more details.
                         return;
                     }
+
                     googleMap.setMyLocationEnabled(true);
+                    googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+                    googleMap.getUiSettings().setCompassEnabled(true);
+
+                    googleMap.getUiSettings().setRotateGesturesEnabled(false);
+                    googleMap.getUiSettings().setTiltGesturesEnabled(false);
 
                     googleMap.setTrafficEnabled(false);
 
+                    imgMyLocation = (ImageView) findViewById(R.id.myMapLocationButton);
+
+                    imgMyLocation.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+                            getMyLocation();
+
+                        }
+                    });
 
                     googleMap.setIndoorEnabled(false);
 
@@ -446,11 +489,15 @@ public class MainActivity extends AppCompatActivity
                             return true;
                         }
                     });
+
+                    //replace
                     String type = "load";
+
+
                     asyncTask = new BackgroundWorker(this);
                     asyncTask.delegate = this;
                     asyncTask.execute(type);
-                }else {
+                } else {
 
                     double lat = data.getDoubleExtra("Lat", 0);
                     double lng = data.getDoubleExtra("Long", 0);
@@ -470,6 +517,8 @@ public class MainActivity extends AppCompatActivity
                     googleMap.setBuildingsEnabled(false);
 
                     googleMap.getUiSettings().setZoomControlsEnabled(true);
+                    googleMap.getUiSettings().setRotateGesturesEnabled(false);
+                    googleMap.getUiSettings().setTiltGesturesEnabled(false);
 
 
                     googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -497,6 +546,8 @@ public class MainActivity extends AppCompatActivity
                             return true;
                         }
                     });
+
+                    //replace
                     String type = "load";
                     asyncTask = new BackgroundWorker(this);
                     asyncTask.delegate = this;
@@ -509,22 +560,24 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void processFinish(String output) {
         String[] rows = output.split(";");
-        for(int i = 0; i < rows.length; i++){
+        for (int i = 0; i < rows.length; i++) {
             String[] cols = rows[i].split(":");
             if (cols.length >= 3) {
                 String lat = cols[1];
                 String lng = cols[2];
                 String time = cols[3];
                 String[] times = time.split("/");
-                if (times.length >= 5){
+                if (times.length >= 5) {
                     String year = times[0];
                     String month = times[1];
                     String day = times[2];
                     String hour = times[3];
                     String min = times[4];
-                    if (min.length() ==1){ min = "0" + min;}
+                    if (min.length() == 1) {
+                        min = "0" + min;
+                    }
                     String markerTime = "Time posted: " + hour + ":" + min + "   Date Posted: " + month + "/" + day;
-                    LatLng newLoc = new LatLng(Double.parseDouble(lat),Double.parseDouble(lng));
+                    LatLng newLoc = new LatLng(Double.parseDouble(lat), Double.parseDouble(lng));
                     addressMarker = googleMap.addMarker(new MarkerOptions()
                             .position(newLoc)
                             .title(cols[0])
@@ -533,6 +586,43 @@ public class MainActivity extends AppCompatActivity
 
             }
         }
+    }
+
+    public Object getMyLocation() {
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        // Define the criteria how to select the locatioin provider -> use
+        // default
+        Criteria criteria = new Criteria();
+        provider = locationManager.getBestProvider(criteria, true);
+        Location location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+
+        // waits for a location from the location Manager
+        while (location == null) {
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission
+                            (this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                            != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return null;
+            }
+            location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+        }
+        double lat = location.getLatitude();
+        double lng = location.getLongitude();
+        //Toast.makeText(getApplicationContext(), "Latitude " + lat + " Longitude " + lng,Toast.LENGTH_SHORT ).show();
+
+        LatLng coordinate = new LatLng(lat, lng);
+
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 18.0f));
+
+        return null;
     }
 
     class PlaceAMarker extends AsyncTask<String, String, String> {

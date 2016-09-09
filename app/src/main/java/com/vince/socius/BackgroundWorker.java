@@ -19,7 +19,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 
-public class BackgroundWorker extends AsyncTask<String,Void,String> {
+public class    BackgroundWorker extends AsyncTask<String,Void,String> {
     Context context;
     public AsyncResponse delegate = null;
     AlertDialog alertDialog;
@@ -30,8 +30,8 @@ public class BackgroundWorker extends AsyncTask<String,Void,String> {
     @Override
     protected String doInBackground(String... params) {
         String type = params[0];
-        String add_url = "http://128.237.134.107:8888/add.php";
-        String load_url = "http://128.237.134.107:8888/load.php";
+        String add_url = "http://128.237.181.203:8888/add.php";
+        String load_url = "http://128.237.181.203:8888/load.php";
         if(type.equals("add")) {
             try {
                 String address = params[1];

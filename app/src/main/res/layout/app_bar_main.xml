@@ -39,8 +39,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="fill_parent"
                     android:id="@+id/map"
-                    android:name="com.google.android.gms.maps.MapFragment"
-                    />
+                    android:name="com.google.android.gms.maps.MapFragment" />
 
                 <ImageView android:id="@+id/image_view"
                     android:layout_width="wrap_content"
@@ -65,6 +64,26 @@
                     android:layout_above="@+id/image_view"
                     android:layout_centerHorizontal="true"
                     android:onClick="pinShare"/>
+
+                <ImageButton
+                    android:id="@+id/myMapLocationButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:layout_centerInParent="true"
+                    android:maxWidth="50dp"
+                    android:maxHeight="100dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/mylocation"
+                    android:contentDescription="My Location"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="false"
+                    android:layout_marginBottom="25dp"
+                    android:layout_marginLeft="20dp"
+                    android:clickable="false"
+                    android:alpha=".85" />
+
 
             </RelativeLayout>
             <LinearLayout

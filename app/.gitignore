@@ -5,3 +5,5 @@
 /.idea/libraries
 .DS_Store
 /src/main/res/values/strings.xml
+google-services.json
+
