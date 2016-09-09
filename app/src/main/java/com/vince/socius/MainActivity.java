@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -49,7 +50,7 @@ import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, AsyncResponse {
+        implements NavigationView.OnNavigationItemSelectedListener, AsyncResponse, OnMapReadyCallback{
     BackgroundWorker asyncTask = new BackgroundWorker(this);
     NavigationView navigationView = null;
     Toolbar toolbar = null;
@@ -107,102 +108,9 @@ public class MainActivity extends AppCompatActivity
 
         // Initialize my Google Map
         try {
-
-            googleMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
-
-            LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
-            boolean enabledGPS = service
-                    .isProviderEnabled(LocationManager.GPS_PROVIDER);
-            if (!enabledGPS) {
-                Intent intent = new Intent(this, noGPS.class);
-                startActivityForResult(intent, 3);
-            } else {
-                locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-                // Define the criteria how to select the location provider -> use
-                // default
-                Criteria criteria = new Criteria();
-                provider = locationManager.getBestProvider(criteria, true);
-                Location location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
-
-                double lat = location.getLatitude();
-                double lng = location.getLongitude();
-                //Toast.makeText(getApplicationContext(), "Latitude " + lat + " Longitude " + lng,Toast.LENGTH_SHORT ).show();
-
-                LatLng coordinate = new LatLng(lat, lng);
-
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 18.0f));
-
-                googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
-                if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
-                }
-                //googleMap.setPadding(0, 200,0,0);
-                googleMap.setMyLocationEnabled(true);
-
-                googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-                googleMap.getUiSettings().setCompassEnabled(true);
-
-                googleMap.setTrafficEnabled(false);
-                googleMap.getUiSettings().setRotateGesturesEnabled(false);
-                googleMap.getUiSettings().setTiltGesturesEnabled(false);
-
-                imgMyLocation = (ImageView) findViewById(R.id.myMapLocationButton);
-
-                imgMyLocation.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        getMyLocation();
-
-                    }
-                });
-                googleMap.setIndoorEnabled(false);
-
-                googleMap.setBuildingsEnabled(false);
+            ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
 
 
-                //googleMap.getUiSettings().setZoomControlsEnabled(true);
-
-                googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                    public boolean onMarkerClick(Marker marker) {
-                        // Check if there is an open info window
-                        if (lastOpened != null) {
-                            // Close the info window
-                            lastOpened.hideInfoWindow();
-
-                            // Is the marker the same marker that was already open
-                            if (lastOpened.equals(marker)) {
-                                // Nullify the lastOpened object
-                                lastOpened = null;
-                                // Return so that the info window isn't opened again
-                                return true;
-                            }
-                        }
-
-                        // Open the info window for the marker
-                        marker.showInfoWindow();
-                        // Re-assign the last opened such that we can close it later
-                        lastOpened = marker;
-
-                        // Event was handled by our code do not launch default behaviour.
-                        return true;
-                    }
-                });
-
-                //Database loading, replace this with firebase
-                String type = "load";
-                asyncTask = new BackgroundWorker(this);
-                asyncTask.delegate = this;
-                asyncTask.execute(type);
-            }
 
         } catch (Exception e) {
 
@@ -211,6 +119,106 @@ public class MainActivity extends AppCompatActivity
         }
 
 
+    }
+
+
+    @Override
+    public void onMapReady(GoogleMap map ) {
+//DO WHATEVER YOU WANT WITH GOOGLEMAP
+        googleMap = map;
+        LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
+        boolean enabledGPS = service
+                .isProviderEnabled(LocationManager.GPS_PROVIDER);
+        if (!enabledGPS) {
+            Intent intent = new Intent(this, noGPS.class);
+            startActivityForResult(intent, 3);
+        } else {
+            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            // Define the criteria how to select the location provider -> use
+            // default
+            Criteria criteria = new Criteria();
+            provider = locationManager.getBestProvider(criteria, true);
+            Location location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+
+            double lat = location.getLatitude();
+            double lng = location.getLongitude();
+            //Toast.makeText(getApplicationContext(), "Latitude " + lat + " Longitude " + lng,Toast.LENGTH_SHORT ).show();
+
+            LatLng coordinate = new LatLng(lat, lng);
+
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 18.0f));
+
+            googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            //googleMap.setPadding(0, 200,0,0);
+            googleMap.setMyLocationEnabled(true);
+
+            googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+            googleMap.getUiSettings().setCompassEnabled(true);
+
+            googleMap.setTrafficEnabled(false);
+            googleMap.getUiSettings().setRotateGesturesEnabled(false);
+            googleMap.getUiSettings().setTiltGesturesEnabled(false);
+
+            imgMyLocation = (ImageView) findViewById(R.id.myMapLocationButton);
+
+            imgMyLocation.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    getMyLocation();
+
+                }
+            });
+            googleMap.setIndoorEnabled(false);
+
+            googleMap.setBuildingsEnabled(false);
+
+
+            //googleMap.getUiSettings().setZoomControlsEnabled(true);
+
+            googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                public boolean onMarkerClick(Marker marker) {
+                    // Check if there is an open info window
+                    if (lastOpened != null) {
+                        // Close the info window
+                        lastOpened.hideInfoWindow();
+
+                        // Is the marker the same marker that was already open
+                        if (lastOpened.equals(marker)) {
+                            // Nullify the lastOpened object
+                            lastOpened = null;
+                            // Return so that the info window isn't opened again
+                            return true;
+                        }
+                    }
+
+                    // Open the info window for the marker
+                    marker.showInfoWindow();
+                    // Re-assign the last opened such that we can close it later
+                    lastOpened = marker;
+
+                    // Event was handled by our code do not launch default behaviour.
+                    return true;
+                }
+            });
+
+            //Database loading, replace this with firebase
+            String type = "load";
+            asyncTask = new BackgroundWorker(this);
+            asyncTask.delegate = this;
+            asyncTask.execute(type);
+        }
     }
 
 
