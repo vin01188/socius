@@ -108,8 +108,10 @@ public class MainActivity extends AppCompatActivity
 
                 people.add(p);
 
+                if (googleMap != null){
+                    addPeople();
+                }
                 Log.v("E_CHILD_ADDED", p.getAddress());
-
             }
 
             @Override
@@ -269,10 +271,7 @@ public class MainActivity extends AppCompatActivity
             });
 
             //Database loading, replace this with firebase
-            String type = "load";
-            asyncTask = new BackgroundWorker(this);
-            asyncTask.delegate = this;
-            asyncTask.execute(type);
+            addPeople();
         }
     }
 
@@ -410,14 +409,15 @@ public class MainActivity extends AppCompatActivity
                     Person pers = new Person(newAddress, temp.latitude,temp.longitude,time );
                     personRef.push().setValue(pers);
 
-
+                    addPeople();
+                    /*
                     //replace this part with firebase code
                     asyncTask.delegate = this;
                     asyncTask.execute(type, newAddress, Double.toString(temp.latitude), Double.toString(temp.longitude), time);
                     type = "load";
                     asyncTask = new BackgroundWorker(this);
                     asyncTask.delegate = this;
-                    asyncTask.execute(type);
+                    asyncTask.execute(type); */
                 }
             } else if (requestCode == 2) {
                 boolean isConf = data.getBooleanExtra("Confirmation", false);
@@ -453,20 +453,23 @@ public class MainActivity extends AppCompatActivity
                         personRef.push().setValue(pers);
                         //replace
 
+                        /*
                         asyncTask.delegate = this;
                         asyncTask.execute(type, newAddress, Double.toString(newLoc.latitude), Double.toString(newLoc.longitude), time);
                         type = "load";
 
                         asyncTask = new BackgroundWorker(this);
                         asyncTask.delegate = this;
-                        asyncTask.execute(type);
+                        asyncTask.execute(type); */
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                    addPeople();
+                    /*
                     String type = "load";
                     asyncTask = new BackgroundWorker(this);
                     asyncTask.delegate = this;
-                    asyncTask.execute(type);
+                    asyncTask.execute(type);*/
                     /*
                     addressMarker = googleMap.addMarker(new MarkerOptions()
                             .position(newLoc)
@@ -560,14 +563,15 @@ public class MainActivity extends AppCompatActivity
                             return true;
                         }
                     });
-
+                    addPeople();
                     //replace
+                    /*
                     String type = "load";
 
 
                     asyncTask = new BackgroundWorker(this);
                     asyncTask.delegate = this;
-                    asyncTask.execute(type);
+                    asyncTask.execute(type);*/
                 } else {
 
                     double lat = data.getDoubleExtra("Lat", 0);
@@ -617,12 +621,14 @@ public class MainActivity extends AppCompatActivity
                             return true;
                         }
                     });
-
+                    addPeople();
+                    /*
                     //replace
                     String type = "load";
                     asyncTask = new BackgroundWorker(this);
                     asyncTask.delegate = this;
                     asyncTask.execute(type);
+                    */
                 }
             }
         }
@@ -636,8 +642,19 @@ public class MainActivity extends AppCompatActivity
                 String year = times[0];
                 String month = times[1];
                 String day = times[2];
+                String hour = times[3];
+                String min = times[4];
+                if (min.length() == 1){
+                    min = "0" + min;
+                }
 
-
+                String markerTime = "Time posted: " + hour + ":" + min + "  " +
+                        " Date Posted: " + month + "/" + day;
+                LatLng newLoc = new LatLng(temp.getLattitude(), temp.getLongitude());
+                addressMarker = googleMap.addMarker(new MarkerOptions()
+                        .position(newLoc)
+                        .title(temp.getAddress())
+                        .snippet(markerTime));
             }
         }
     }
