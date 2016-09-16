@@ -18,6 +18,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,6 +34,13 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -46,6 +54,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -75,11 +84,57 @@ public class MainActivity extends AppCompatActivity
 
     private ImageView imgMyLocation;
 
+    private DatabaseReference mFirebaseDatabaseReference;
+    private DatabaseReference personRef;
+
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseUser mFirebaseUser;
+
+    private ArrayList<Person> people;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        personRef = mFirebaseDatabaseReference.child("People");
+        people = new ArrayList<Person>();
+        personRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                String key = dataSnapshot.getKey();
+                Person p = dataSnapshot.getValue(Person.class);
+
+                people.add(p);
+
+                Log.v("E_CHILD_ADDED", p.getAddress());
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
         asyncTask.delegate = this;
         /*MainFragment fragment = new MainFragment();
@@ -110,8 +165,6 @@ public class MainActivity extends AppCompatActivity
         try {
             ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
 
-
-
         } catch (Exception e) {
 
             e.printStackTrace();
@@ -139,7 +192,9 @@ public class MainActivity extends AppCompatActivity
             Criteria criteria = new Criteria();
             provider = locationManager.getBestProvider(criteria, true);
             Location location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
-
+            while (location == null) {
+                location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+            }
             double lat = location.getLatitude();
             double lng = location.getLongitude();
             //Toast.makeText(getApplicationContext(), "Latitude " + lat + " Longitude " + lng,Toast.LENGTH_SHORT ).show();
@@ -352,6 +407,10 @@ public class MainActivity extends AppCompatActivity
 
                     //time format YYYY/MM/DD/HOUR/MIN
                     String time = year + "/" + month + "/" + day + "/" + hour + "/" + minute;
+                    Person pers = new Person(newAddress, temp.latitude,temp.longitude,time );
+                    personRef.push().setValue(pers);
+
+
                     //replace this part with firebase code
                     asyncTask.delegate = this;
                     asyncTask.execute(type, newAddress, Double.toString(temp.latitude), Double.toString(temp.longitude), time);
@@ -372,6 +431,7 @@ public class MainActivity extends AppCompatActivity
                         String city = addresses.get(0).getAddressLine(1);
                         String country = addresses.get(0).getAddressLine(2);
                         String newAddress = address + " " + city;
+
                         String type = "add";
 
                         //replace
@@ -389,7 +449,10 @@ public class MainActivity extends AppCompatActivity
                         //time format YYYY/MM/DD/HOUR/MIN
                         String time = year + "/" + month + "/" + day + "/" + hour + "/" + minute;
 
+                        Person pers = new Person(newAddress, newLoc.latitude,newLoc.longitude,time );
+                        personRef.push().setValue(pers);
                         //replace
+
                         asyncTask.delegate = this;
                         asyncTask.execute(type, newAddress, Double.toString(newLoc.latitude), Double.toString(newLoc.longitude), time);
                         type = "load";
@@ -561,6 +624,20 @@ public class MainActivity extends AppCompatActivity
                     asyncTask.delegate = this;
                     asyncTask.execute(type);
                 }
+            }
+        }
+    }
+
+    public void addPeople() {
+        for (int i = 0; i < people.size(); i++){
+            Person temp = people.get(i);
+            String[] times = temp.getTime().split("/");
+            if (times.length >= 5){
+                String year = times[0];
+                String month = times[1];
+                String day = times[2];
+
+
             }
         }
     }
