@@ -11,6 +11,7 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
@@ -27,6 +28,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -59,7 +63,8 @@ import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,  OnMapReadyCallback{
+        implements NavigationView.OnNavigationItemSelectedListener,  OnMapReadyCallback
+        ,GoogleApiClient.OnConnectionFailedListener{
     NavigationView navigationView = null;
     Toolbar toolbar = null;
 
@@ -88,6 +93,10 @@ public class MainActivity extends AppCompatActivity
 
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
+    private GoogleApiClient mGoogleApiClient;
+    public static final String ANONYMOUS = "anonymous";
+
+    private static String mUsername;
 
     private ArrayList<Person> people;
 
@@ -95,6 +104,23 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();
+        if (mFirebaseUser == null) {
+            // Not signed in, launch the Sign In activity
+            startActivity(new Intent(this,LoginActivity.class));
+            finish();
+            return;
+        } else {
+            mUsername = mFirebaseUser.getDisplayName();
+        }
+
+        // For Google Login
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this /* FragmentActivity */,  this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API)
+                .build();
 
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
         personRef = mFirebaseDatabaseReference.child("People");
@@ -295,7 +321,18 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }else if (id == R.id.action_logout) {
+            // User logout
+            mFirebaseAuth.signOut();
+            Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+            mUsername = ANONYMOUS;
+
+            // Show login screen again
+            startActivity(new Intent(this, LoginActivity.class));
+            return true;
         }
+
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -396,7 +433,7 @@ public class MainActivity extends AppCompatActivity
 
                     //time format YYYY/MM/DD/HOUR/MIN
                     String time = year + "/" + month + "/" + day + "/" + hour + "/" + minute;
-                    Person pers = new Person(newAddress, temp.latitude,temp.longitude,time );
+                    Person pers = new Person(newAddress, temp.latitude,temp.longitude,time,mUsername );
                     personRef.push().setValue(pers);
 
                     addPeople();
@@ -426,7 +463,7 @@ public class MainActivity extends AppCompatActivity
                         //time format YYYY/MM/DD/HOUR/MIN
                         String time = year + "/" + month + "/" + day + "/" + hour + "/" + minute;
 
-                        Person pers = new Person(newAddress, newLoc.latitude,newLoc.longitude,time );
+                        Person pers = new Person(newAddress, newLoc.latitude,newLoc.longitude,time,mUsername);
                         personRef.push().setValue(pers);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -769,6 +806,11 @@ public class MainActivity extends AppCompatActivity
         }
         return p1;
     }
-
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        // An unresolvable error has occurred and Google APIs (including Sign-In) will not
+        // be available.
+        Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
+    }
 
 }

@@ -9,19 +9,22 @@ public class Person {
     private double lattitude;
     private double longitude;
     private String time;
+    private String poster;
 
     public Person (){
         address = "";
         lattitude = 0.0;
         longitude = 0.0;
         time ="";
+        poster = "";
     }
 
-    public Person (String address, double lattitude, double longitude,String time){
+    public Person (String address, double lattitude, double longitude,String time, String poster){
         this.address = address;
         this.lattitude = lattitude;
         this.longitude = longitude;
         this.time = time;
+        this.poster = poster;
     }
 
 
@@ -41,6 +44,8 @@ public class Person {
         return time;
     }
 
+    public String getPoster() { return poster; }
+
     public void setAddress(String address){
         this.address = address;
     }
@@ -56,5 +61,7 @@ public class Person {
     public void setTime(String time){
         this.time = time;
     }
+
+    public void setPoster(String poster) { this.poster = poster; }
 
 }
