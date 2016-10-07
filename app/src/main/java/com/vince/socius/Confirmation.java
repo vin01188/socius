@@ -13,6 +13,7 @@ import android.widget.Toast;
 public class Confirmation extends AppCompatActivity {
 
     EditText minutes;
+    EditText description;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +24,7 @@ public class Confirmation extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         minutes = (EditText) findViewById(R.id.minutes);
+        description = (EditText) findViewById(R.id.description);
 
         Intent intent = getIntent();
         String address = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
@@ -34,9 +36,11 @@ public class Confirmation extends AppCompatActivity {
 
         if (!minutes.getText().toString().equals("")) {
             int newMin = Integer.parseInt(minutes.getText().toString());
+            String desc = description.getText().toString();
             Intent goingBack = new Intent();
             goingBack.putExtra("Minutes",newMin);
             goingBack.putExtra("Confirmation", true);
+            goingBack.putExtra("Description", desc);
             setResult(RESULT_OK, goingBack);
             finish();
         }else{

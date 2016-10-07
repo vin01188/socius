@@ -1,6 +1,7 @@
 package com.vince.socius;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -24,8 +25,11 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -33,6 +37,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
@@ -60,7 +65,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,  OnMapReadyCallback
@@ -100,10 +107,23 @@ public class MainActivity extends AppCompatActivity
 
     private ArrayList<Person> people;
 
+    private ViewGroup infoWindow;
+    private TextView infoTitle;
+    private TextView infoSnippet;
+    private TextView infoDescription;
+    private Button infoButton;
+    private OnInfoWindowElemTouchListener infoButtonListener;
+
+
+    //map to store markers
+    private Map<Person, Marker> markerMap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        markerMap = new HashMap<Person,Marker>();
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
@@ -136,17 +156,21 @@ public class MainActivity extends AppCompatActivity
                 if (googleMap != null){
                     addPeople();
                 }
-                Log.v("E_CHILD_ADDED", p.getAddress());
+                Log.v("E_CHILD_ADDED", Boolean.toString(p.getIsNotDelete()));
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                String key = dataSnapshot.getKey();
+                Person p = dataSnapshot.getValue(Person.class);
+                Log.v("E_CHILD_ADDED1", Boolean.toString(p.getIsNotDelete()));
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                String key = dataSnapshot.getKey();
+                Person p = dataSnapshot.getValue(Person.class);
+                Log.v("E_CHILD_ADDED2", Boolean.toString(p.getIsNotDelete()));
             }
 
             @Override
@@ -199,6 +223,75 @@ public class MainActivity extends AppCompatActivity
     public void onMapReady(GoogleMap map ) {
 //DO WHATEVER YOU WANT WITH GOOGLEMAP
         googleMap = map;
+
+        final MapWrapperLayout mapWrapperLayout = (MapWrapperLayout)findViewById(R.id.map_relative_layout);
+
+        // MapWrapperLayout initialization
+        // 39 - default marker height
+        // 20 - offset between the default InfoWindow bottom edge and it's content bottom edge
+        mapWrapperLayout.init(map, getPixelsFromDp(this, 39 + 20));
+
+        // We want to reuse the info window for all the markers,
+        // so let's create only one class member instance
+        this.infoWindow = (ViewGroup)getLayoutInflater().inflate(R.layout.infowindow, null);
+        this.infoTitle = (TextView)infoWindow.findViewById(R.id.title);
+        this.infoSnippet = (TextView)infoWindow.findViewById(R.id.snippet);
+        this.infoDescription = (TextView)infoWindow.findViewById(R.id.description);
+        //repeat for delete button
+        this.infoButton = (Button)infoWindow.findViewById(R.id.button);
+
+        // Setting custom OnTouchListener which deals with the pressed state
+        // so it shows up
+        this.infoButtonListener = new OnInfoWindowElemTouchListener(infoButton,
+                getResources().getDrawable(R.drawable.button_pressed),
+                getResources().getDrawable(R.drawable.button_pressed))
+        {
+            @Override
+            protected void onClickConfirmed(View v, Marker marker) {
+                // Here we can perform some action triggered after clicking the button
+                //Toast.makeText(MainActivity.this, marker.getTitle() + "'s button clicked!", Toast.LENGTH_SHORT).show();
+
+                Person temp = (Person) marker.getTag();
+                temp.delete();
+                addPeople();
+                double lat = temp.getLattitude();
+                double lng = temp.getLongitude();
+                double key = Math.abs(lat* lng);
+                String keystring = Double.toString(key);
+                String keystringnew = keystring.replaceAll("\\.", "");
+                Log.v("E_KEY_ADDED", keystringnew);
+                personRef.child("test" + keystringnew).setValue(temp);
+/*
+                Marker tempMarker = markerMap.get(temp);
+                Toast.makeText(MainActivity.this, tempMarker.getSnippet()+ "'s button clicked!", Toast.LENGTH_SHORT).show();
+                tempMarker.remove();*/
+            }
+        };
+        this.infoButton.setOnTouchListener(infoButtonListener);
+
+        map.setInfoWindowAdapter(new InfoWindowAdapter() {
+            @Override
+            public View getInfoWindow(Marker marker) {
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+                // Setting up the infoWindow with current's marker info
+                infoTitle.setText(marker.getTitle());
+                infoSnippet.setText(marker.getSnippet());
+                Person temp = (Person)marker.getTag();
+                infoDescription.setText("Description: " + temp.getDescription());
+                infoButtonListener.setMarker(marker);
+
+
+                // We must call this to set the current marker and infoWindow references
+                // to the MapWrapperLayout
+                mapWrapperLayout.setMarkerWithInfoWindow(marker, infoWindow);
+                return infoWindow;
+            }
+        });
+
         LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
         boolean enabledGPS = service
                 .isProviderEnabled(LocationManager.GPS_PROVIDER);
@@ -431,17 +524,22 @@ public class MainActivity extends AppCompatActivity
                     int hour = calendar.get(Calendar.HOUR_OF_DAY);
                     int minute = calendar.get(Calendar.MINUTE);
 
+                    String description = data.getStringExtra("Description");
+
                     //time format YYYY/MM/DD/HOUR/MIN
                     String time = year + "/" + month + "/" + day + "/" + hour + "/" + minute;
-                    Person pers = new Person(newAddress, temp.latitude,temp.longitude,time,mUsername );
-                    personRef.push().setValue(pers);
+                    Person pers = new Person(newAddress, temp.latitude,temp.longitude,time,mUsername ,description);
+                    double key = Math.abs( temp.latitude * temp.longitude);
+                    String keystring = Double.toString(key);
+                    String keystringnew = keystring.replaceAll("\\.", "");
+                    Log.v("E_KEY_ADDED", keystringnew);
+                    personRef.child("test" + keystringnew).setValue(pers);
 
                     addPeople();
                 }
             } else if (requestCode == 2) {
                 boolean isConf = data.getBooleanExtra("Confirmation", false);
                 if (isConf) {
-
                     LatLng newLoc = googleMap.getCameraPosition().target;
                     try {
                         Geocoder geocoder = new Geocoder(this);
@@ -460,11 +558,17 @@ public class MainActivity extends AppCompatActivity
                         int hour = calendar.get(Calendar.HOUR_OF_DAY);
                         int minute = calendar.get(Calendar.MINUTE);
 
+                        String description = data.getStringExtra("Description");
+
                         //time format YYYY/MM/DD/HOUR/MIN
                         String time = year + "/" + month + "/" + day + "/" + hour + "/" + minute;
 
-                        Person pers = new Person(newAddress, newLoc.latitude,newLoc.longitude,time,mUsername);
-                        personRef.push().setValue(pers);
+                        Person pers = new Person(newAddress, newLoc.latitude,newLoc.longitude,time,mUsername,description);
+                        double key = Math.abs(newLoc.latitude * newLoc.longitude);
+                        String keystring = Double.toString(key);
+                        String keystringnew = keystring.replaceAll("\\.", "");
+                        Log.v("E_KEY_ADDED", keystringnew);
+                        personRef.child("test" + keystringnew).setValue(pers);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -615,26 +719,31 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void addPeople() {
-        for (int i = 0; i < people.size(); i++){
+        googleMap.clear();
+        for (int i = 0; i < people.size(); i++) {
             Person temp = people.get(i);
-            String[] times = temp.getTime().split("/");
-            if (times.length >= 5){
-                String year = times[0];
-                String month = times[1];
-                String day = times[2];
-                String hour = times[3];
-                String min = times[4];
-                if (min.length() == 1){
-                    min = "0" + min;
-                }
+            if (temp.getIsNotDelete() && temp.getPoster().equals(mUsername)) {
+                String[] times = temp.getTime().split("/");
+                if (times.length >= 5) {
+                    String year = times[0];
+                    String month = times[1];
+                    String day = times[2];
+                    String hour = times[3];
+                    String min = times[4];
+                    if (min.length() == 1) {
+                        min = "0" + min;
+                    }
 
-                String markerTime = "Time posted: " + hour + ":" + min + "  " +
-                        " Date Posted: " + month + "/" + day;
-                LatLng newLoc = new LatLng(temp.getLattitude(), temp.getLongitude());
-                addressMarker = googleMap.addMarker(new MarkerOptions()
-                        .position(newLoc)
-                        .title(temp.getAddress())
-                        .snippet(markerTime));
+                    String markerTime = "Time posted: " + hour + ":" + min + "  " +
+                            " Date Posted: " + month + "/" + day;
+                    LatLng newLoc = new LatLng(temp.getLattitude(), temp.getLongitude());
+                    addressMarker = googleMap.addMarker(new MarkerOptions()
+                            .position(newLoc)
+                            .title(temp.getAddress())
+                            .snippet(markerTime));
+                    addressMarker.setTag(temp);
+                    markerMap.put(temp, addressMarker);
+                }
             }
         }
     }
@@ -811,6 +920,10 @@ public class MainActivity extends AppCompatActivity
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
         // be available.
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
+    }
+    public static int getPixelsFromDp(Context context, float dp) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int)(dp * scale + 0.5f);
     }
 
 }

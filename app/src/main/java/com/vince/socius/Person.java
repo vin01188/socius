@@ -10,6 +10,8 @@ public class Person {
     private double longitude;
     private String time;
     private String poster;
+    public String description;
+    private boolean isNotDelete;
 
     public Person (){
         address = "";
@@ -17,14 +19,17 @@ public class Person {
         longitude = 0.0;
         time ="";
         poster = "";
+        isNotDelete = true;
     }
 
-    public Person (String address, double lattitude, double longitude,String time, String poster){
+    public Person (String address, double lattitude, double longitude,String time, String poster, String description){
         this.address = address;
         this.lattitude = lattitude;
         this.longitude = longitude;
         this.time = time;
         this.poster = poster;
+        this.isNotDelete = true;
+        this.description = description;
     }
 
 
@@ -40,11 +45,15 @@ public class Person {
         return longitude;
     }
 
+    public String getDescription() { return description; }
+
     public String getTime(){
         return time;
     }
 
     public String getPoster() { return poster; }
+
+    public boolean getIsNotDelete() {return isNotDelete;}
 
     public void setAddress(String address){
         this.address = address;
@@ -63,5 +72,14 @@ public class Person {
     }
 
     public void setPoster(String poster) { this.poster = poster; }
+
+    public void setDescription (String description) { this.description = description; }
+
+    public void setIsNotDelete(boolean bool){
+        this.isNotDelete = bool;
+    }
+    public void delete(){
+        isNotDelete = false;
+    }
 
 }

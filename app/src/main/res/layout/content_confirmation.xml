@@ -70,8 +70,18 @@
         android:ems="10"
         android:id="@+id/minutes"
         android:hint="Minutes"
-        android:layout_above="@+id/button3"
+        android:layout_above="@+id/description"
         android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:id="@+id/description"
+        android:hint="Description"
+        android:layout_above="@+id/button3"
+        android:layout_centerHorizontal="true"
+        />
 
 
 </RelativeLayout>
