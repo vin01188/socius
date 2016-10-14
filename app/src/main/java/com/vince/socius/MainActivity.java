@@ -92,6 +92,7 @@ public class MainActivity extends AppCompatActivity
     private String provider;
 
     public final static String EXTRA_MESSAGE = "com.vince.socius.MESSAGE";
+    public final static String EXTRA_DESCRIPTION = "com.vince.socius.DESCRIPTION";
 
     private Marker lastOpened = null;
 
@@ -114,7 +115,12 @@ public class MainActivity extends AppCompatActivity
     private TextView infoSnippet;
     private TextView infoDescription;
     private Button infoButton;
+    private Button editButton;
+
     private OnInfoWindowElemTouchListener infoButtonListener;
+    private OnInfoWindowElemTouchListener editButtonListener;
+
+    private Person currentEdit;
 
 
     //map to store markers
@@ -241,6 +247,7 @@ public class MainActivity extends AppCompatActivity
         this.infoDescription = (TextView)infoWindow.findViewById(description);
         //repeat for delete button
         this.infoButton = (Button)infoWindow.findViewById(R.id.button);
+        this.editButton = (Button)infoWindow.findViewById(R.id.buttonEdit);
 
         // Setting custom OnTouchListener which deals with the pressed state
         // so it shows up
@@ -271,6 +278,25 @@ public class MainActivity extends AppCompatActivity
         };
         this.infoButton.setOnTouchListener(infoButtonListener);
 
+        this.editButtonListener = new OnInfoWindowElemTouchListener(editButton,
+                getResources().getDrawable(R.drawable.button_pressed),
+                getResources().getDrawable(R.drawable.button_pressed)) {
+            @Override
+            protected void onClickConfirmed(View v, Marker marker) {
+                Person temp = (Person) marker.getTag();
+                currentEdit = temp;
+                String description = temp.getDescription();
+                String address = temp.getAddress();
+
+                Intent intent = new Intent(v.getContext(), EditActivity.class);
+                intent.putExtra(EXTRA_MESSAGE, address);
+                intent.putExtra(EXTRA_DESCRIPTION, description);
+                startActivityForResult(intent, 4);
+
+            }
+        };
+        this.editButton.setOnTouchListener(editButtonListener);
+
         map.setInfoWindowAdapter(new InfoWindowAdapter() {
             @Override
             public View getInfoWindow(Marker marker) {
@@ -285,6 +311,7 @@ public class MainActivity extends AppCompatActivity
                 Person temp = (Person)marker.getTag();
                 infoDescription.setText("Description: " + temp.getDescription());
                 infoButtonListener.setMarker(marker);
+                editButtonListener.setMarker(marker);
 
 
                 // We must call this to set the current marker and infoWindow references
@@ -522,7 +549,7 @@ public class MainActivity extends AppCompatActivity
                     Calendar calendar = Calendar.getInstance();
                     //calendar.add(Calendar.MINUTE, (-1 * minusmin));
                     int day = calendar.get(Calendar.DAY_OF_MONTH);
-                    int month = calendar.get(Calendar.MONTH);
+                    int month = calendar.get(Calendar.MONTH) + 1;
                     int year = calendar.get(Calendar.YEAR);
                     int hour = hourextra;
                     //int minute = calendar.get(Calendar.MINUTE);
@@ -558,7 +585,7 @@ public class MainActivity extends AppCompatActivity
                         Calendar calendar = Calendar.getInstance();
                         //calendar.add(Calendar.MINUTE, (-1 * minusmin));
                         int day = calendar.get(Calendar.DAY_OF_MONTH);
-                        int month = calendar.get(Calendar.MONTH);
+                        int month = calendar.get(Calendar.MONTH) + 1;
                         int year = calendar.get(Calendar.YEAR);
                         int hour = hourextra;
                         //int minute = calendar.get(Calendar.MINUTE);
@@ -719,6 +746,50 @@ public class MainActivity extends AppCompatActivity
                         }
                     });
                     addPeople();
+                }
+            }else if (requestCode == 4){
+                {
+                    boolean isConf = data.getBooleanExtra("Confirmation", false);
+                    if (isConf) {
+
+                        /*
+                        Person temp = (Person) marker.getTag();
+                        temp.delete();
+                        addPeople();
+                        double lat = temp.getLattitude();
+                        double lng = temp.getLongitude();
+                        double key = Math.abs(lat* lng);
+                        String keystring = Double.toString(key);
+                        String keystringnew = keystring.replaceAll("\\.", "");
+                        Log.v("E_KEY_ADDED", keystringnew);
+                        personRef.child("test" + keystringnew).setValue(temp);
+                        */
+
+                        int hourextra = data.getIntExtra("Minutes", 0);
+
+                        Calendar calendar = Calendar.getInstance();
+                        //calendar.add(Calendar.MINUTE, (-1 * minusmin));
+                        int day = calendar.get(Calendar.DAY_OF_MONTH);
+                        int month = calendar.get(Calendar.MONTH) + 1;
+                        int year = calendar.get(Calendar.YEAR);
+                        int hour = hourextra;
+                        //int minute = calendar.get(Calendar.MINUTE);
+                        String amorpm = data.getStringExtra("AmOrPm");
+
+                        String description = data.getStringExtra("Description");
+                        currentEdit.setDescription(description);
+
+                        //time format YYYY/MM/DD/HOUR/MIN
+                        String time = year + "/" + month + "/" + day + "/" + hour + "/" + amorpm;
+                        currentEdit.setTime(time);
+                        double key = Math.abs( currentEdit.getLattitude() * currentEdit.getLongitude());
+                        String keystring = Double.toString(key);
+                        String keystringnew = keystring.replaceAll("\\.", "");
+                        Log.v("E_KEY_ADDED", keystringnew);
+                        personRef.child("test" + keystringnew).setValue(currentEdit);
+
+                        addPeople();
+                    }
                 }
             }
         }
