@@ -49,27 +49,23 @@
         android:onClick="noMark"
         android:layout_marginTop="165dp"
         android:layout_below="@+id/linearLayout"
-        android:layout_alignLeft="@+id/minutes"
-        android:layout_alignStart="@+id/minutes" />
+        android:layout_alignLeft="@+id/description"
+        android:layout_alignStart="@+id/description" />
 
-    <EditText
-        android:layout_width="wrap_content"
+    <Spinner
+        android:id="@+id/time_spinner"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/minutes"
-        android:hint="Minutes"
         android:layout_above="@+id/description"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignLeft="@+id/description"
+        />
 
-    <EditText
+    <Spinner
+        android:id="@+id/am"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:id="@+id/description"
-        android:hint="Description"
-        android:layout_above="@+id/button3"
-        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/description"
+        android:layout_toRightOf="@id/time_spinner"
         />
 
     <Button
@@ -82,6 +78,15 @@
         android:layout_alignBaseline="@+id/yes_button"
         android:layout_alignBottom="@+id/yes_button"
         android:layout_alignEnd="@+id/description" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:id="@+id/description"
+        android:hint="Description"
+        android:layout_above="@+id/button3"
+        android:layout_centerHorizontal="true" />
 
 
 </RelativeLayout>

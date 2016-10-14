@@ -69,6 +69,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.vince.socius.R.id.description;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,  OnMapReadyCallback
         ,GoogleApiClient.OnConnectionFailedListener{
@@ -236,7 +238,7 @@ public class MainActivity extends AppCompatActivity
         this.infoWindow = (ViewGroup)getLayoutInflater().inflate(R.layout.infowindow, null);
         this.infoTitle = (TextView)infoWindow.findViewById(R.id.title);
         this.infoSnippet = (TextView)infoWindow.findViewById(R.id.snippet);
-        this.infoDescription = (TextView)infoWindow.findViewById(R.id.description);
+        this.infoDescription = (TextView)infoWindow.findViewById(description);
         //repeat for delete button
         this.infoButton = (Button)infoWindow.findViewById(R.id.button);
 
@@ -515,19 +517,21 @@ public class MainActivity extends AppCompatActivity
                     new PlaceAMarker().execute(newAddress);
                     LatLng temp = getLocationFromAddress(newAddress);
 
-                    int minusmin = data.getIntExtra("Minutes", 0);
+                    int hourextra = data.getIntExtra("Minutes", 0);
+
                     Calendar calendar = Calendar.getInstance();
-                    calendar.add(Calendar.MINUTE, (-1 * minusmin));
+                    //calendar.add(Calendar.MINUTE, (-1 * minusmin));
                     int day = calendar.get(Calendar.DAY_OF_MONTH);
                     int month = calendar.get(Calendar.MONTH);
                     int year = calendar.get(Calendar.YEAR);
-                    int hour = calendar.get(Calendar.HOUR_OF_DAY);
-                    int minute = calendar.get(Calendar.MINUTE);
+                    int hour = hourextra;
+                    //int minute = calendar.get(Calendar.MINUTE);
+                    String amorpm = data.getStringExtra("AmOrPm");
 
                     String description = data.getStringExtra("Description");
 
                     //time format YYYY/MM/DD/HOUR/MIN
-                    String time = year + "/" + month + "/" + day + "/" + hour + "/" + minute;
+                    String time = year + "/" + month + "/" + day + "/" + hour + "/" + amorpm;
                     Person pers = new Person(newAddress, temp.latitude,temp.longitude,time,mUsername ,description);
                     double key = Math.abs( temp.latitude * temp.longitude);
                     String keystring = Double.toString(key);
@@ -549,19 +553,21 @@ public class MainActivity extends AppCompatActivity
                         String country = addresses.get(0).getAddressLine(2);
                         String newAddress = address + " " + city;
 
-                        int minusmin = data.getIntExtra("Minutes", 0);
+                        int hourextra = data.getIntExtra("Minutes", 0);
+
                         Calendar calendar = Calendar.getInstance();
-                        calendar.add(Calendar.MINUTE, (-1 * minusmin));
+                        //calendar.add(Calendar.MINUTE, (-1 * minusmin));
                         int day = calendar.get(Calendar.DAY_OF_MONTH);
                         int month = calendar.get(Calendar.MONTH);
                         int year = calendar.get(Calendar.YEAR);
-                        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-                        int minute = calendar.get(Calendar.MINUTE);
+                        int hour = hourextra;
+                        //int minute = calendar.get(Calendar.MINUTE);
+                        String amorpm = data.getStringExtra("AmOrPm");
 
                         String description = data.getStringExtra("Description");
 
                         //time format YYYY/MM/DD/HOUR/MIN
-                        String time = year + "/" + month + "/" + day + "/" + hour + "/" + minute;
+                        String time = year + "/" + month + "/" + day + "/" + hour + "/" + amorpm;
 
                         Person pers = new Person(newAddress, newLoc.latitude,newLoc.longitude,time,mUsername,description);
                         double key = Math.abs(newLoc.latitude * newLoc.longitude);
@@ -729,12 +735,10 @@ public class MainActivity extends AppCompatActivity
                     String month = times[1];
                     String day = times[2];
                     String hour = times[3];
-                    String min = times[4];
-                    if (min.length() == 1) {
-                        min = "0" + min;
-                    }
+                    String am = times[4];
 
-                    String markerTime = "Time posted: " + hour + ":" + min + "  " +
+
+                    String markerTime = "Time posted: " + hour + " " + am + "  " +
                             " Date Posted: " + month + "/" + day;
                     LatLng newLoc = new LatLng(temp.getLattitude(), temp.getLongitude());
                     addressMarker = googleMap.addMarker(new MarkerOptions()
