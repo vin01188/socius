@@ -44,24 +44,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textStyle="bold"
-        android:text="Yes"
+        android:text="Cancel"
         android:id="@+id/yes_button"
-        android:onClick="yesMark"
+        android:onClick="noMark"
         android:layout_marginTop="165dp"
         android:layout_below="@+id/linearLayout"
         android:layout_alignLeft="@+id/minutes"
         android:layout_alignStart="@+id/minutes" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="No"
-        android:textStyle="bold"
-        android:onClick="noMark"
-        android:id="@+id/button3"
-        android:layout_alignTop="@+id/yes_button"
-        android:layout_toRightOf="@+id/yes_button"
-        android:layout_toEndOf="@+id/yes_button" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -82,6 +71,17 @@
         android:layout_above="@+id/button3"
         android:layout_centerHorizontal="true"
         />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:textStyle="bold"
+        android:onClick="yesMark"
+        android:id="@+id/button3"
+        android:layout_alignBaseline="@+id/yes_button"
+        android:layout_alignBottom="@+id/yes_button"
+        android:layout_alignEnd="@+id/description" />
 
 
 </RelativeLayout>
