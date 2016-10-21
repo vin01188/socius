@@ -74,6 +74,7 @@ import static com.vince.socius.R.id.description;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,  OnMapReadyCallback
         ,GoogleApiClient.OnConnectionFailedListener{
+
     NavigationView navigationView = null;
     Toolbar toolbar = null;
 
@@ -556,10 +557,13 @@ public class MainActivity extends AppCompatActivity
                     String amorpm = data.getStringExtra("AmOrPm");
 
                     String description = data.getStringExtra("Description");
+                    int numberPeople = Integer.parseInt(data.getStringExtra("Number"));
+
 
                     //time format YYYY/MM/DD/HOUR/MIN
                     String time = year + "/" + month + "/" + day + "/" + hour + "/" + amorpm;
-                    Person pers = new Person(newAddress, temp.latitude,temp.longitude,time,mUsername ,description);
+                    Person pers = new Person(newAddress, temp.latitude,temp.longitude,time,mUsername ,description
+                                            ,numberPeople);
                     double key = Math.abs( temp.latitude * temp.longitude);
                     String keystring = Double.toString(key);
                     String keystringnew = keystring.replaceAll("\\.", "");
@@ -593,10 +597,13 @@ public class MainActivity extends AppCompatActivity
 
                         String description = data.getStringExtra("Description");
 
+                        int numberPeople = Integer.parseInt(data.getStringExtra("Number"));
+
                         //time format YYYY/MM/DD/HOUR/MIN
                         String time = year + "/" + month + "/" + day + "/" + hour + "/" + amorpm;
 
-                        Person pers = new Person(newAddress, newLoc.latitude,newLoc.longitude,time,mUsername,description);
+                        Person pers = new Person(newAddress, newLoc.latitude,newLoc.longitude,time,mUsername,description
+                                                ,numberPeople);
                         double key = Math.abs(newLoc.latitude * newLoc.longitude);
                         String keystring = Double.toString(key);
                         String keystringnew = keystring.replaceAll("\\.", "");

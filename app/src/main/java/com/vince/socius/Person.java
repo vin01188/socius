@@ -12,6 +12,7 @@ public class Person {
     private String poster;
     public String description;
     private boolean isNotDelete;
+    private int number;
 
     public Person (){
         address = "";
@@ -20,9 +21,10 @@ public class Person {
         time ="";
         poster = "";
         isNotDelete = true;
+        number = 0;
     }
 
-    public Person (String address, double lattitude, double longitude,String time, String poster, String description){
+    public Person (String address, double lattitude, double longitude,String time, String poster, String description,int number){
         this.address = address;
         this.lattitude = lattitude;
         this.longitude = longitude;
@@ -30,6 +32,7 @@ public class Person {
         this.poster = poster;
         this.isNotDelete = true;
         this.description = description;
+        this.number = number;
     }
 
 
@@ -46,6 +49,8 @@ public class Person {
     }
 
     public String getDescription() { return description; }
+
+    public int getNumber() {return number;}
 
     public String getTime(){
         return time;
@@ -72,6 +77,8 @@ public class Person {
     }
 
     public void setPoster(String poster) { this.poster = poster; }
+
+    public void setNumber(int number){this.number = number;}
 
     public void setDescription (String description) { this.description = description; }
 

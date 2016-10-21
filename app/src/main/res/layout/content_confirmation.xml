@@ -49,22 +49,23 @@
         android:onClick="noMark"
         android:layout_marginTop="165dp"
         android:layout_below="@+id/linearLayout"
-        android:layout_alignLeft="@+id/description"
-        android:layout_alignStart="@+id/description" />
+        android:layout_alignLeft="@+id/services"
+        android:layout_alignStart="@+id/services"
+        />
 
     <Spinner
         android:id="@+id/time_spinner"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/description"
-        android:layout_alignLeft="@+id/description"
+        android:layout_above="@+id/numPeople"
+        android:layout_alignLeft="@+id/numPeople"
         />
 
     <Spinner
         android:id="@+id/am"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/description"
+        android:layout_above="@+id/numPeople"
         android:layout_toRightOf="@id/time_spinner"
         />
 
@@ -79,14 +80,44 @@
         android:layout_alignBottom="@+id/yes_button"
         android:layout_alignEnd="@+id/description" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:id="@+id/numPeople"
+        android:layout_above="@+id/description"
+        android:text="Number of People:  "
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:id="@+id/services"
+        android:layout_above="@+id/button3"
+        android:text="What services are needed? "
+        />
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/number"
+        android:hint="Number"
+        android:inputType="number"
+        android:layout_toRightOf="@+id/numPeople"
+        android:layout_alignBottom="@+id/numPeople"
+        android:layout_alignBaseline="@+id/numPeople"
+        />
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
         android:id="@+id/description"
-        android:hint="Description"
+        android:hint="Services"
         android:layout_above="@+id/button3"
-        android:layout_centerHorizontal="true" />
+        android:layout_toRightOf="@+id/services"
+        android:layout_alignBaseline="@+id/services"/>
+
 
 
 </RelativeLayout>
