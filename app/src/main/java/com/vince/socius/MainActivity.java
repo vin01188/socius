@@ -50,7 +50,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -93,6 +92,7 @@ public class MainActivity extends AppCompatActivity
     private String provider;
 
     public final static String EXTRA_MESSAGE = "com.vince.socius.MESSAGE";
+    public final static String EXTRA_UID = "com.vince.socius.UID";
     public final static String EXTRA_DESCRIPTION = "com.vince.socius.DESCRIPTION";
 
     private Marker lastOpened = null;
@@ -134,8 +134,8 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.blanklayout);
-
+        setContentView(R.layout.activity_main);
+        isStaff = false;
         markerMap = new HashMap<Person,Marker>();
 
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
@@ -196,121 +196,56 @@ public class MainActivity extends AppCompatActivity
                 isStaff = false;
             }*/
         }
-        readUserDataFromFirebase(new Runnable(){
-            public void run(){
-                if (isStaff){
-                    startActivity(new Intent(MainActivity.this, Staff.class));
-                }else {
-                    startActivity(new Intent(MainActivity.this, User.class));
+        Intent intent = new Intent(this, User.class);
+        intent.putExtra(EXTRA_UID, mFirebaseUser.getUid());
+        startActivityForResult(intent,5);
+
+
+
+
+        // For Google Login
+        mGoogleApiClient = new GoogleApiClient.Builder(MainActivity.this)
+                .enableAutoManage(MainActivity.this /* FragmentActivity */,  MainActivity.this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API)
+                .build();
+
+
+
+
+
+        personRef = mFirebaseDatabaseReference.child("People");
+        people = new ArrayList<Person>();
+        personRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                String key = dataSnapshot.getKey();
+                Person p = dataSnapshot.getValue(Person.class);
+
+                people.add(p);
+
+                if (googleMap != null){
+                    addPeople();
                 }
-
-
-
-
-                // For Google Login
-                mGoogleApiClient = new GoogleApiClient.Builder(MainActivity.this)
-                        .enableAutoManage(MainActivity.this /* FragmentActivity */,  MainActivity.this /* OnConnectionFailedListener */)
-                        .addApi(Auth.GOOGLE_SIGN_IN_API)
-                        .build();
-
-
-
-
-
-                personRef = mFirebaseDatabaseReference.child("People");
-                people = new ArrayList<Person>();
-                personRef.addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        String key = dataSnapshot.getKey();
-                        Person p = dataSnapshot.getValue(Person.class);
-
-                        people.add(p);
-
-                        if (googleMap != null){
-                            addPeople();
-                        }
-                        Log.v("E_CHILD_ADDED", Boolean.toString(p.getIsNotDelete()));
-                    }
-
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                        String key = dataSnapshot.getKey();
-                        Person p = dataSnapshot.getValue(Person.class);
-                        Log.v("E_CHILD_ADDED1", Boolean.toString(p.getIsNotDelete()));
-                    }
-
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-                        String key = dataSnapshot.getKey();
-                        Person p = dataSnapshot.getValue(Person.class);
-                        Log.v("E_CHILD_ADDED2", Boolean.toString(p.getIsNotDelete()));
-                    }
-
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
-                mFirebaseAuth = FirebaseAuth.getInstance();
-                mFirebaseUser = mFirebaseAuth.getCurrentUser();
-
-                setContentView(R.layout.activity_main);
-                //set toolbar initially
-                toolbar = (Toolbar) findViewById(R.id.toolbar);
-                setSupportActionBar(toolbar);
-
-
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-                ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                        MainActivity.this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-                drawer.setDrawerListener(toggle);
-                toggle.syncState();
-
-                navigationView = (NavigationView) findViewById(R.id.nav_view);
-                navigationView.setNavigationItemSelectedListener(MainActivity.this);
-
-                // Initialize my EditTexts
-
-                addressEditText = (EditText) findViewById(R.id.addressEditText);
-
-                // Initialize my Google Map
-                try {
-                    ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMapAsync(MainActivity.this);
-
-                } catch (Exception e) {
-
-                    e.printStackTrace();
-
-                }
-
+                Log.v("E_CHILD_ADDED", Boolean.toString(p.getIsNotDelete()));
             }
 
-        });
-
-
-
-    }
-
-    public void readUserDataFromFirebase(final Runnable onLoaded){
-        mFirebaseDatabaseReference.child("Staff").child(mFirebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String role = dataSnapshot.getValue(String.class);
-                if(role == null){
-                    isStaff = false;
-                }else if (role.equals("staff")){
-                    isStaff = true;
-                }else{
-                    isStaff = false;
-                }
-                onLoaded.run();
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                String key = dataSnapshot.getKey();
+                Person p = dataSnapshot.getValue(Person.class);
+                Log.v("E_CHILD_ADDED1", Boolean.toString(p.getIsNotDelete()));
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                String key = dataSnapshot.getKey();
+                Person p = dataSnapshot.getValue(Person.class);
+                Log.v("E_CHILD_ADDED2", Boolean.toString(p.getIsNotDelete()));
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
             }
 
             @Override
@@ -318,7 +253,43 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
+
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();
+
+
+        //set toolbar initially
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                MainActivity.this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(MainActivity.this);
+
+        // Initialize my EditTexts
+
+        addressEditText = (EditText) findViewById(R.id.addressEditText);
+
+        // Initialize my Google Map
+        try {
+            ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMapAsync(MainActivity.this);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        }
+
+
     }
+
 
 
     @Override
@@ -896,6 +867,9 @@ public class MainActivity extends AppCompatActivity
                         addPeople();
                     }
                 }
+            }else if(requestCode == 5){
+                isStaff = data.getBooleanExtra("IsStaff",false);
+                addPeople();
             }
         }
     }
