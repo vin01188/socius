@@ -50,6 +50,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -66,10 +67,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-
-import static com.vince.socius.R.id.description;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,  OnMapReadyCallback
@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity
     private TextView infoTitle;
     private TextView infoSnippet;
     private TextView infoDescription;
+    private TextView infoNumber;
     private Button infoButton;
     private Button editButton;
 
@@ -123,6 +124,8 @@ public class MainActivity extends AppCompatActivity
 
     private Person currentEdit;
 
+    private Boolean isStaff;
+
 
     //map to store markers
     private Map<Person, Marker> markerMap;
@@ -130,56 +133,34 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
+        setContentView(R.layout.blanklayout);
 
         markerMap = new HashMap<Person,Marker>();
 
-        mFirebaseAuth = FirebaseAuth.getInstance();
-        mFirebaseUser = mFirebaseAuth.getCurrentUser();
-        if (mFirebaseUser == null) {
-            // Not signed in, launch the Sign In activity
-            startActivity(new Intent(this,LoginActivity.class));
-            finish();
-            return;
-        } else {
-            mUsername = mFirebaseUser.getDisplayName();
-        }
-
-        // For Google Login
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */,  this /* OnConnectionFailedListener */)
-                .addApi(Auth.GOOGLE_SIGN_IN_API)
-                .build();
-
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
-        personRef = mFirebaseDatabaseReference.child("People");
-        people = new ArrayList<Person>();
-        personRef.addChildEventListener(new ChildEventListener() {
+
+        //checking if the current user is a staff member or not.
+        final HashSet<String> staff = new HashSet<String>();
+        DatabaseReference staffRef = mFirebaseDatabaseReference.child("adsf");
+
+        staffRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 String key = dataSnapshot.getKey();
-                Person p = dataSnapshot.getValue(Person.class);
+                String email = dataSnapshot.getValue(String.class);
 
-                people.add(p);
-
-                if (googleMap != null){
-                    addPeople();
-                }
-                Log.v("E_CHILD_ADDED", Boolean.toString(p.getIsNotDelete()));
+                staff.add(email);
+                Log.v("E_STAFF_ADDED", email);
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                String key = dataSnapshot.getKey();
-                Person p = dataSnapshot.getValue(Person.class);
-                Log.v("E_CHILD_ADDED1", Boolean.toString(p.getIsNotDelete()));
+
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                String key = dataSnapshot.getKey();
-                Person p = dataSnapshot.getValue(Person.class);
-                Log.v("E_CHILD_ADDED2", Boolean.toString(p.getIsNotDelete()));
             }
 
             @Override
@@ -193,44 +174,155 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+
+
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
-
-        //set toolbar initially
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        // Initialize my EditTexts
-
-        addressEditText = (EditText) findViewById(R.id.addressEditText);
-
-        // Initialize my Google Map
-        try {
-            ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-
+        if (mFirebaseUser == null) {
+            // Not signed in, launch the Sign In activity
+            startActivity(new Intent(this,LoginActivity.class));
+            finish();
+            return;
+        } else {
+            mUsername = mFirebaseUser.getDisplayName();
+            Log.v("E_STAFF_USER", mFirebaseDatabaseReference.child("Staff").child(mFirebaseUser.getUid()).toString());
+            /*while(staff.isEmpty()) {
+                isStaff = false;
+            }*/
+            /*
+            if (mFirebaseDatabaseReference.child("Staff").child(mFirebaseUser.getUid()).getRef() != null){
+                isStaff = true;
+            }else{
+                isStaff = false;
+            }*/
         }
+        readUserDataFromFirebase(new Runnable(){
+            public void run(){
+                if (isStaff){
+                    startActivity(new Intent(MainActivity.this, Staff.class));
+                }else {
+                    startActivity(new Intent(MainActivity.this, User.class));
+                }
 
 
+
+
+                // For Google Login
+                mGoogleApiClient = new GoogleApiClient.Builder(MainActivity.this)
+                        .enableAutoManage(MainActivity.this /* FragmentActivity */,  MainActivity.this /* OnConnectionFailedListener */)
+                        .addApi(Auth.GOOGLE_SIGN_IN_API)
+                        .build();
+
+
+
+
+
+                personRef = mFirebaseDatabaseReference.child("People");
+                people = new ArrayList<Person>();
+                personRef.addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        String key = dataSnapshot.getKey();
+                        Person p = dataSnapshot.getValue(Person.class);
+
+                        people.add(p);
+
+                        if (googleMap != null){
+                            addPeople();
+                        }
+                        Log.v("E_CHILD_ADDED", Boolean.toString(p.getIsNotDelete()));
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                        String key = dataSnapshot.getKey();
+                        Person p = dataSnapshot.getValue(Person.class);
+                        Log.v("E_CHILD_ADDED1", Boolean.toString(p.getIsNotDelete()));
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+                        String key = dataSnapshot.getKey();
+                        Person p = dataSnapshot.getValue(Person.class);
+                        Log.v("E_CHILD_ADDED2", Boolean.toString(p.getIsNotDelete()));
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                mFirebaseAuth = FirebaseAuth.getInstance();
+                mFirebaseUser = mFirebaseAuth.getCurrentUser();
+
+                setContentView(R.layout.activity_main);
+                //set toolbar initially
+                toolbar = (Toolbar) findViewById(R.id.toolbar);
+                setSupportActionBar(toolbar);
+
+
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                        MainActivity.this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                drawer.setDrawerListener(toggle);
+                toggle.syncState();
+
+                navigationView = (NavigationView) findViewById(R.id.nav_view);
+                navigationView.setNavigationItemSelectedListener(MainActivity.this);
+
+                // Initialize my EditTexts
+
+                addressEditText = (EditText) findViewById(R.id.addressEditText);
+
+                // Initialize my Google Map
+                try {
+                    ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMapAsync(MainActivity.this);
+
+                } catch (Exception e) {
+
+                    e.printStackTrace();
+
+                }
+
+            }
+
+        });
+
+
+
+    }
+
+    public void readUserDataFromFirebase(final Runnable onLoaded){
+        mFirebaseDatabaseReference.child("Staff").child(mFirebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String role = dataSnapshot.getValue(String.class);
+                if(role == null){
+                    isStaff = false;
+                }else if (role.equals("staff")){
+                    isStaff = true;
+                }else{
+                    isStaff = false;
+                }
+                onLoaded.run();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 
     @Override
     public void onMapReady(GoogleMap map ) {
-//DO WHATEVER YOU WANT WITH GOOGLEMAP
         googleMap = map;
 
         final MapWrapperLayout mapWrapperLayout = (MapWrapperLayout)findViewById(R.id.map_relative_layout);
@@ -245,7 +337,10 @@ public class MainActivity extends AppCompatActivity
         this.infoWindow = (ViewGroup)getLayoutInflater().inflate(R.layout.infowindow, null);
         this.infoTitle = (TextView)infoWindow.findViewById(R.id.title);
         this.infoSnippet = (TextView)infoWindow.findViewById(R.id.snippet);
-        this.infoDescription = (TextView)infoWindow.findViewById(description);
+        this.infoDescription = (TextView)infoWindow.findViewById(R.id.description);
+        this.infoNumber = (TextView) infoWindow.findViewById(R.id.numberpeop);
+
+
         //repeat for delete button
         this.infoButton = (Button)infoWindow.findViewById(R.id.button);
         this.editButton = (Button)infoWindow.findViewById(R.id.buttonEdit);
@@ -310,7 +405,8 @@ public class MainActivity extends AppCompatActivity
                 infoTitle.setText(marker.getTitle());
                 infoSnippet.setText(marker.getSnippet());
                 Person temp = (Person)marker.getTag();
-                infoDescription.setText("Description: " + temp.getDescription());
+                infoDescription.setText("Services needed: " + temp.getDescription());
+                infoNumber.setText("Number of people: " + temp.getNumber());
                 infoButtonListener.setMarker(marker);
                 editButtonListener.setMarker(marker);
 
@@ -447,11 +543,13 @@ public class MainActivity extends AppCompatActivity
         }else if (id == R.id.action_logout) {
             // User logout
             mFirebaseAuth.signOut();
+            isStaff = false;
             Auth.GoogleSignInApi.signOut(mGoogleApiClient);
             mUsername = ANONYMOUS;
 
             // Show login screen again
             startActivity(new Intent(this, LoginActivity.class));
+            finish();
             return true;
         }
 
@@ -806,7 +904,7 @@ public class MainActivity extends AppCompatActivity
         googleMap.clear();
         for (int i = 0; i < people.size(); i++) {
             Person temp = people.get(i);
-            if (temp.getIsNotDelete() && temp.getPoster().equals(mUsername)) {
+            if (temp.getIsNotDelete() &&(isStaff || temp.getPoster().equals(mUsername))) {
                 String[] times = temp.getTime().split("/");
                 if (times.length >= 5) {
                     String year = times[0];

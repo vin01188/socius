@@ -77,6 +77,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.vince.socius.Confirmation" />
         </activity>
+        <activity android:name=".User" />
+        <activity android:name=".Staff"></activity>
     </application>
 
 </manifest>
