@@ -414,6 +414,7 @@ public class MainActivity extends AppCompatActivity
                 ActivityCompat.requestPermissions(this,
                         new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,android.Manifest.permission.ACCESS_COARSE_LOCATION},
                         MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+                return;
             }else {
 
                 locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -509,6 +510,18 @@ public class MainActivity extends AppCompatActivity
                     // default
                     Criteria criteria = new Criteria();
                     provider = locationManager.getBestProvider(criteria, true);
+                    if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        ActivityCompat.requestPermissions(this,
+                                new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                                MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+                    }
                     Location location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
                     while (location == null) {
                         location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
@@ -584,6 +597,8 @@ public class MainActivity extends AppCompatActivity
 
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
+                    Intent intent = new Intent(this, noGPS.class);
+                    startActivityForResult(intent, 3);
                 }
                 return;
             }
@@ -825,6 +840,9 @@ public class MainActivity extends AppCompatActivity
                         //                                          int[] grantResults)
                         // to handle the case where the user grants the permission. See the documentation
                         // for ActivityCompat#requestPermissions for more details.
+                        ActivityCompat.requestPermissions(this,
+                                new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                                MY_PERMISSIONS_REQUEST_READ_CONTACTS);
                         return;
                     }
 
@@ -1034,6 +1052,9 @@ public class MainActivity extends AppCompatActivity
                 //                                          int[] grantResults)
                 // to handle the case where the user grants the permission. See the documentation
                 // for ActivityCompat#requestPermissions for more details.
+                ActivityCompat.requestPermissions(this,
+                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_READ_CONTACTS);
                 return null;
             }
             location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);

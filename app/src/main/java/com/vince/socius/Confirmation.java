@@ -13,6 +13,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Calendar;
+
 public class Confirmation extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     public final static String EXTRA_ADDRESS = "com.vince.socius.ADDRESS";
@@ -48,14 +50,20 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.hour_array, android.R.layout.simple_spinner_dropdown_item);
         ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this, R.array.am_array, android.R.layout.simple_spinner_dropdown_item);
 
+        Calendar calendar = Calendar.getInstance();
+        int inithour = calendar.get(Calendar.HOUR);
+        int initpos = (inithour - 1) % 12;
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         hourspin.setAdapter(adapter);
         hourspin.setOnItemSelectedListener(this);
 
+        hourspin.setSelection(initpos);
+
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         amspin.setAdapter(adapter1);
         amspin.setOnItemSelectedListener(this);
+        amspin.setSelection(calendar.get(Calendar.AM_PM));
 
         Intent intent = getIntent();
         String address = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);

@@ -1,11 +1,13 @@
 package com.vince.socius;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
@@ -58,7 +60,9 @@ public class noGPS extends AppCompatActivity {
         LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
         boolean enabledGPS = service
                 .isProviderEnabled(LocationManager.GPS_PROVIDER);
-        if (enabledGPS){
+        if (enabledGPS
+                && !(ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)){
             Intent goingBack = new Intent();
             goingBack.putExtra("LocOn", true);
             setResult(RESULT_OK,goingBack);
