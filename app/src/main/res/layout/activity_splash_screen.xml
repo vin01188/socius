@@ -6,6 +6,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/imgLogo"
         android:layout_centerInParent="true"
-        android:src="@drawable/socius"/>
+        android:src="@drawable/logomain"/>
 
 </RelativeLayout>

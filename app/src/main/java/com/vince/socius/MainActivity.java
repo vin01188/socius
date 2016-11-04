@@ -95,6 +95,8 @@ public class MainActivity extends AppCompatActivity
     public final static String EXTRA_UID = "com.vince.socius.UID";
     public final static String EXTRA_DESCRIPTION = "com.vince.socius.DESCRIPTION";
 
+    public final static int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 11;
+
     private Marker lastOpened = null;
 
     private ImageView imgMyLocation;
@@ -303,6 +305,7 @@ public class MainActivity extends AppCompatActivity
         // 20 - offset between the default InfoWindow bottom edge and it's content bottom edge
         mapWrapperLayout.init(map, getPixelsFromDp(this, 39 + 20));
 
+        // Create different info windows for staff and users.
         // We want to reuse the info window for all the markers,
         // so let's create only one class member instance
         this.infoWindow = (ViewGroup)getLayoutInflater().inflate(R.layout.infowindow, null);
@@ -389,6 +392,8 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        //Window things finish here
+
         LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
         boolean enabledGPS = service
                 .isProviderEnabled(LocationManager.GPS_PROVIDER);
@@ -396,24 +401,7 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this, noGPS.class);
             startActivityForResult(intent, 3);
         } else {
-            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-            // Define the criteria how to select the location provider -> use
-            // default
-            Criteria criteria = new Criteria();
-            provider = locationManager.getBestProvider(criteria, true);
-            Location location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
-            while (location == null) {
-                location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
-            }
-            double lat = location.getLatitude();
-            double lng = location.getLongitude();
-            //Toast.makeText(getApplicationContext(), "Latitude " + lat + " Longitude " + lng,Toast.LENGTH_SHORT ).show();
 
-            LatLng coordinate = new LatLng(lat, lng);
-
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 18.0f));
-
-            googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
             if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
@@ -423,66 +411,187 @@ public class MainActivity extends AppCompatActivity
                 //                                          int[] grantResults)
                 // to handle the case where the user grants the permission. See the documentation
                 // for ActivityCompat#requestPermissions for more details.
-                return;
-            }
-            //googleMap.setPadding(0, 200,0,0);
-            googleMap.setMyLocationEnabled(true);
+                ActivityCompat.requestPermissions(this,
+                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+            }else {
 
-            googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-            googleMap.getUiSettings().setCompassEnabled(true);
-
-            googleMap.setTrafficEnabled(false);
-            googleMap.getUiSettings().setRotateGesturesEnabled(false);
-            googleMap.getUiSettings().setTiltGesturesEnabled(false);
-
-            imgMyLocation = (ImageView) findViewById(R.id.myMapLocationButton);
-
-            imgMyLocation.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    getMyLocation();
-
+                locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                // Define the criteria how to select the location provider -> use
+                // default
+                Criteria criteria = new Criteria();
+                provider = locationManager.getBestProvider(criteria, true);
+                Location location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+                while (location == null) {
+                    location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
                 }
-            });
-            googleMap.setIndoorEnabled(false);
+                double lat = location.getLatitude();
+                double lng = location.getLongitude();
+                //Toast.makeText(getApplicationContext(), "Latitude " + lat + " Longitude " + lng,Toast.LENGTH_SHORT ).show();
 
-            googleMap.setBuildingsEnabled(false);
+                LatLng coordinate = new LatLng(lat, lng);
 
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 18.0f));
 
-            //googleMap.getUiSettings().setZoomControlsEnabled(true);
+                googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
-            googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                public boolean onMarkerClick(Marker marker) {
-                    // Check if there is an open info window
-                    if (lastOpened != null) {
-                        // Close the info window
-                        lastOpened.hideInfoWindow();
+                //googleMap.setPadding(0, 200,0,0);
+                googleMap.setMyLocationEnabled(true);
 
-                        // Is the marker the same marker that was already open
-                        if (lastOpened.equals(marker)) {
-                            // Nullify the lastOpened object
-                            lastOpened = null;
-                            // Return so that the info window isn't opened again
-                            return true;
-                        }
+                googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+                googleMap.getUiSettings().setCompassEnabled(true);
+
+                googleMap.setTrafficEnabled(false);
+                googleMap.getUiSettings().setRotateGesturesEnabled(false);
+                googleMap.getUiSettings().setTiltGesturesEnabled(false);
+
+                imgMyLocation = (ImageView) findViewById(R.id.myMapLocationButton);
+
+                imgMyLocation.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        getMyLocation();
+
                     }
+                });
+                googleMap.setIndoorEnabled(false);
 
-                    // Open the info window for the marker
-                    marker.showInfoWindow();
-                    // Re-assign the last opened such that we can close it later
-                    lastOpened = marker;
+                googleMap.setBuildingsEnabled(false);
 
-                    // Event was handled by our code do not launch default behaviour.
-                    return true;
-                }
-            });
 
-            //Database loading, replace this with firebase
-            addPeople();
+                //googleMap.getUiSettings().setZoomControlsEnabled(true);
+
+                googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                    public boolean onMarkerClick(Marker marker) {
+                        // Check if there is an open info window
+                        if (lastOpened != null) {
+                            // Close the info window
+                            lastOpened.hideInfoWindow();
+
+                            // Is the marker the same marker that was already open
+                            if (lastOpened.equals(marker)) {
+                                // Nullify the lastOpened object
+                                lastOpened = null;
+                                // Return so that the info window isn't opened again
+                                return true;
+                            }
+                        }
+
+                        // Open the info window for the marker
+                        marker.showInfoWindow();
+                        // Re-assign the last opened such that we can close it later
+                        lastOpened = marker;
+
+                        // Event was handled by our code do not launch default behaviour.
+                        return true;
+                    }
+                });
+
+                //Database loading, replace this with firebase
+                addPeople();
+            }
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //might need to add grandResults[1]
+
+                    locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                    // Define the criteria how to select the location provider -> use
+                    // default
+                    Criteria criteria = new Criteria();
+                    provider = locationManager.getBestProvider(criteria, true);
+                    Location location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+                    while (location == null) {
+                        location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+                    }
+                    double lat = location.getLatitude();
+                    double lng = location.getLongitude();
+                    //Toast.makeText(getApplicationContext(), "Latitude " + lat + " Longitude " + lng,Toast.LENGTH_SHORT ).show();
+
+                    LatLng coordinate = new LatLng(lat, lng);
+
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 18.0f));
+
+                    googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+                    //googleMap.setPadding(0, 200,0,0);
+                    googleMap.setMyLocationEnabled(true);
+
+                    googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+                    googleMap.getUiSettings().setCompassEnabled(true);
+
+                    googleMap.setTrafficEnabled(false);
+                    googleMap.getUiSettings().setRotateGesturesEnabled(false);
+                    googleMap.getUiSettings().setTiltGesturesEnabled(false);
+
+                    imgMyLocation = (ImageView) findViewById(R.id.myMapLocationButton);
+
+                    imgMyLocation.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+                            getMyLocation();
+
+                        }
+                    });
+                    googleMap.setIndoorEnabled(false);
+
+                    googleMap.setBuildingsEnabled(false);
+
+
+                    //googleMap.getUiSettings().setZoomControlsEnabled(true);
+
+                    googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                        public boolean onMarkerClick(Marker marker) {
+                            // Check if there is an open info window
+                            if (lastOpened != null) {
+                                // Close the info window
+                                lastOpened.hideInfoWindow();
+
+                                // Is the marker the same marker that was already open
+                                if (lastOpened.equals(marker)) {
+                                    // Nullify the lastOpened object
+                                    lastOpened = null;
+                                    // Return so that the info window isn't opened again
+                                    return true;
+                                }
+                            }
+
+                            // Open the info window for the marker
+                            marker.showInfoWindow();
+                            // Re-assign the last opened such that we can close it later
+                            lastOpened = marker;
+
+                            // Event was handled by our code do not launch default behaviour.
+                            return true;
+                        }
+                    });
+
+                    //Database loading, replace this with firebase
+                    addPeople();
+
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
 
     @Override
     public void onBackPressed() {

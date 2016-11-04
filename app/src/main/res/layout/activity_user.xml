@@ -10,6 +10,20 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.vince.socius.User">
 
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/logo"
+        android:adjustViewBounds="true"
+        android:layout_centerInParent="true"
+        android:maxWidth="400sp"
+        android:maxHeight="400sp"
+        android:scaleType="fitCenter"
+        android:paddingBottom="40dp"
+        android:layout_above="@+id/moveButton"
+        android:src="@drawable/logomain"
+        />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,9 +37,9 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="[Mission]"
+        android:text="    With Socius, everyone is working to support the homeless population. With your contribution, we’re understanding how the location homeless community spends their time across the city so that services can be delivered directly to them."
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:id="@+id/textView4"
-        android:textSize="30sp"/>
+        android:textSize="20sp"/>
 </RelativeLayout>
