@@ -28,8 +28,10 @@ public class EditActivity extends AppCompatActivity  implements AdapterView.OnIt
         String amorpm = "PM";
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setDisplayShowHomeEnabled(false);
+
 
         description = (EditText) findViewById(R.id.description);
         hourspin = (Spinner) findViewById(R.id.time_spinner);

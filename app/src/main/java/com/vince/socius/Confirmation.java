@@ -34,12 +34,15 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirmation);
+
+
         String hour = "1";
         String amorpm = "PM";
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setDisplayShowHomeEnabled(false);
 
         description = (EditText) findViewById(R.id.description);
         hourspin = (Spinner) findViewById(R.id.time_spinner);
@@ -74,7 +77,7 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
 
     public void yesMark(View view) {
 
-        if (!hour.equals("")) {
+        if (!(number.getText().toString().equals(""))) {
 
             int newMin = Integer.parseInt(hour);
             String desc = description.getText().toString();
@@ -91,7 +94,7 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
 
 
         } else {
-            Toast toast = Toast.makeText(this, "Enter minutes", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(this, "Enter Number", Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
         }

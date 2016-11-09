@@ -72,6 +72,17 @@
                     android:layout_centerHorizontal="true"
                     android:onClick="pinShare"/>
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Test"
+                    android:layout_above="@+id/realSubmit"
+                    android:background="#FFFFFF"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:textSize="30sp"
+                    android:id="@+id/realAddress"/>
                 <ImageButton
                     android:id="@+id/myMapLocationButton"
                     android:layout_width="wrap_content"
@@ -83,14 +94,27 @@
                     android:scaleType="fitCenter"
                     android:src="@drawable/mylocation"
                     android:contentDescription="My Location"
-                    android:layout_alignParentBottom="true"
                     android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="false"
                     android:layout_marginBottom="25dp"
                     android:layout_marginLeft="20dp"
+                    android:layout_above="@id/realAddress"
                     android:clickable="false"
                     android:alpha=".85" />
+                
 
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Submit Address"
+                    android:id="@+id/realSubmit"
+                    android:layout_alignParentBottom="true"
+                    android:background="#FFFFFF"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:onClick="showAddressMarker"
+                    android:layout_marginBottom="10dp"
+                    />
 
             </RelativeLayout>
             <LinearLayout

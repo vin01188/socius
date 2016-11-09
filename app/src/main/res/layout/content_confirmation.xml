@@ -40,45 +40,25 @@
 
     </LinearLayout>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:text="Cancel"
-        android:id="@+id/yes_button"
-        android:onClick="noMark"
-        android:layout_marginTop="165dp"
-        android:layout_below="@+id/linearLayout"
-        android:layout_alignLeft="@+id/services"
-        android:layout_alignStart="@+id/services"
-        />
-
     <Spinner
         android:id="@+id/time_spinner"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/numPeople"
+        android:layout_below="@+id/linearLayout"
         android:layout_alignLeft="@+id/numPeople"
+        android:layout_marginTop="20dp"
         />
 
     <Spinner
         android:id="@+id/am"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/numPeople"
+        android:layout_above="@+id/linearLayout"
         android:layout_toRightOf="@id/time_spinner"
+        android:layout_marginTop="20dp"
         />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Submit"
-        android:textStyle="bold"
-        android:onClick="yesMark"
-        android:id="@+id/button3"
-        android:layout_alignBaseline="@+id/yes_button"
-        android:layout_alignBottom="@+id/yes_button"
-        android:layout_alignEnd="@+id/description" />
+
 
     <TextView
         android:layout_width="wrap_content"
@@ -86,7 +66,7 @@
         android:textSize="20sp"
         android:textStyle="bold"
         android:id="@+id/numPeople"
-        android:layout_above="@+id/description"
+        android:layout_below="@+id/time_spinner"
         android:text="Number of People:  "
         />
     <TextView
@@ -95,8 +75,9 @@
         android:textSize="20sp"
         android:textStyle="bold"
         android:id="@+id/services"
-        android:layout_above="@+id/button3"
+        android:layout_below="@+id/numPeople"
         android:text="What services are needed? "
+        android:layout_marginTop="10dp"
         />
     <EditText
         android:layout_width="wrap_content"
@@ -114,10 +95,30 @@
         android:ems="10"
         android:id="@+id/description"
         android:hint="Services"
-        android:layout_above="@+id/button3"
         android:layout_toRightOf="@+id/services"
         android:layout_alignBaseline="@+id/services"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:textStyle="bold"
+        android:onClick="yesMark"
+        android:id="@+id/button3"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="50dp"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:text="Back"
+        android:id="@+id/yes_button"
+        android:onClick="noMark"
+        android:layout_marginTop="165dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50dp"
+        />
 
 </RelativeLayout>
