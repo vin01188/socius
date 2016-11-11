@@ -12,6 +12,7 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -31,6 +32,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.os.Handler;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
@@ -121,6 +123,8 @@ public class MainActivity extends AppCompatActivity
     private Button infoButton;
     private Button editButton;
 
+    private TextView addressTextview;
+
     private OnInfoWindowElemTouchListener infoButtonListener;
     private OnInfoWindowElemTouchListener editButtonListener;
 
@@ -128,6 +132,7 @@ public class MainActivity extends AppCompatActivity
 
     private Boolean isStaff;
 
+    public static final long DISCONNECT_TIMEOUT = 1000;
 
     //map to store markers
     private Map<Person, Marker> markerMap;
@@ -139,6 +144,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         isStaff = false;
         markerMap = new HashMap<Person,Marker>();
+
+        addressTextview = (TextView) findViewById(R.id.realAddress);
 
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
@@ -277,7 +284,7 @@ public class MainActivity extends AppCompatActivity
 
         // Initialize my EditTexts
 
-        addressEditText = (EditText) findViewById(R.id.addressEditText);
+        //addressEditText = (EditText) findViewById(R.id.addressEditText);
 
         // Initialize my Google Map
         try {
@@ -293,6 +300,64 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    //Handles inactivity to update the address in address textbox
+    private Handler disconnectHandler = new Handler(){
+        public void handleMessage(Message msg) {
+        }
+    };
+
+    private Runnable disconnectCallback = new Runnable() {
+        @Override
+        public void run() {
+            LatLng newLoc = googleMap.getCameraPosition().target;
+
+            try {
+                Geocoder geocoder = new Geocoder(MainActivity.this);
+                List<Address> addresses = geocoder.getFromLocation(newLoc.latitude, newLoc.longitude, 1);
+                if (addresses.size() == 0) {
+                    Toast toast = Toast.makeText(MainActivity.this, "Not a valid address", Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
+                } else {
+                    String address = addresses.get(0).getAddressLine(0);
+                    String city = addresses.get(0).getAddressLine(1);
+                    String country = addresses.get(0).getAddressLine(2);
+                    String newAddress = address + " " + city;
+                    addressTextview.setText(newAddress);
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+    };
+
+    public void resetDisconnectTimer(){
+        disconnectHandler.removeCallbacks(disconnectCallback);
+        disconnectHandler.postDelayed(disconnectCallback, DISCONNECT_TIMEOUT);
+    }
+
+    public void stopDisconnectTimer(){
+        disconnectHandler.removeCallbacks(disconnectCallback);
+    }
+
+    @Override
+    public void onUserInteraction(){
+        resetDisconnectTimer();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        resetDisconnectTimer();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        stopDisconnectTimer();
+    }
 
     @Override
     public void onMapReady(GoogleMap map ) {
