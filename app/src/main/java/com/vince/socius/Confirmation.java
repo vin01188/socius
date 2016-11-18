@@ -35,6 +35,7 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
     boolean clothes;
     boolean medical;
     boolean toilet;
+    boolean dontknow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,7 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
         toilet = false;
         clothes = false;
         medical = false;
+        dontknow = false;
 
         String hour = "1";
         String amorpm = "PM";
@@ -95,6 +97,7 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
             if(clothes) desc += "Clothes | ";
             if(medical) desc += "Medical | ";
             if(toilet) desc += "Toiletries | ";
+            if(dontknow) desc += "Do not know | ";
             if(!description.getText().toString().equals("")) desc += description.getText().toString();
             else if(desc.length() > 3) desc = desc.substring(0,desc.length() - 3);
             int num = Integer.parseInt(number.getText().toString());
@@ -166,6 +169,12 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
                 else
                     toilet = false;
                 break;
+            case R.id.idk:
+                if(checked)
+                    dontknow = true;
+                else
+                    dontknow = false;
+                break;
         }
     }
 
@@ -183,6 +192,7 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
                     if(clothes) desc += "Clothes | ";
                     if(medical) desc += "Medical | ";
                     if(toilet) desc += "Toiletries | ";
+                    if(dontknow) desc += "Do not know | ";
                     if(!description.getText().toString().equals("")) desc += description.getText().toString();
                     else if(desc.length() > 3) desc = desc.substring(0,desc.length() - 3);
                     String num = number.getText().toString();

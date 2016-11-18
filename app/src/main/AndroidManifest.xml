@@ -78,7 +78,11 @@
                 android:value="com.vince.socius.Confirmation" />
         </activity>
         <activity android:name=".User" />
-        <activity android:name=".Staff"></activity>
+        <activity android:name=".Staff" />
+        <activity
+            android:name=".AboutActivity"
+            android:label="@string/title_activity_about"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

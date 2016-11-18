@@ -16,10 +16,19 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/thanks"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:text="Thanks for contributing!\nHere is a summary of your input before you submit."
+        android:layout_marginBottom="10dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/addressDesc"
         android:textSize="20sp"
         android:textStyle="bold"
         android:text="Address: "
+        android:layout_below="@+id/thanks"
         />
     
     <TextView

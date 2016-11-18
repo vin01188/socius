@@ -129,7 +129,7 @@
         android:ems="10"
         android:id="@+id/description"
         android:hint="Other"
-        android:layout_below="@+id/foodBox"
+        android:layout_below="@+id/idk"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true" />
 
@@ -159,5 +159,14 @@
         android:layout_below="@+id/services"
         android:layout_toEndOf="@+id/clothesBox"
         android:onClick="onCheckBoxClicked"/>
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Do not know"
+        android:id="@+id/idk"
+        android:layout_below="@+id/foodBox"
+        android:onClick="onCheckBoxClicked"
+        />
 
 </RelativeLayout>
