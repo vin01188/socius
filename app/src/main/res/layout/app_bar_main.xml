@@ -62,16 +62,6 @@
 
                     />
 
-                <Button
-                    style="?android:attr/buttonStyleSmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Pin"
-                    android:id="@+id/button"
-                    android:layout_above="@+id/image_view"
-                    android:layout_centerHorizontal="true"
-                    android:onClick="pinShare"/>
-
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -30,11 +31,20 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
     String amorpm;
     String address1;
 
+    boolean food;
+    boolean clothes;
+    boolean medical;
+    boolean toilet;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirmation);
 
+        food = false;
+        toilet = false;
+        clothes = false;
+        medical = false;
 
         String hour = "1";
         String amorpm = "PM";
@@ -80,7 +90,13 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
         if (!(number.getText().toString().equals(""))) {
 
             int newMin = Integer.parseInt(hour);
-            String desc = description.getText().toString();
+            String desc = "";
+            if(food) desc += "Food | ";
+            if(clothes) desc += "Clothes | ";
+            if(medical) desc += "Medical | ";
+            if(toilet) desc += "Toiletries | ";
+            if(!description.getText().toString().equals("")) desc += description.getText().toString();
+            else if(desc.length() > 3) desc = desc.substring(0,desc.length() - 3);
             int num = Integer.parseInt(number.getText().toString());
             String temp = amorpm;
 
@@ -120,6 +136,39 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
+    //checkbox actions
+    public void onCheckBoxClicked(View view){
+        boolean checked = ((CheckBox) view).isChecked();
+
+        //Check which checkbox was clicked
+        switch(view.getId()){
+            case R.id.foodBox:
+                if (checked)
+                    food = true;
+                else
+                    food = false;
+                break;
+            case R.id.medicalBox:
+                if(checked)
+                    medical = true;
+                else
+                    medical = false;
+                break;
+            case R.id.clothesBox:
+                if(checked)
+                    clothes = true;
+                else
+                    clothes = false;
+                break;
+            case R.id.toiletBox:
+                if(checked)
+                    toilet = true;
+                else
+                    toilet = false;
+                break;
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -129,7 +178,13 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
                 if (isConf) {
 
                     int newMin = Integer.parseInt(hour);
-                    String desc = description.getText().toString();
+                    String desc = "";
+                    if(food) desc += "Food | ";
+                    if(clothes) desc += "Clothes | ";
+                    if(medical) desc += "Medical | ";
+                    if(toilet) desc += "Toiletries | ";
+                    if(!description.getText().toString().equals("")) desc += description.getText().toString();
+                    else if(desc.length() > 3) desc = desc.substring(0,desc.length() - 3);
                     String num = number.getText().toString();
                     String temp = amorpm;
 
