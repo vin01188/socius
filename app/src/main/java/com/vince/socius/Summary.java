@@ -29,13 +29,13 @@ public class Summary extends AppCompatActivity {
         String service = intent.getStringExtra(Confirmation.EXTRA_SERVICE);
 
         TextView addressConfirmation = (TextView) findViewById(R.id.addressDesc);
-        addressConfirmation.append(" " + address);
+        addressConfirmation.append(address);
         TextView timeView = (TextView)findViewById(R.id.timeDesc);
-        timeView.append(" " + time);
+        timeView.append(time);
         TextView numView = (TextView) findViewById(R.id.numDesc);
-        numView.append(" " + num);
+        numView.append(num);
         TextView serviceView = (TextView) findViewById(R.id.serviceDesc);
-        serviceView.append(" " + service);
+        serviceView.append(service);
 
 
     }

@@ -145,7 +145,7 @@
         android:layout_below="@+id/foodBox"
         android:onClick="onCheckBoxClicked"
         android:textSize="24sp"
-        android:textColor="#424242"/>
+        android:textColor="@color/colorPrimary"/>
 
     <CheckBox
         android:text="Toiletries"

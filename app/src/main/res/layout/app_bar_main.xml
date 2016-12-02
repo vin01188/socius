@@ -58,21 +58,11 @@
                     android:scaleType="fitCenter"
                     android:paddingBottom="40dp"
 
-                    android:src="@drawable/pin"
+                    android:src="@drawable/pinnew"
 
                     />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Loading Address"
-                    android:layout_above="@+id/realSubmit"
-                    android:background="#FFFFFF"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:textSize="20sp"
-                    android:id="@+id/realAddress"/>
+
                 <ImageButton
                     android:id="@+id/myMapLocationButton"
                     android:layout_width="wrap_content"
@@ -87,25 +77,49 @@
                     android:layout_alignParentLeft="true"
                     android:layout_marginBottom="25dp"
                     android:layout_marginLeft="20dp"
-                    android:layout_above="@id/realAddress"
                     android:clickable="false"
-                    android:alpha=".85" />
-                
+                    android:alpha=".85"
+                    android:layout_alignParentBottom="true"/>
 
 
+
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:background="#FFFFFF"
+                android:id="@+id/bottomLayout"
+                >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:text="Loading Address"
+                    android:background="#FFFFFF"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:textSize="15sp"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginEnd="40dp"
+
+                    android:id="@+id/realAddress"/>
                 <Button
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="45dp"
                     android:text="Submit Address"
                     android:id="@+id/realSubmit"
-                    android:layout_alignParentBottom="true"
-                    android:background="#FFFFFF"
+                    android:background="@color/colorPrimary"
                     android:layout_marginRight="10dp"
                     android:layout_marginLeft="10dp"
+                    android:textColor="#FFFFFF"
                     android:onClick="pinShare"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_below="@id/realAddress"
                     />
-
             </RelativeLayout>
         </LinearLayout>
 

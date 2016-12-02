@@ -20,26 +20,34 @@
         android:maxWidth="400sp"
         android:maxHeight="400sp"
         android:scaleType="fitCenter"
-        android:paddingBottom="40dp"
-        android:layout_above="@+id/moveButton"
         android:src="@drawable/logomain"
+        android:layout_above="@+id/textView4"
         />
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text=""
+        android:text="Enter Need"
+        android:textColor="#FFFFFF"
+        android:background="@color/colorPrimary"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:onClick="openMain"
         android:id="@+id/moveButton"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="    With Socius, everyone is working to support the homeless population. With your contribution, we’re understanding how the location homeless community spends their time across the city so that services can be delivered directly to them."
-        android:layout_alignParentBottom="true"
+        android:layout_centerVertical="true"
+        android:text="When you encounter someone who you think could use homelessness services, let us know through the app. Eventually, we will have connections with community partners who can address immediate needs. Please be aware that, currently, we can only record need"
         android:layout_centerHorizontal="true"
+        android:gravity="center"
         android:id="@+id/textView4"
-        android:textSize="20sp"/>
+        android:textSize="18dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        />
 </RelativeLayout>

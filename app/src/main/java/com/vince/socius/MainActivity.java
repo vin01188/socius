@@ -322,7 +322,7 @@ public class MainActivity extends AppCompatActivity
                     String address = addresses.get(0).getAddressLine(0);
                     String city = addresses.get(0).getAddressLine(1);
                     String country = addresses.get(0).getAddressLine(2);
-                    String newAddress = address + " " + city;
+                    String newAddress = address + "\n" + city;
                     addressTextview.setText(newAddress);
                 }
 

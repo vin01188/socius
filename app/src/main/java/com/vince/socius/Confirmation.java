@@ -51,6 +51,7 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
         medical = false;
         dontknow = false;
 
+
         String hour = "1";
         String amorpm = "PM";
         String minute = "00";

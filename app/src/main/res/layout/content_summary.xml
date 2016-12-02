@@ -9,25 +9,40 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/bg"
+
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.vince.socius.Summary"
     tools:showIn="@layout/activity_summary">
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentRight="true"
+        android:text="Submit"
+        android:layout_marginBottom="0dp"
+        android:id="@+id/cancelButton"
+        android:onClick="submitFinal"
+        android:background="#00000000"
+        android:src="@android:drawable/ic_menu_close_clear_cancel" />
+
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/thanks"
-        android:textSize="20sp"
+        android:textSize="25sp"
         android:textStyle="bold"
-        android:text="Thanks for contributing!\nHere is a summary of your input before you submit."
-        android:layout_marginBottom="10dp"/>
+        android:text="We've received your submission."
+        android:layout_marginBottom="10dp"
+        android:layout_below="@id/cancelButton"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/addressDesc"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:text="Address: "
+        android:textSize="24sp"
+        android:text=""
+        android:textColor="@color/colorPrimary"
         android:layout_below="@+id/thanks"
         />
     
@@ -35,29 +50,59 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/timeDesc"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:text="Time: "
-        android:layout_below="@+id/addressDesc"
+        android:textSize="24sp"
+        android:text=""
+        android:textColor="@color/colorPrimary"
+        android:layout_below="@+id/timeTitle"
         />
     
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" 
         android:id="@+id/numDesc"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:text="Number of People: "
-        android:layout_below="@+id/timeDesc"/>
-    
+        android:textSize="24sp"
+        android:text=""
+        android:layout_below="@+id/numberTitle"
+        android:textColor="@color/colorPrimary"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="17sp"
+        android:id="@+id/needs"
+        android:layout_below="@+id/addressDesc"
+        android:text="Needs "
+        android:layout_marginTop="10dp"
+        />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/serviceDesc"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:text="Services: "
-        android:layout_below="@+id/numDesc"/>
+        android:textSize="24sp"
+        android:text=""
+        android:textColor="@color/colorPrimary"
+        android:layout_below="@+id/needs"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="17sp"
+        android:id="@+id/timeTitle"
+        android:layout_below="@+id/serviceDesc"
+        android:text="Time"
+        android:layout_marginTop="10dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="17sp"
+        android:id="@+id/numberTitle"
+        android:layout_below="@+id/timeDesc"
+        android:text="Number of People"
+        android:layout_marginTop="10dp"
+        />
 
     <Button
         android:layout_width="wrap_content"
@@ -65,18 +110,11 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="50dp"
         android:id="@+id/editAll"
-        android:text="Edit"
-        android:onClick="editFinal"/>
+        android:text="Revise"
+        android:onClick="editFinal"
+        android:background="@color/colorPrimary"
+        android:textColor="#FFFFFF"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:text="Submit"
-        android:layout_marginBottom="50dp"
-        android:onClick="submitFinal"
-        />
 
 
 
