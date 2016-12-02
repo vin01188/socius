@@ -12,6 +12,7 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -32,7 +33,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.os.Handler;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
@@ -805,6 +805,7 @@ public class MainActivity extends AppCompatActivity
                     LatLng temp = getLocationFromAddress(newAddress);
 
                     int hourextra = data.getIntExtra("Minutes", 0);
+                    String minextra = data.getStringExtra("MinutesReal");
 
                     Calendar calendar = Calendar.getInstance();
                     //calendar.add(Calendar.MINUTE, (-1 * minusmin));
@@ -820,7 +821,7 @@ public class MainActivity extends AppCompatActivity
 
 
                     //time format YYYY/MM/DD/HOUR/MIN
-                    String time = year + "/" + month + "/" + day + "/" + hour + "/" + amorpm;
+                    String time = year + "/" + month + "/" + day + "/" + hour + "/" + minextra + "/" + amorpm;
                     Person pers = new Person(newAddress, temp.latitude,temp.longitude,time,mUsername ,description
                                             ,numberPeople);
                     double key = Math.abs( temp.latitude * temp.longitude);
@@ -844,6 +845,8 @@ public class MainActivity extends AppCompatActivity
                         String newAddress = address + " " + city;
 
                         int hourextra = data.getIntExtra("Minutes", 0);
+                        String minextra = data.getStringExtra("MinutesReal");
+
 
                         Calendar calendar = Calendar.getInstance();
                         //calendar.add(Calendar.MINUTE, (-1 * minusmin));
@@ -859,7 +862,7 @@ public class MainActivity extends AppCompatActivity
                         int numberPeople = Integer.parseInt(data.getStringExtra("Number"));
 
                         //time format YYYY/MM/DD/HOUR/MIN
-                        String time = year + "/" + month + "/" + day + "/" + hour + "/" + amorpm;
+                        String time = year + "/" + month + "/" + day + "/" + hour + "/" + minextra + "/" + amorpm;
 
                         Person pers = new Person(newAddress, newLoc.latitude,newLoc.longitude,time,mUsername,description
                                                 ,numberPeople);
@@ -1078,10 +1081,10 @@ public class MainActivity extends AppCompatActivity
                     String month = times[1];
                     String day = times[2];
                     String hour = times[3];
-                    String am = times[4];
+                    String min = times[4];
+                    String am = times[5];
 
-
-                    String markerTime = "Time posted: " + hour + " " + am + "  " +
+                    String markerTime = "Time posted: " + hour + ":"+min+" " + am + "  " +
                             " Date Posted: " + month + "/" + day;
                     LatLng newLoc = new LatLng(temp.getLattitude(), temp.getLongitude());
                     addressMarker = googleMap.addMarker(new MarkerOptions()

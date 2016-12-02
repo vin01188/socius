@@ -27,6 +27,8 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
     EditText number;
     Spinner hourspin;
     Spinner amspin;
+    Spinner minutespin;
+    String minute;
     String hour;
     String amorpm;
     String address1;
@@ -50,6 +52,7 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
 
         String hour = "1";
         String amorpm = "PM";
+        String minute = "00";
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(false);
@@ -59,21 +62,36 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
         description = (EditText) findViewById(R.id.description);
         hourspin = (Spinner) findViewById(R.id.time_spinner);
         amspin = (Spinner) findViewById(R.id.am);
+        minutespin = (Spinner)findViewById(R.id.minute_spinner);
         number = (EditText) findViewById(R.id.number);
 
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.hour_array, android.R.layout.simple_spinner_dropdown_item);
         ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this, R.array.am_array, android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<CharSequence> adaptermin = ArrayAdapter.createFromResource(this, R.array.minute_array, android.R.layout.simple_spinner_dropdown_item);
 
         Calendar calendar = Calendar.getInstance();
         int inithour = calendar.get(Calendar.HOUR);
         int initpos = (inithour - 1) % 12;
+        int initmin = calendar.get(Calendar.MINUTE);
+
+
+        //hour = Integer.toString(inithour);
+
+
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         hourspin.setAdapter(adapter);
         hourspin.setOnItemSelectedListener(this);
 
         hourspin.setSelection(initpos);
+
+        adaptermin.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        minutespin.setAdapter(adaptermin);
+        minutespin.setOnItemSelectedListener(this);
+        minutespin.setSelection(initmin);
+
+        //minute = (String)minutespin.getSelectedItem();
 
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         amspin.setAdapter(adapter1);
@@ -108,7 +126,7 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
             intent.putExtra(EXTRA_ADDRESS, address1);
             intent.putExtra(EXTRA_NUMBER, Integer.toString(num));
             intent.putExtra(EXTRA_SERVICE, desc);
-            intent.putExtra(EXTRA_TIME, newMin + " " + temp);
+            intent.putExtra(EXTRA_TIME, newMin + ":" + minute + " " + temp);
             startActivityForResult(intent, result);
 
 
@@ -128,10 +146,13 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
 
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         String selected = (String) parent.getItemAtPosition(pos);
+
         if (selected.equals("PM") || selected.equals("AM")) {
             amorpm = selected;
-        } else {
+        } else if(parent.getCount() == 12) {
             hour = selected;
+        }else{
+            minute = selected;
         }
     }
 
@@ -187,6 +208,7 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
                 if (isConf) {
 
                     int newMin = Integer.parseInt(hour);
+                    String newMinReal = String.copyValueOf(minute.toCharArray());
                     String desc = "";
                     if(food) desc += "Food | ";
                     if(clothes) desc += "Clothes | ";
@@ -202,6 +224,7 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
 
                     goingBack.putExtra("Number", num);
                     goingBack.putExtra("Minutes", newMin);
+                    goingBack.putExtra("MinutesReal", newMinReal);
                     goingBack.putExtra("AmOrPm", temp);
                     goingBack.putExtra("Confirmation", true);
                     goingBack.putExtra("Description", desc);

@@ -20,9 +20,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Are you sure you want to add "
+            android:text=""
             android:textSize="20sp"
-            android:textStyle="bold"
             android:id="@+id/addressConf"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
@@ -42,7 +41,7 @@
 
     <Spinner
         android:id="@+id/time_spinner"
-        android:layout_width="150dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/linearLayout"
         android:layout_alignLeft="@+id/numPeople"
@@ -50,10 +49,18 @@
         />
 
     <Spinner
+        android:id="@+id/minute_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayout"
+        android:layout_toRightOf="@+id/time_spinner"
+        android:layout_marginTop="20dp"
+        />
+    <Spinner
         android:id="@+id/am"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/time_spinner"
+        android:layout_toRightOf="@id/minute_spinner"
         android:layout_marginTop="20dp"
         android:layout_below="@id/linearLayout"
         />
@@ -67,16 +74,14 @@
         android:textStyle="bold"
         android:id="@+id/numPeople"
         android:layout_below="@+id/time_spinner"
-        android:text="Number of People:  "
-        />
+        android:text="Number of People:  " />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20sp"
-        android:textStyle="bold"
         android:id="@+id/services"
         android:layout_below="@+id/numPeople"
-        android:text="What services are needed? "
+        android:text="  Needs "
         android:layout_marginTop="10dp"
         />
     <EditText
@@ -91,16 +96,22 @@
         />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Submit"
-        android:textStyle="bold"
+        android:text="Submit Information"
+        android:textColor="#FFFFFF"
         android:onClick="yesMark"
         android:id="@+id/button3"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="50dp"/>
-
+        android:layout_marginBottom="50dp"
+        android:background="@color/colorPrimary"
+        android:textAllCaps="false"
+        android:textSize="17sp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        />
+<!--
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -112,61 +123,78 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="50dp"
         />
+-->
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/description"
+        android:hint="Other"
+        android:layout_alignParentEnd="true"
+        android:layout_toRightOf="@+id/checkBoxOther"
+        android:textSize="24sp"
+        android:layout_below="@+id/idk" />
 
     <CheckBox
         android:text="Clothes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/clothesBox"
-        android:layout_alignBaseline="@+id/foodBox"
-        android:layout_alignBottom="@+id/foodBox"
-        android:layout_toEndOf="@+id/foodBox"
-        android:onClick="onCheckBoxClicked"/>
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:id="@+id/description"
-        android:hint="Other"
-        android:layout_below="@+id/idk"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_below="@+id/foodBox"
+        android:onClick="onCheckBoxClicked"
+        android:textSize="24sp"
+        android:textColor="#424242"/>
 
     <CheckBox
         android:text="Toiletries"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/services"
-        android:layout_toEndOf="@+id/medicalBox"
+        android:layout_below="@+id/clothesBox"
         android:id="@+id/toiletBox"
-        android:onClick="onCheckBoxClicked"/>
-
-    <CheckBox
-        android:text="Food"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/foodBox"
-        android:layout_below="@+id/services"
-        android:layout_alignParentStart="true"
-        android:onClick="onCheckBoxClicked"/>
+        android:onClick="onCheckBoxClicked"
+        android:textSize="24sp"
+        android:textColor="#424242"/>
 
     <CheckBox
         android:text="Medical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/medicalBox"
-        android:layout_below="@+id/services"
-        android:layout_toEndOf="@+id/clothesBox"
-        android:onClick="onCheckBoxClicked"/>
+        android:layout_below="@+id/toiletBox"
+        android:onClick="onCheckBoxClicked"
+        android:textSize="24sp"
+        android:textColor="#424242"/>
+
 
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Do not know"
         android:id="@+id/idk"
-        android:layout_below="@+id/foodBox"
         android:onClick="onCheckBoxClicked"
+        android:layout_below="@+id/medicalBox"
+        android:layout_alignParentStart="true"
+        android:textSize="24sp"
+        android:textColor="#424242"/>
+
+    <CheckBox
+        android:text="Food"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/foodBox"
+        android:onClick="onCheckBoxClicked"
+        android:layout_below="@+id/services"
+        android:layout_alignParentStart="true"
+        android:textSize="24sp"
+        android:textColor="#424242"
         />
+
+    <CheckBox
+        android:text=""
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBoxOther"
+        android:layout_below="@+id/idk"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
