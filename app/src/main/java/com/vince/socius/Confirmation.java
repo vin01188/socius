@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -12,7 +11,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -24,14 +22,17 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
     public final static String EXTRA_SERVICE = "com.vince.socius.SERVICE";
 
     EditText description;
-    EditText number;
+    //EditText number;
     Spinner hourspin;
     Spinner amspin;
     Spinner minutespin;
+    Spinner peoplespin;
+
     String minute;
     String hour;
     String amorpm;
     String address1;
+    String numberOfPeople;
 
     boolean food;
     boolean clothes;
@@ -53,6 +54,7 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
         String hour = "1";
         String amorpm = "PM";
         String minute = "00";
+        numberOfPeople = "1";
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(false);
@@ -63,12 +65,15 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
         hourspin = (Spinner) findViewById(R.id.time_spinner);
         amspin = (Spinner) findViewById(R.id.am);
         minutespin = (Spinner)findViewById(R.id.minute_spinner);
-        number = (EditText) findViewById(R.id.number);
+        //number = (EditText) findViewById(R.id.number);
+        peoplespin = (Spinner) findViewById(R.id.numPeople_spinner);
+
 
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.hour_array, android.R.layout.simple_spinner_dropdown_item);
         ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this, R.array.am_array, android.R.layout.simple_spinner_dropdown_item);
         ArrayAdapter<CharSequence> adaptermin = ArrayAdapter.createFromResource(this, R.array.minute_array, android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<CharSequence> adapternum = ArrayAdapter.createFromResource(this, R.array.number_array, android.R.layout.simple_spinner_dropdown_item);
 
         Calendar calendar = Calendar.getInstance();
         int inithour = calendar.get(Calendar.HOUR);
@@ -98,43 +103,39 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
         amspin.setOnItemSelectedListener(this);
         amspin.setSelection(calendar.get(Calendar.AM_PM));
 
+        adapternum.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        peoplespin.setAdapter(adapternum);
+        peoplespin.setOnItemSelectedListener(this);
+        peoplespin.setSelection(0);
+
         Intent intent = getIntent();
         String address = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
         TextView addressConfirmation = (TextView) findViewById(R.id.addressConf);
         address1 = address;
-        addressConfirmation.append(" " + address + "?" + " And when were you at this location?");
+        addressConfirmation.append(address);
+
     }
 
     public void yesMark(View view) {
 
-        if (!(number.getText().toString().equals(""))) {
+        int newMin = Integer.parseInt(hour);
+        String desc = "";
+        if(food) desc += "Food \n";
+        if(clothes) desc += "Clothes \n";
+        if(medical) desc += "Medical \n";
+        if(toilet) desc += "Toiletries \n";
+        if(dontknow) desc += "Do not know \n";
+        if(!description.getText().toString().equals("")) desc += description.getText().toString();
+        //else if(desc.length() > 3) desc = desc.substring(0,desc.length() - 3);
+        String temp = amorpm;
 
-            int newMin = Integer.parseInt(hour);
-            String desc = "";
-            if(food) desc += "Food | ";
-            if(clothes) desc += "Clothes | ";
-            if(medical) desc += "Medical | ";
-            if(toilet) desc += "Toiletries | ";
-            if(dontknow) desc += "Do not know | ";
-            if(!description.getText().toString().equals("")) desc += description.getText().toString();
-            else if(desc.length() > 3) desc = desc.substring(0,desc.length() - 3);
-            int num = Integer.parseInt(number.getText().toString());
-            String temp = amorpm;
-
-            Intent intent = new Intent(this, Summary.class);
-            final int result = 10;
-            intent.putExtra(EXTRA_ADDRESS, address1);
-            intent.putExtra(EXTRA_NUMBER, Integer.toString(num));
-            intent.putExtra(EXTRA_SERVICE, desc);
-            intent.putExtra(EXTRA_TIME, newMin + ":" + minute + " " + temp);
-            startActivityForResult(intent, result);
-
-
-        } else {
-            Toast toast = Toast.makeText(this, "Enter Number", Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER, 0, 0);
-            toast.show();
-        }
+        Intent intent = new Intent(this, Summary.class);
+        final int result = 10;
+        intent.putExtra(EXTRA_ADDRESS, address1);
+        intent.putExtra(EXTRA_NUMBER, numberOfPeople);
+        intent.putExtra(EXTRA_SERVICE, desc);
+        intent.putExtra(EXTRA_TIME, newMin + ":" + minute + " " + temp);
+        startActivityForResult(intent, result);
     }
 
     public void noMark(View view) {
@@ -149,8 +150,10 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
 
         if (selected.equals("PM") || selected.equals("AM")) {
             amorpm = selected;
-        } else if(parent.getCount() == 12) {
+        }else if(parent.getCount() == 12) {
             hour = selected;
+        }else if (parent.getCount() == 10){
+            numberOfPeople = selected;
         }else{
             minute = selected;
         }
@@ -217,12 +220,11 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
                     if(dontknow) desc += "Do not know | ";
                     if(!description.getText().toString().equals("")) desc += description.getText().toString();
                     else if(desc.length() > 3) desc = desc.substring(0,desc.length() - 3);
-                    String num = number.getText().toString();
                     String temp = amorpm;
 
                     Intent goingBack = new Intent();
 
-                    goingBack.putExtra("Number", num);
+                    goingBack.putExtra("Number", numberOfPeople);
                     goingBack.putExtra("Minutes", newMin);
                     goingBack.putExtra("MinutesReal", newMinReal);
                     goingBack.putExtra("AmOrPm", temp);
