@@ -49,5 +49,44 @@
         android:textSize="18dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
+
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/whoWeAre"
+        android:text="WHO WE ARE"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="15dp"
+        android:layout_below="@+id/textView4"
+        android:layout_toLeftOf="@+id/centerView"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/testback"
+        android:layout_marginTop="10dp"
+        android:onClick="whoClicked"
+        />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/centerView"
+        android:layout_below="@+id/textView4"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/howToUse"
+        android:text="HOW TO USE"
+        android:textColor="@color/colorAccent"
+        android:textSize="15dp"
+        android:layout_below="@+id/textView4"
+        android:layout_toRightOf="@+id/centerView"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/testback2"
+        android:layout_marginTop="10dp"
+        android:onClick="howClicked"
         />
 </RelativeLayout>
