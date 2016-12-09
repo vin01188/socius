@@ -68,9 +68,9 @@ public class noGPS extends AppCompatActivity {
             setResult(RESULT_OK,goingBack);
             finish();
         } else{
-            Toast toast = Toast.makeText(this, "Location not turned on", Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER,0,0);
-            toast.show();
+            //Toast toast = Toast.makeText(this, "Location not turned on", Toast.LENGTH_LONG);
+            //toast.setGravity(Gravity.CENTER,0,0);
+            //toast.show();
         }
     }
 
@@ -100,4 +100,9 @@ public class noGPS extends AppCompatActivity {
         return p1;
     }
 
+
+    @Override
+    public void onBackPressed(){
+
+    }
 }

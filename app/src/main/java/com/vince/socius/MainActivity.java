@@ -23,7 +23,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -315,9 +314,10 @@ public class MainActivity extends AppCompatActivity
                 Geocoder geocoder = new Geocoder(MainActivity.this);
                 List<Address> addresses = geocoder.getFromLocation(newLoc.latitude, newLoc.longitude, 1);
                 if (addresses.size() == 0) {
+                    /*
                     Toast toast = Toast.makeText(MainActivity.this, "Not a valid address", Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.CENTER, 0, 0);
-                    toast.show();
+                    toast.show();*/
                 } else {
                     String address = addresses.get(0).getAddressLine(0);
                     String city = addresses.get(0).getAddressLine(1);
@@ -755,9 +755,10 @@ public class MainActivity extends AppCompatActivity
             startActivityForResult(intent, result);
 
         } else {
+            /*
             Toast toast = Toast.makeText(this, "Not a valid address", Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER, 0, 0);
-            toast.show();
+            toast.show();*/
         }
 
     }
@@ -769,9 +770,10 @@ public class MainActivity extends AppCompatActivity
             Geocoder geocoder = new Geocoder(this);
             List<Address> addresses = geocoder.getFromLocation(newLoc.latitude, newLoc.longitude, 1);
             if (addresses.size() == 0) {
+                /*
                 Toast toast = Toast.makeText(this, "Not a valid address", Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
-                toast.show();
+                toast.show();*/
             } else {
                 String address = addresses.get(0).getAddressLine(0);
                 String city = addresses.get(0).getAddressLine(1);
@@ -969,6 +971,7 @@ public class MainActivity extends AppCompatActivity
                     });
                     addPeople();
                 } else {
+
 
                     double lat = data.getDoubleExtra("Lat", 0);
                     double lng = data.getDoubleExtra("Long", 0);
