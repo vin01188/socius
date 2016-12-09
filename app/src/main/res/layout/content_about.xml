@@ -30,7 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:text="When you encounter someone who you think could use homelessness services, let us know through the app. Eventually, we will have connections with community partners who can address immediate needs. Please be aware that, currently, we can only record need"
+        android:text="Socius is an app that uses your contributions to track the needs of the homeless community across the city. We're in Alpha now, but we're hoping to grow our service so that the location data we collect can be used to deliver services directly to those who need it most."
         android:layout_centerHorizontal="true"
         android:gravity="center"
         android:id="@+id/aboutMessage"

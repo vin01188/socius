@@ -107,13 +107,13 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_marginBottom="50dp"
         android:id="@+id/editAll"
         android:text="Revise"
         android:onClick="editFinal"
         android:background="@color/colorPrimary"
-        android:textColor="#FFFFFF"/>
+        android:textColor="#FFFFFF"
+        android:layout_below="@+id/numDesc"/>
 
 
 
