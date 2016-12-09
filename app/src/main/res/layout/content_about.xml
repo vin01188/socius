@@ -13,10 +13,68 @@
     tools:context="com.vince.socius.AboutActivity"
     tools:showIn="@layout/activity_about">
 
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/logo1"
+        android:adjustViewBounds="true"
+        android:layout_centerInParent="true"
+        android:maxWidth="400sp"
+        android:maxHeight="400sp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/logomain"
+        android:layout_above="@+id/aboutMessage"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:text="About page"/>
+        android:layout_centerVertical="true"
+        android:text="When you encounter someone who you think could use homelessness services, let us know through the app. Eventually, we will have connections with community partners who can address immediate needs. Please be aware that, currently, we can only record need"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:id="@+id/aboutMessage"
+        android:textSize="18dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/whoWeAre1"
+        android:text="WHO WE ARE"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="15dp"
+        android:layout_below="@+id/aboutMessage"
+        android:layout_toLeftOf="@+id/centerView1"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/testback"
+        android:layout_marginTop="10dp"
+        android:onClick="whoClicked"
+        />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/centerView1"
+        android:layout_below="@+id/aboutMessage"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/howToUse1"
+        android:text="HOW TO USE"
+        android:textColor="@color/colorAccent"
+        android:textSize="15dp"
+        android:layout_below="@+id/aboutMessage"
+        android:layout_toRightOf="@+id/centerView1"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/testback2"
+        android:layout_marginTop="10dp"
+        android:onClick="howClicked"
+        />
 </RelativeLayout>
