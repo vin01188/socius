@@ -29,6 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -972,7 +973,8 @@ public class MainActivity extends AppCompatActivity
                     addPeople();
                 } else {
 
-
+                    ImageButton curLocButton = (ImageButton) findViewById(R.id.myMapLocationButton);
+                    curLocButton.setVisibility(View.INVISIBLE);
                     double lat = data.getDoubleExtra("Lat", 0);
                     double lng = data.getDoubleExtra("Long", 0);
                     //Toast.makeText(getApplicationContext(), "Latitude " + lat + " Longitude " + lng,Toast.LENGTH_SHORT ).show();
