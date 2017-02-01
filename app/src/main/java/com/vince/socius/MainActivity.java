@@ -309,28 +309,30 @@ public class MainActivity extends AppCompatActivity
     private Runnable disconnectCallback = new Runnable() {
         @Override
         public void run() {
-            LatLng newLoc = googleMap.getCameraPosition().target;
 
-            try {
-                Geocoder geocoder = new Geocoder(MainActivity.this);
-                List<Address> addresses = geocoder.getFromLocation(newLoc.latitude, newLoc.longitude, 1);
-                if (addresses.size() == 0) {
+            if (googleMap != null) {
+                LatLng newLoc = googleMap.getCameraPosition().target;
+
+                try {
+                    Geocoder geocoder = new Geocoder(MainActivity.this);
+                    List<Address> addresses = geocoder.getFromLocation(newLoc.latitude, newLoc.longitude, 1);
+                    if (addresses.size() == 0) {
                     /*
                     Toast toast = Toast.makeText(MainActivity.this, "Not a valid address", Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.CENTER, 0, 0);
                     toast.show();*/
-                } else {
-                    String address = addresses.get(0).getAddressLine(0);
-                    String city = addresses.get(0).getAddressLine(1);
-                    String country = addresses.get(0).getAddressLine(2);
-                    String newAddress = address + "\n" + city;
-                    addressTextview.setText(newAddress);
+                    } else {
+                        String address = addresses.get(0).getAddressLine(0);
+                        String city = addresses.get(0).getAddressLine(1);
+                        String country = addresses.get(0).getAddressLine(2);
+                        String newAddress = address + "\n" + city;
+                        addressTextview.setText(newAddress);
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-
-            } catch (IOException e) {
-                e.printStackTrace();
             }
-
         }
     };
 

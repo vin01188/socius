@@ -23,7 +23,7 @@
         android:maxWidth="400sp"
         android:maxHeight="400sp"
         android:scaleType="fitCenter"
-        android:src="@drawable/logomain"
+        android:src="@drawable/logo"
         android:layout_above="@+id/aboutMessage"/>
 
     <TextView
