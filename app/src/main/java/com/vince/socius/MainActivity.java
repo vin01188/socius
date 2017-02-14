@@ -44,7 +44,6 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -1077,7 +1076,11 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    //for now add people does nothingß
     public void addPeople() {
+
+        return;
+        /*
         googleMap.clear();
         for (int i = 0; i < people.size(); i++) {
             Person temp = people.get(i);
@@ -1102,7 +1105,7 @@ public class MainActivity extends AppCompatActivity
                     markerMap.put(temp, addressMarker);
                 }
             }
-        }
+        }*/
     }
 
 

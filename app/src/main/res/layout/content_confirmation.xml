@@ -1,5 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ScrollView01"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,216 +12,246 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingTop="72dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.vince.socius.Confirmation"
     tools:showIn="@layout/activity_confirmation"
     android:id="@+id/content">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:id="@+id/linearLayout">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textSize="20sp"
-            android:id="@+id/addressConf"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:gravity="center">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/linearLayout">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="20sp"
+                android:id="@+id/addressConf"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+            </LinearLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="17sp"
+            android:id="@+id/timeText"
+            android:layout_below="@+id/description"
+            android:text="  Time "
+            android:layout_marginTop="20dp"
+            />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="17sp"
-        android:id="@+id/timeText"
-        android:layout_below="@+id/checkBoxOther"
-        android:text="  Time "
-        android:layout_marginTop="20dp"
-        />
-
-    <Spinner
-        android:id="@+id/time_spinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/timeText"
-        android:layout_alignLeft="@+id/numPeople"
-        android:layout_marginTop="5dp"
-        />
+        <Spinner
+            android:id="@+id/time_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/timeText"
+            android:layout_alignLeft="@+id/numPeople"
+            android:layout_marginTop="5dp"
+            />
 
 
-    <Spinner
-        android:id="@+id/minute_spinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/timeText"
-        android:layout_toRightOf="@+id/time_spinner"
-        android:layout_marginTop="5dp"
-        />
-    <Spinner
-        android:id="@+id/am"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/minute_spinner"
-        android:layout_marginTop="5dp"
-        android:layout_below="@id/timeText"
-        />
+        <Spinner
+            android:id="@+id/minute_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/timeText"
+            android:layout_toRightOf="@+id/time_spinner"
+            android:layout_marginTop="5dp"
+            />
+        <Spinner
+            android:id="@+id/am"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/minute_spinner"
+            android:layout_marginTop="5dp"
+            android:layout_below="@id/timeText"
+            />
 
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="17sp"
-        android:id="@+id/numPeople"
-        android:layout_below="@+id/time_spinner"
-        android:text="  Number of People "
-        android:layout_marginTop="20dp"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="17sp"
-        android:id="@+id/services"
-        android:layout_below="@+id/linearLayout"
-        android:text="  Needs "
-        android:layout_marginTop="10dp"
-        />
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Submit Information"
-        android:textColor="#FFFFFF"
-        android:onClick="yesMark"
-        android:id="@+id/button3"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="10dp"
-        android:background="@color/colorPrimary"
-        android:textAllCaps="false"
-        android:textSize="17sp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        />
-<!--
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:text="Back"
-        android:id="@+id/yes_button"
-        android:onClick="noMark"
-        android:layout_marginTop="165dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="50dp"
-        />
--->
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/description"
-        android:hint="Other"
-        android:layout_alignParentEnd="true"
-        android:layout_toRightOf="@+id/checkBoxOther"
-        android:textSize="24sp"
-        android:layout_below="@+id/idk"
-        android:padding="5dp"/>
-
-    <CheckBox
-        android:text="Clothes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/clothesBox"
-        android:layout_below="@+id/foodBox"
-        android:onClick="onCheckBoxClicked"
-        android:textSize="24sp"
-        android:textColor="#424242"/>
-
-    <CheckBox
-        android:text="Toiletries"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/clothesBox"
-        android:id="@+id/toiletBox"
-        android:onClick="onCheckBoxClicked"
-        android:textSize="24sp"
-        android:textColor="#424242"/>
-
-    <CheckBox
-        android:text="Medical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/medicalBox"
-        android:layout_below="@+id/toiletBox"
-        android:onClick="onCheckBoxClicked"
-        android:textSize="24sp"
-        android:textColor="#424242"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="17sp"
+            android:id="@+id/numPeople"
+            android:layout_below="@+id/time_spinner"
+            android:text="  Number of People "
+            android:layout_marginTop="20dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="17sp"
+            android:id="@+id/services"
+            android:layout_below="@+id/linearLayout"
+            android:text="  Needs "
+            android:layout_marginTop="10dp"
+            />
 
 
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Do not know"
-        android:id="@+id/idk"
-        android:onClick="onCheckBoxClicked"
-        android:layout_below="@+id/medicalBox"
-        android:layout_alignParentStart="true"
-        android:textSize="24sp"
-        android:textColor="#424242"/>
+    <!--
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="Back"
+            android:id="@+id/yes_button"
+            android:onClick="noMark"
+            android:layout_marginTop="165dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="50dp"
+            />
+    -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@android:color/transparent"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
+        </LinearLayout>
 
-    <CheckBox
-        android:text="Food"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/foodBox"
-        android:onClick="onCheckBoxClicked"
-        android:layout_below="@+id/services"
-        android:layout_alignParentStart="true"
-        android:textSize="24sp"
-        android:textColor="#424242"
-        />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/description"
+            android:hint="Other"
+            android:layout_alignParentEnd="true"
+            android:layout_toRightOf="@+id/checkBoxOther"
+            android:textSize="24sp"
+            android:layout_below="@+id/idk"
+            android:padding="5dp"/>
 
-    <CheckBox
-        android:text=""
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/checkBoxOther"
-        android:layout_below="@+id/idk"
-        android:layout_alignParentStart="true" />
-<!--
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/number"
-        android:hint="Number"
-        android:inputType="number"
-        android:layout_below="@+id/numPeople"/>
-        -->
-    <Spinner
-        android:id="@+id/numPeople_spinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/numPeople"
-        android:layout_alignLeft="@+id/numPeople"
-        android:layout_marginTop="5dp"
+        <CheckBox
+            android:text="Clothes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/clothesBox"
+            android:layout_below="@+id/foodBox"
+            android:onClick="onCheckBoxClicked"
+            android:textSize="24sp"
+            android:textColor="#424242"/>
 
-        />
+        <CheckBox
+            android:text="Toiletries"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/clothesBox"
+            android:id="@+id/toiletBox"
+            android:onClick="onCheckBoxClicked"
+            android:textSize="24sp"
+            android:textColor="#424242"/>
 
+        <CheckBox
+            android:text="Physical Health"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/physicalHealthBox"
+            android:layout_below="@+id/toiletBox"
+            android:onClick="onCheckBoxClicked"
+            android:textSize="24sp"
+            android:textColor="#424242"/>
 
+        <CheckBox
+            android:text="Mental Health"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/mentalHealthBox"
+            android:layout_below="@+id/physicalHealthBox"
+            android:onClick="onCheckBoxClicked"
+            android:textSize="24sp"
+            android:textColor="#424242"/>
 
-</RelativeLayout>
+        <CheckBox
+            android:text="Dental Health"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/dentalHealthBox"
+            android:layout_below="@+id/mentalHealthBox"
+            android:onClick="onCheckBoxClicked"
+            android:textSize="24sp"
+            android:textColor="#424242"/>
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Do not know"
+            android:id="@+id/idk"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/dentalHealthBox"
+            android:layout_alignParentStart="true"
+            android:textSize="24sp"
+            android:textColor="#424242"/>
+
+        <CheckBox
+            android:text="Food"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/foodBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/services"
+            android:layout_alignParentStart="true"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text=""
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/checkBoxOther"
+            android:layout_below="@+id/idk"
+            android:layout_alignParentStart="true" />
+    <!--
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/number"
+            android:hint="Number"
+            android:inputType="number"
+            android:layout_below="@+id/numPeople"/>
+            -->
+        <Spinner
+            android:id="@+id/numPeople_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/numPeople"
+            android:layout_alignLeft="@+id/numPeople"
+            android:layout_marginTop="5dp"
+
+            />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Submit Information"
+            android:textColor="#FFFFFF"
+            android:onClick="yesMark"
+            android:id="@+id/button3"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="10dp"
+            android:background="@color/colorPrimary"
+            android:textAllCaps="false"
+            android:textSize="17sp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_below="@id/numPeople_spinner"
+            />
+
+    </RelativeLayout>
+
+</ScrollView>

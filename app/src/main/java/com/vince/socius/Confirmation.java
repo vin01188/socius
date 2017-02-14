@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -36,7 +38,9 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
 
     boolean food;
     boolean clothes;
-    boolean medical;
+    boolean physicalHealth;
+    boolean mentalHealth;
+    boolean dentalHealth;
     boolean toilet;
     boolean dontknow;
 
@@ -48,7 +52,9 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
         food = false;
         toilet = false;
         clothes = false;
-        medical = false;
+        physicalHealth = false;
+        mentalHealth = false;
+        dentalHealth = false;
         dontknow = false;
 
 
@@ -63,6 +69,30 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
         getSupportActionBar().setDisplayShowHomeEnabled(false);
 
         description = (EditText) findViewById(R.id.description);
+
+        description.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.length() > 0){
+                    CheckBox checkBox = (CheckBox) findViewById(R.id.checkBoxOther);
+                    checkBox.setChecked(true);
+                }else{
+                    CheckBox checkBox = (CheckBox) findViewById(R.id.checkBoxOther);
+                    checkBox.setChecked(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
         hourspin = (Spinner) findViewById(R.id.time_spinner);
         amspin = (Spinner) findViewById(R.id.am);
         minutespin = (Spinner)findViewById(R.id.minute_spinner);
@@ -123,7 +153,9 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
         String desc = "";
         if(food) desc += "Food \n";
         if(clothes) desc += "Clothes \n";
-        if(medical) desc += "Medical \n";
+        if(physicalHealth) desc += "Physical Health \n";
+        if(mentalHealth) desc += "Mental Health \n";
+        if(dentalHealth) desc += "Dental Health \n";
         if(toilet) desc += "Toiletries \n";
         if(dontknow) desc += "Do not know \n";
         if(!description.getText().toString().equals("")) desc += description.getText().toString();
@@ -176,11 +208,23 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
                 else
                     food = false;
                 break;
-            case R.id.medicalBox:
+            case R.id.physicalHealthBox:
                 if(checked)
-                    medical = true;
+                    physicalHealth = true;
                 else
-                    medical = false;
+                    physicalHealth = false;
+                break;
+            case R.id.mentalHealthBox:
+                if(checked)
+                    mentalHealth = true;
+                else
+                    mentalHealth = false;
+                break;
+            case R.id.dentalHealthBox:
+                if(checked)
+                    dentalHealth = true;
+                else
+                    dentalHealth = false;
                 break;
             case R.id.clothesBox:
                 if(checked)
@@ -216,7 +260,9 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
                     String desc = "";
                     if(food) desc += "Food | ";
                     if(clothes) desc += "Clothes | ";
-                    if(medical) desc += "Medical | ";
+                    if(physicalHealth) desc += "Physical Health | ";
+                    if(mentalHealth) desc += "Mental Health | ";
+                    if(dentalHealth) desc += "Dental Health | ";
                     if(toilet) desc += "Toiletries | ";
                     if(dontknow) desc += "Do not know | ";
                     if(!description.getText().toString().equals("")) desc += description.getText().toString();
