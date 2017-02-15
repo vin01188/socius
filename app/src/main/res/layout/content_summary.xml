@@ -24,7 +24,9 @@
         android:id="@+id/cancelButton"
         android:onClick="submitFinal"
         android:background="#00000000"
-        android:src="@android:drawable/ic_menu_close_clear_cancel" />
+
+        android:src="@android:drawable/ic_menu_close_clear_cancel"
+        android:tint="@color/colorPrimaryDark" />
 
 
     <TextView

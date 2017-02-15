@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
@@ -37,6 +38,7 @@ import android.widget.Toast;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
@@ -72,8 +74,8 @@ import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,  OnMapReadyCallback
-        ,GoogleApiClient.OnConnectionFailedListener{
+        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback
+        , GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
 
     NavigationView navigationView = null;
     Toolbar toolbar = null;
@@ -89,6 +91,7 @@ public class MainActivity extends AppCompatActivity
     Marker addressMarker;
 
     private LocationManager locationManager;
+    private Location location;
 
     private String provider;
 
@@ -108,6 +111,7 @@ public class MainActivity extends AppCompatActivity
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
     private GoogleApiClient mGoogleApiClient;
+    private GoogleApiClient lGoogleApiClient;
     public static final String ANONYMOUS = "anonymous";
 
     private static String mUsername;
@@ -142,7 +146,7 @@ public class MainActivity extends AppCompatActivity
 
         setContentView(R.layout.activity_main);
         isStaff = false;
-        markerMap = new HashMap<Person,Marker>();
+        markerMap = new HashMap<Person, Marker>();
 
         addressTextview = (TextView) findViewById(R.id.realAddress);
 
@@ -183,12 +187,11 @@ public class MainActivity extends AppCompatActivity
         });
 
 
-
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
         if (mFirebaseUser == null) {
             // Not signed in, launch the Sign In activity
-            startActivity(new Intent(this,LoginActivity.class));
+            startActivity(new Intent(this, LoginActivity.class));
             finish();
             return;
         } else {
@@ -206,23 +209,28 @@ public class MainActivity extends AppCompatActivity
         }
         Intent intent = new Intent(this, User.class);
         intent.putExtra(EXTRA_UID, mFirebaseUser.getUid());
-        startActivityForResult(intent,5);
+        startActivityForResult(intent, 5);
 
 
+        if (lGoogleApiClient == null) {
+            lGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
 
 
         // For Google Login
         mGoogleApiClient = new GoogleApiClient.Builder(MainActivity.this)
-                .enableAutoManage(MainActivity.this /* FragmentActivity */,  MainActivity.this /* OnConnectionFailedListener */)
+                .enableAutoManage(MainActivity.this /* FragmentActivity */, MainActivity.this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                 .build();
 
 
-
-
-
         personRef = mFirebaseDatabaseReference.child("People");
         people = new ArrayList<Person>();
+        /*
         personRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -231,7 +239,7 @@ public class MainActivity extends AppCompatActivity
 
                 people.add(p);
 
-                if (googleMap != null){
+                if (googleMap != null) {
                     addPeople();
                 }
                 Log.v("E_CHILD_ADDED", Boolean.toString(p.getIsNotDelete()));
@@ -261,6 +269,7 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
+        */
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
@@ -300,7 +309,7 @@ public class MainActivity extends AppCompatActivity
 
 
     //Handles inactivity to update the address in address textbox
-    private Handler disconnectHandler = new Handler(){
+    private Handler disconnectHandler = new Handler() {
         public void handleMessage(Message msg) {
         }
     };
@@ -335,17 +344,17 @@ public class MainActivity extends AppCompatActivity
         }
     };
 
-    public void resetDisconnectTimer(){
+    public void resetDisconnectTimer() {
         disconnectHandler.removeCallbacks(disconnectCallback);
         disconnectHandler.postDelayed(disconnectCallback, DISCONNECT_TIMEOUT);
     }
 
-    public void stopDisconnectTimer(){
+    public void stopDisconnectTimer() {
         disconnectHandler.removeCallbacks(disconnectCallback);
     }
 
     @Override
-    public void onUserInteraction(){
+    public void onUserInteraction() {
         resetDisconnectTimer();
     }
 
@@ -355,17 +364,23 @@ public class MainActivity extends AppCompatActivity
         resetDisconnectTimer();
     }
 
+    protected void onStart() {
+        mGoogleApiClient.connect();
+        super.onStart();
+    }
+
     @Override
     public void onStop() {
+        mGoogleApiClient.disconnect();
         super.onStop();
         stopDisconnectTimer();
     }
 
     @Override
-    public void onMapReady(GoogleMap map ) {
+    public void onMapReady(GoogleMap map) {
         googleMap = map;
 
-        final MapWrapperLayout mapWrapperLayout = (MapWrapperLayout)findViewById(R.id.map_relative_layout);
+        final MapWrapperLayout mapWrapperLayout = (MapWrapperLayout) findViewById(R.id.map_relative_layout);
 
         // MapWrapperLayout initialization
         // 39 - default marker height
@@ -375,23 +390,22 @@ public class MainActivity extends AppCompatActivity
         // Create different info windows for staff and users.
         // We want to reuse the info window for all the markers,
         // so let's create only one class member instance
-        this.infoWindow = (ViewGroup)getLayoutInflater().inflate(R.layout.infowindow, null);
-        this.infoTitle = (TextView)infoWindow.findViewById(R.id.title);
-        this.infoSnippet = (TextView)infoWindow.findViewById(R.id.snippet);
-        this.infoDescription = (TextView)infoWindow.findViewById(R.id.description);
+        this.infoWindow = (ViewGroup) getLayoutInflater().inflate(R.layout.infowindow, null);
+        this.infoTitle = (TextView) infoWindow.findViewById(R.id.title);
+        this.infoSnippet = (TextView) infoWindow.findViewById(R.id.snippet);
+        this.infoDescription = (TextView) infoWindow.findViewById(R.id.description);
         this.infoNumber = (TextView) infoWindow.findViewById(R.id.numberpeop);
 
 
         //repeat for delete button
-        this.infoButton = (Button)infoWindow.findViewById(R.id.button);
-        this.editButton = (Button)infoWindow.findViewById(R.id.buttonEdit);
+        this.infoButton = (Button) infoWindow.findViewById(R.id.button);
+        this.editButton = (Button) infoWindow.findViewById(R.id.buttonEdit);
 
         // Setting custom OnTouchListener which deals with the pressed state
         // so it shows up
         this.infoButtonListener = new OnInfoWindowElemTouchListener(infoButton,
                 getResources().getDrawable(R.drawable.button_pressed),
-                getResources().getDrawable(R.drawable.button_pressed))
-        {
+                getResources().getDrawable(R.drawable.button_pressed)) {
             @Override
             protected void onClickConfirmed(View v, Marker marker) {
                 // Here we can perform some action triggered after clicking the button
@@ -402,7 +416,7 @@ public class MainActivity extends AppCompatActivity
                 addPeople();
                 double lat = temp.getLattitude();
                 double lng = temp.getLongitude();
-                double key = Math.abs(lat* lng);
+                double key = Math.abs(lat * lng);
                 String keystring = Double.toString(key);
                 String keystringnew = keystring.replaceAll("\\.", "");
                 Log.v("E_KEY_ADDED", keystringnew);
@@ -445,7 +459,7 @@ public class MainActivity extends AppCompatActivity
                 // Setting up the infoWindow with current's marker info
                 infoTitle.setText(marker.getTitle());
                 infoSnippet.setText(marker.getSnippet());
-                Person temp = (Person)marker.getTag();
+                Person temp = (Person) marker.getTag();
                 infoDescription.setText("Services needed: " + temp.getDescription());
                 infoNumber.setText("Number of people: " + temp.getNumber());
                 infoButtonListener.setMarker(marker);
@@ -479,10 +493,10 @@ public class MainActivity extends AppCompatActivity
                 // to handle the case where the user grants the permission. See the documentation
                 // for ActivityCompat#requestPermissions for more details.
                 ActivityCompat.requestPermissions(this,
-                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION},
                         MY_PERMISSIONS_REQUEST_READ_CONTACTS);
                 return;
-            }else {
+            } else {
 
                 locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
                 // Define the criteria how to select the location provider -> use
@@ -490,11 +504,13 @@ public class MainActivity extends AppCompatActivity
                 Criteria criteria = new Criteria();
                 provider = locationManager.getBestProvider(criteria, true);
                 Location location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
-                while (location == null) {
+                int times =0;
+                while (location == null && times < 4) {
                     location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+                    times++;
                 }
-                double lat = location.getLatitude();
-                double lng = location.getLongitude();
+                double lat = location == null ? 40.4406 : location.getLatitude();
+                double lng = location == null ? -79.9959 : location.getLongitude();
                 //Toast.makeText(getApplicationContext(), "Latitude " + lat + " Longitude " + lng,Toast.LENGTH_SHORT ).show();
 
                 LatLng coordinate = new LatLng(lat, lng);
@@ -528,7 +544,7 @@ public class MainActivity extends AppCompatActivity
                 googleMap.setBuildingsEnabled(false);
 
 
-                //googleMap.getUiSettings().setZoomControlsEnabled(true);
+                googleMap.getUiSettings().setZoomControlsEnabled(true);
 
                 googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     public boolean onMarkerClick(Marker marker) {
@@ -586,10 +602,10 @@ public class MainActivity extends AppCompatActivity
                         // to handle the case where the user grants the permission. See the documentation
                         // for ActivityCompat#requestPermissions for more details.
                         ActivityCompat.requestPermissions(this,
-                                new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                                new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION},
                                 MY_PERMISSIONS_REQUEST_READ_CONTACTS);
                     }
-                    Location location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+                    location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
                     while (location == null) {
                         location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
                     }
@@ -702,7 +718,7 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
-        }else if (id == R.id.action_logout) {
+        } else if (id == R.id.action_logout) {
             // User logout
             mFirebaseAuth.signOut();
             isStaff = false;
@@ -714,7 +730,6 @@ public class MainActivity extends AppCompatActivity
             finish();
             return true;
         }
-
 
 
         return super.onOptionsItemSelected(item);
@@ -730,7 +745,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
-            startActivity(new Intent(this,AboutActivity.class));
+            startActivity(new Intent(this, AboutActivity.class));
 
         } else if (id == R.id.nav_slideshow) {
 
@@ -826,9 +841,9 @@ public class MainActivity extends AppCompatActivity
 
                     //time format YYYY/MM/DD/HOUR/MIN
                     String time = year + "/" + month + "/" + day + "/" + hour + "/" + minextra + "/" + amorpm;
-                    Person pers = new Person(newAddress, temp.latitude,temp.longitude,time,mUsername ,description
-                                            ,numberPeople);
-                    double key = Math.abs( temp.latitude * temp.longitude);
+                    Person pers = new Person(newAddress, temp.latitude, temp.longitude, time, mUsername, description
+                            , numberPeople);
+                    double key = Math.abs(temp.latitude * temp.longitude);
                     String keystring = Double.toString(key);
                     String keystringnew = keystring.replaceAll("\\.", "");
                     Log.v("E_KEY_ADDED", keystringnew);
@@ -868,8 +883,8 @@ public class MainActivity extends AppCompatActivity
                         //time format YYYY/MM/DD/HOUR/MIN
                         String time = year + "/" + month + "/" + day + "/" + hour + "/" + minextra + "/" + amorpm;
 
-                        Person pers = new Person(newAddress, newLoc.latitude,newLoc.longitude,time,mUsername,description
-                                                ,numberPeople);
+                        Person pers = new Person(newAddress, newLoc.latitude, newLoc.longitude, time, mUsername, description
+                                , numberPeople);
                         double key = Math.abs(newLoc.latitude * newLoc.longitude);
                         String keystring = Double.toString(key);
                         String keystringnew = keystring.replaceAll("\\.", "");
@@ -889,14 +904,60 @@ public class MainActivity extends AppCompatActivity
                     // default
                     Criteria criteria = new Criteria();
                     provider = locationManager.getBestProvider(criteria, true);
-                    Location location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+
+                    location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+
+
+                    /*
+                    locationManager = (LocationManager)getApplicationContext().getSystemService(LOCATION_SERVICE);
+                    List<String> providers = locationManager.getProviders(true);
+                    Location bestLocation = null;
+                    for (String provider : providers) {
+                        Location l = locationManager.getLastKnownLocation(provider);
+                        if (l == null) {
+                            continue;
+                        }
+                        if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                            // Found best last known location: %s", l);
+                            bestLocation = l;
+                        }
+                    }
+                    */
+                    /*
+                    Location location =null;
+
+                    locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                    locationManager.requestLocationUpdates(
+                            LocationManager.GPS_PROVIDER,
+                            0,
+                            0, this);
+                    Log.d("GPS", "GPS Enabled");
+
+                    while (locationManager != null && location ==null) {
+                        location = locationManager
+                                .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                        if (location != null) {
+                            latitude = location.getLatitude();
+                            longitude = location.getLongitude();
+                        }
+                    }*/
 
                     // waits for a location from the location Manager
-                    while (location == null) {
-                        location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+                    //infinite loop here?
+                    //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0, 0, (LocationListener) this);
+//                    while (location == null) {
+                        //location = LocationServices.FusedLocationApi.getLastLocation(
+                        //        lGoogleApiClient)
+                    location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+                    double lat;
+                    double lng;
+                    if (location == null){
+                        lat = 40.4406;
+                        lng = -79.9959;
+                    }else {
+                        lat = location.getLatitude();
+                        lng = location.getLongitude();
                     }
-                    double lat = location.getLatitude();
-                    double lng = location.getLongitude();
                     //Toast.makeText(getApplicationContext(), "Latitude " + lat + " Longitude " + lng,Toast.LENGTH_SHORT ).show();
 
                     LatLng coordinate = new LatLng(lat, lng);
@@ -914,7 +975,7 @@ public class MainActivity extends AppCompatActivity
                         // to handle the case where the user grants the permission. See the documentation
                         // for ActivityCompat#requestPermissions for more details.
                         ActivityCompat.requestPermissions(this,
-                                new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                                new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION},
                                 MY_PERMISSIONS_REQUEST_READ_CONTACTS);
                         return;
                     }
@@ -1025,7 +1086,7 @@ public class MainActivity extends AppCompatActivity
                     });
                     addPeople();
                 }
-            }else if (requestCode == 4){
+            } else if (requestCode == 4) {
                 {
                     boolean isConf = data.getBooleanExtra("Confirmation", false);
                     if (isConf) {
@@ -1060,7 +1121,7 @@ public class MainActivity extends AppCompatActivity
                         //time format YYYY/MM/DD/HOUR/MIN
                         String time = year + "/" + month + "/" + day + "/" + hour + "/" + amorpm;
                         currentEdit.setTime(time);
-                        double key = Math.abs( currentEdit.getLattitude() * currentEdit.getLongitude());
+                        double key = Math.abs(currentEdit.getLattitude() * currentEdit.getLongitude());
                         String keystring = Double.toString(key);
                         String keystringnew = keystring.replaceAll("\\.", "");
                         Log.v("E_KEY_ADDED", keystringnew);
@@ -1069,8 +1130,8 @@ public class MainActivity extends AppCompatActivity
                         addPeople();
                     }
                 }
-            }else if(requestCode == 5){
-                isStaff = data.getBooleanExtra("IsStaff",false);
+            } else if (requestCode == 5) {
+                isStaff = data.getBooleanExtra("IsStaff", false);
                 addPeople();
             }
         }
@@ -1108,14 +1169,14 @@ public class MainActivity extends AppCompatActivity
         }*/
     }
 
-
+//check this
     public Object getMyLocation() {
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         // Define the criteria how to select the locatioin provider -> use
         // default
         Criteria criteria = new Criteria();
         provider = locationManager.getBestProvider(criteria, true);
-        Location location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+        location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
 
         // waits for a location from the location Manager
         while (location == null) {
@@ -1132,7 +1193,7 @@ public class MainActivity extends AppCompatActivity
                 // to handle the case where the user grants the permission. See the documentation
                 // for ActivityCompat#requestPermissions for more details.
                 ActivityCompat.requestPermissions(this,
-                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION},
                         MY_PERMISSIONS_REQUEST_READ_CONTACTS);
                 return null;
             }
@@ -1147,6 +1208,31 @@ public class MainActivity extends AppCompatActivity
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 18.0f));
 
         return null;
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+            return;
+        }
+        location = LocationServices.FusedLocationApi.getLastLocation(
+                lGoogleApiClient);
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
     }
 
     class PlaceAMarker extends AsyncTask<String, String, String> {
@@ -1288,5 +1374,26 @@ public class MainActivity extends AppCompatActivity
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int)(dp * scale + 0.5f);
     }
+/*
+    @Override
+    public void onLocationChanged(Location location) {
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        Log.d("Latitude","status");
+    }
+
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        Log.d("Latitude","disable");
+    }*/
+
 
 }
+
