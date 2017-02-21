@@ -5,9 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
-import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -92,6 +92,7 @@ public class MainActivity extends AppCompatActivity
 
     private LocationManager locationManager;
     private Location location;
+    private boolean isInitialLocation;
 
     private String provider;
 
@@ -143,6 +144,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        isInitialLocation = false;
 
         setContentView(R.layout.activity_main);
         isStaff = false;
@@ -501,16 +504,50 @@ public class MainActivity extends AppCompatActivity
                 locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
                 // Define the criteria how to select the location provider -> use
                 // default
+                LocationListener locationListener = new LocationListener() {
+                    @Override
+                    public void onLocationChanged(Location location1) {
+                        location = location1;
+                        if (!isInitialLocation) {
+                            getMyLocation();
+                            isInitialLocation = true;
+                        }
+                        Log.d("TEst", "Abc");
+                    }
+
+                    @Override
+                    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                    }
+
+                    @Override
+                    public void onProviderEnabled(String provider) {
+
+                    }
+
+                    @Override
+                    public void onProviderDisabled(String provider) {
+
+                    }
+                };
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,locationListener);
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0,locationListener);
+
+                Log.d("Hi","Hi");
+                /*
+
+
                 Criteria criteria = new Criteria();
                 provider = locationManager.getBestProvider(criteria, true);
-                Location location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 int times =0;
                 while (location == null && times < 4) {
-                    location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+                    location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                     times++;
-                }
+                }*/
                 double lat = location == null ? 40.4406 : location.getLatitude();
                 double lng = location == null ? -79.9959 : location.getLongitude();
+
                 //Toast.makeText(getApplicationContext(), "Latitude " + lat + " Longitude " + lng,Toast.LENGTH_SHORT ).show();
 
                 LatLng coordinate = new LatLng(lat, lng);
@@ -588,11 +625,8 @@ public class MainActivity extends AppCompatActivity
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     //might need to add grandResults[1]
 
-                    locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
                     // Define the criteria how to select the location provider -> use
                     // default
-                    Criteria criteria = new Criteria();
-                    provider = locationManager.getBestProvider(criteria, true);
                     if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         // TODO: Consider calling
                         //    ActivityCompat#requestPermissions
@@ -605,12 +639,47 @@ public class MainActivity extends AppCompatActivity
                                 new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION},
                                 MY_PERMISSIONS_REQUEST_READ_CONTACTS);
                     }
-                    location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
-                    while (location == null) {
-                        location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
-                    }
-                    double lat = location.getLatitude();
-                    double lng = location.getLongitude();
+
+                    locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                    // Define the criteria how to select the locatioin provider -> use
+                    // default
+                    //Criteria criteria = new Criteria();
+                    //provider = locationManager.getBestProvider(criteria, true);
+
+                    LocationListener locationListener = new LocationListener() {
+                        @Override
+                        public void onLocationChanged(Location location1) {
+                            //called when a new location is found by the network location provider.
+                            Log.d("Location", "Location Found");
+                            location = location1;
+                            if (!isInitialLocation) {
+                                getMyLocation();
+                                isInitialLocation = true;
+                            }
+                        }
+
+                        @Override
+                        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                        }
+
+                        @Override
+                        public void onProviderEnabled(String provider) {
+
+                        }
+
+                        @Override
+                        public void onProviderDisabled(String provider) {
+
+                        }
+                    };
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,0,locationListener);
+                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0,0,locationListener);
+
+
+                    double lat = location == null ? 40.4406 : location.getLatitude();
+                    double lng = location == null ? -79.9959 : location.getLongitude();
+
                     //Toast.makeText(getApplicationContext(), "Latitude " + lat + " Longitude " + lng,Toast.LENGTH_SHORT ).show();
 
                     LatLng coordinate = new LatLng(lat, lng);
@@ -902,10 +971,41 @@ public class MainActivity extends AppCompatActivity
                     locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
                     // Define the criteria how to select the locatioin provider -> use
                     // default
-                    Criteria criteria = new Criteria();
-                    provider = locationManager.getBestProvider(criteria, true);
+                    //Criteria criteria = new Criteria();
+                    //provider = locationManager.getBestProvider(criteria, true);
 
-                    location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+                    LocationListener locationListener = new LocationListener() {
+                        @Override
+                        public void onLocationChanged(Location location1) {
+                            //called when a new location is found by the network location provider.
+                            Log.d("Location", "Location Found");
+                            location = location1;
+                            if (!isInitialLocation) {
+                                getMyLocation();
+                                isInitialLocation = true;
+                            }
+                        }
+
+                        @Override
+                        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                        }
+
+                        @Override
+                        public void onProviderEnabled(String provider) {
+
+                        }
+
+                        @Override
+                        public void onProviderDisabled(String provider) {
+
+                        }
+                    };
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,0,locationListener);
+                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0,0,locationListener);
+
+                    //location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+
 
 
                     /*
@@ -948,7 +1048,9 @@ public class MainActivity extends AppCompatActivity
 //                    while (location == null) {
                         //location = LocationServices.FusedLocationApi.getLastLocation(
                         //        lGoogleApiClient)
-                    location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+
+
+                    //location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
                     double lat;
                     double lng;
                     if (location == null){
@@ -1171,13 +1273,14 @@ public class MainActivity extends AppCompatActivity
 
 //check this
     public Object getMyLocation() {
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        //locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         // Define the criteria how to select the locatioin provider -> use
         // default
+        /*
         Criteria criteria = new Criteria();
         provider = locationManager.getBestProvider(criteria, true);
-        location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
-
+        location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        */
         // waits for a location from the location Manager
         while (location == null) {
             if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -1197,7 +1300,7 @@ public class MainActivity extends AppCompatActivity
                         MY_PERMISSIONS_REQUEST_READ_CONTACTS);
                 return null;
             }
-            location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         }
         double lat = location.getLatitude();
         double lng = location.getLongitude();
@@ -1227,6 +1330,9 @@ public class MainActivity extends AppCompatActivity
         }
         location = LocationServices.FusedLocationApi.getLastLocation(
                 lGoogleApiClient);
+        if (location != null){
+
+        }
 
     }
 
