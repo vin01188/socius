@@ -22,6 +22,7 @@ public class User extends AppCompatActivity {
     Button submit;
     Button howButton;
     Button whyButton;
+    Button openButton;
     TextView mainMessage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,7 @@ public class User extends AppCompatActivity {
         submit = (Button)findViewById(R.id.moveButton);
         whyButton = (Button) findViewById(R.id.whoWeAre);
         howButton = (Button) findViewById(R.id.howToUse);
+        openButton = (Button) findViewById(R.id.openButton);
         mainMessage = (TextView) findViewById(R.id.textView4);
 
         Intent intent = getIntent();
@@ -41,9 +43,11 @@ public class User extends AppCompatActivity {
             public void run(){
                 //put in button here
                 if (isStaff) {
-                    submit.setText("Open Requests");
+                    //submit.setText("Open Requests");
+                    openButton.setVisibility(View.VISIBLE);
                 }else{
-                    submit.setText("Let us know");
+                    //submit.setText("Let us know");
+                    openButton.setVisibility(View.GONE);
                 }
 
 
@@ -57,6 +61,14 @@ public class User extends AppCompatActivity {
         Intent goingBack = new Intent();
         setResult(RESULT_OK, goingBack);
         goingBack.putExtra("IsStaff",isStaff);
+        goingBack.putExtra("IsOpen", false);
+        finish();
+    }
+
+    public void openRequests(View view){
+        Intent goingBack = new Intent();
+        setResult(RESULT_OK, goingBack);
+        goingBack.putExtra("IsOpen", true);
         finish();
     }
 

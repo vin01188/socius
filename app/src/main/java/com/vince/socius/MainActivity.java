@@ -46,6 +46,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -233,7 +234,7 @@ public class MainActivity extends AppCompatActivity
 
         personRef = mFirebaseDatabaseReference.child("People");
         people = new ArrayList<Person>();
-        /*
+
         personRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -272,7 +273,7 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
-        */
+
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
@@ -412,7 +413,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             protected void onClickConfirmed(View v, Marker marker) {
                 // Here we can perform some action triggered after clicking the button
-                //Toast.makeText(MainActivity.this, marker.getTitle() + "'s button clicked!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, marker.getTitle() + "'s button clicked!", Toast.LENGTH_SHORT).show();
 
                 Person temp = (Person) marker.getTag();
                 temp.delete();
@@ -598,6 +599,7 @@ public class MainActivity extends AppCompatActivity
                                 return true;
                             }
                         }
+                        //Add Activity Here
 
                         // Open the info window for the marker
                         marker.showInfoWindow();
@@ -1233,21 +1235,54 @@ public class MainActivity extends AppCompatActivity
                     }
                 }
             } else if (requestCode == 5) {
+                //From User Page
                 isStaff = data.getBooleanExtra("IsStaff", false);
-                addPeople();
+                boolean isOpenRequest = data.getBooleanExtra("IsOpen", false);
+                if (isOpenRequest) {
+                    //add all pins
+                    openRequestPins();
+                }else{
+                    googleMap.clear();
+                }
             }
         }
     }
 
+    public void openRequestPins() {
+        googleMap.clear();
+        for (int i = 0; i < people.size(); i++) {
+            Person temp = people.get(i);
+            String[] times = temp.getTime().split("/");
+            if (times.length >= 5) {
+                String year = times[0];
+                String month = times[1];
+                String day = times[2];
+                String hour = times[3];
+                String min = times[4];
+                String am = times[5];
+
+                String markerTime = "Time posted: " + hour + ":" + min + " " + am + "  " +
+                        " Date Posted: " + month + "/" + day;
+                LatLng newLoc = new LatLng(temp.getLattitude(), temp.getLongitude());
+                addressMarker = googleMap.addMarker(new MarkerOptions()
+                        .position(newLoc)
+                        .title(temp.getAddress())
+                        .snippet(markerTime));
+                addressMarker.setTag(temp);
+                markerMap.put(temp, addressMarker);
+            }
+        }
+    }
     //for now add people does nothing
     public void addPeople() {
+
 
         return;
         /*
         googleMap.clear();
         for (int i = 0; i < people.size(); i++) {
             Person temp = people.get(i);
-            if (temp.getIsNotDelete() &&(isStaff || temp.getPoster().equals(mUsername))) {
+            if (temp.getIsNotDelete() && (isStaff || temp.getPoster().equals(mUsername))) {
                 String[] times = temp.getTime().split("/");
                 if (times.length >= 5) {
                     String year = times[0];
@@ -1268,7 +1303,9 @@ public class MainActivity extends AppCompatActivity
                     markerMap.put(temp, addressMarker);
                 }
             }
-        }*/
+        }
+        */
+
     }
 
 //check this
