@@ -1,21 +1,92 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:id="@+id/activity_login"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:paddingBottom="@dimen/activity_vertical_margin"
+android:paddingLeft="@dimen/activity_horizontal_margin"
+android:paddingRight="@dimen/activity_horizontal_margin"
+android:paddingTop="@dimen/activity_vertical_margin"
+tools:context="com.vince.socius.LoginActivity">
+
+
+<ImageView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/logo"
+    android:adjustViewBounds="true"
+    android:layout_centerInParent="true"
+    android:maxWidth="400sp"
+    android:maxHeight="400sp"
+    android:scaleType="fitCenter"
+    android:src="@drawable/logo"
+    android:layout_above="@+id/textView4"
+    />
+<Button
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.vince.socius.LoginActivity">
+    android:layout_height="wrap_content"
+    android:text="Login"
+    android:textColor="#FFFFFF"
+    android:background="@color/colorPrimary"
+    android:layout_centerVertical="true"
+    android:layout_centerHorizontal="true"
+    android:onClick="openMain"
+    android:id="@+id/sign_in_button"
+    android:layout_alignParentBottom="true"
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp"
+    />
 
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/sign_in_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="visible"
-        android:layout_gravity="center"/>
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerVertical="true"
+    android:text="Socius is an app that uses your contributions to track the needs of the homeless community across the city. We're in Alpha now, but we're hoping to grow our service so that the location data we collect can be used to deliver services directly to those who need it most."
+    android:layout_centerHorizontal="true"
+    android:gravity="center"
+    android:id="@+id/textView4"
+    android:textSize="18dp"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
 
-</LinearLayout>
+    />
+
+<Button
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/whoWeAre"
+    android:text="WHO WE ARE"
+    android:textColor="@color/colorPrimaryDark"
+    android:textSize="15dp"
+    android:layout_below="@+id/textView4"
+    android:layout_toLeftOf="@+id/centerView"
+    android:layout_marginEnd="10dp"
+    android:background="@drawable/testback"
+    android:layout_marginTop="10dp"
+    android:onClick="whoClicked"
+    />
+
+<View
+    android:layout_width="0dp"
+    android:layout_height="1dp"
+    android:layout_centerHorizontal="true"
+    android:id="@+id/centerView"
+    android:layout_below="@+id/textView4"
+    />
+
+<Button
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/howToUse"
+    android:text="HOW TO USE"
+    android:textColor="@color/colorAccent"
+    android:textSize="15dp"
+    android:layout_below="@+id/textView4"
+    android:layout_toRightOf="@+id/centerView"
+    android:layout_marginStart="10dp"
+    android:background="@drawable/testback2"
+    android:layout_marginTop="10dp"
+    android:onClick="howClicked"
+    />
+</RelativeLayout>

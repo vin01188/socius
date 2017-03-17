@@ -3,9 +3,12 @@ package com.vince.socius;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -13,7 +16,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -27,7 +29,10 @@ public class LoginActivity extends AppCompatActivity implements
 
     private static final String TAG = "LoginActivity";
     private static final int RC_SIGN_IN = 9001;
-    private SignInButton mSignInButton;
+    private Button mSignInButton;
+    Button howButton;
+    Button whyButton;
+    TextView mainMessage;
     private GoogleApiClient mGoogleApiClient;
     GoogleSignInAccount account;
 
@@ -40,7 +45,10 @@ public class LoginActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_login);
 
         // Set click listener for sign-in button
-        mSignInButton = (SignInButton) findViewById(R.id.sign_in_button);
+        mSignInButton = (Button) findViewById(R.id.sign_in_button);
+        whyButton = (Button) findViewById(R.id.whoWeAre);
+        howButton = (Button) findViewById(R.id.howToUse);
+        mainMessage = (TextView) findViewById(R.id.textView4);
         mSignInButton.setOnClickListener(this);
 
         // Google Sign In
@@ -137,5 +145,27 @@ public class LoginActivity extends AppCompatActivity implements
         // be available.
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
+    }
+
+    public void whoClicked(View view){
+        whyButton.setBackgroundResource(R.drawable.testback);
+        howButton.setBackgroundResource(R.drawable.testback2);
+        mainMessage.setText("Socius is an app that uses your contributions to track the needs of the " +
+                "homeless community across the city. We're in Alpha now, but we're hoping to grow our service " +
+                "so that the location data we collect can be used to " +
+                "deliver services directly to those who need it most.");
+        whyButton.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+        howButton.setTextColor(ContextCompat.getColor(this,R.color.colorAccent));
+    }
+
+    public void howClicked (View view){
+        howButton.setBackgroundResource(R.drawable.testback);
+        whyButton.setBackgroundResource(R.drawable.testback2);
+        mainMessage.setText("When you encounter someone who you think could use homelessness" +
+                " services, let us know through the app. Eventually, we will have connections with" +
+                " community partners who can address immediate needs. Please be aware that, " +
+                "currently, we can only record need.");
+        howButton.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+        whyButton.setTextColor(ContextCompat.getColor(this,R.color.colorAccent));
     }
 }

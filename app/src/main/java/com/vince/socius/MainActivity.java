@@ -1239,7 +1239,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    //for now add people does nothingß
+    //for now add people does nothing
     public void addPeople() {
 
         return;
