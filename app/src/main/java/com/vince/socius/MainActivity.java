@@ -623,6 +623,7 @@ public class MainActivity extends AppCompatActivity
         // Setting up the infoWindow with current's marker info
         String time = marker.getSnippet();
         Person temp = (Person) marker.getTag();
+        currentEdit = temp;
         String address =  marker.getTitle();
         String description = temp.getDescription();
         String number = "" + temp.getNumber();
@@ -1267,20 +1268,20 @@ public class MainActivity extends AppCompatActivity
                 }
             } else if (requestCode == 6){
                 //From Admin page
+                // Buggy fix later
                 Log.d("DELETEDPIN","test");
 
-                boolean isDelete = data.getBooleanExtra("IsDelete", false);
-                Person temp = data.getParcelableExtra("Temp");
+                boolean isDelete = data.getBooleanExtra("isDelete", false);
                 if (isDelete){
-                    temp.delete();
+                    currentEdit.delete();
                     openRequestPins();
-                    double lat = temp.getLattitude();
-                    double lng = temp.getLongitude();
+                    double lat = currentEdit.getLattitude();
+                    double lng = currentEdit.getLongitude();
                     double key = Math.abs(lat * lng);
                     String keystring = Double.toString(key);
                     String keystringnew = keystring.replaceAll("\\.", "");
                     Log.v("E_KEY_ADDED", keystringnew);
-                    personRef.child("test" + keystringnew).setValue(temp);
+                    personRef.child("test" + keystringnew).setValue(currentEdit);
                 }
 
             }

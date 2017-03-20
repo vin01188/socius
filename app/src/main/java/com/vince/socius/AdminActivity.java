@@ -52,7 +52,6 @@ public class AdminActivity extends AppCompatActivity {
         goingBack.putExtra("Temp", current);
         goingBack.putExtra("isDelete", true);
         setResult(RESULT_OK, goingBack);
-        current.setIsNotDelete(false);
         finish();
     }
 

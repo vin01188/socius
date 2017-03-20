@@ -44,6 +44,7 @@ public class User extends AppCompatActivity {
                 //put in button here
                 if (isStaff) {
                     //submit.setText("Open Requests");
+                    isStaff = true;
                     openButton.setVisibility(View.VISIBLE);
                 }else{
                     //submit.setText("Let us know");
@@ -68,6 +69,7 @@ public class User extends AppCompatActivity {
     public void openRequests(View view){
         Intent goingBack = new Intent();
         setResult(RESULT_OK, goingBack);
+        goingBack.putExtra("IsStaff",isStaff);
         goingBack.putExtra("IsOpen", true);
         finish();
     }
