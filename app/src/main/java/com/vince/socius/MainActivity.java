@@ -587,27 +587,29 @@ public class MainActivity extends AppCompatActivity
                 googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     public boolean onMarkerClick(Marker marker) {
                         // Check if there is an open info window
-                        if (lastOpened != null) {
+                        //if (lastOpened != null) {
                             // Close the info window
-                            lastOpened.hideInfoWindow();
+                        //    lastOpened.hideInfoWindow();
 
                             // Is the marker the same marker that was already open
-                            if (lastOpened.equals(marker)) {
+                        //    if (lastOpened.equals(marker)) {
                                 // Nullify the lastOpened object
-                                lastOpened = null;
+                        //        lastOpened = null;
                                 // Return so that the info window isn't opened again
-                                return true;
-                            }
-                        }
+                        //        return true;
+                        //    }
+                        //}
                         //Add Activity Here
 
                         // Open the info window for the marker
-                        marker.showInfoWindow();
+                        //marker.showInfoWindow();
                         // Re-assign the last opened such that we can close it later
-                        lastOpened = marker;
+                        //lastOpened = marker;
 
+                        markerClick(marker);
                         // Event was handled by our code do not launch default behaviour.
                         return true;
+
                     }
                 });
 
@@ -617,6 +619,22 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    private void markerClick(Marker marker) {
+        // Setting up the infoWindow with current's marker info
+        String time = marker.getSnippet();
+        Person temp = (Person) marker.getTag();
+        String address =  marker.getTitle();
+        String description = temp.getDescription();
+        String number = "" + temp.getNumber();
+        Intent intent = new Intent(this, AdminActivity.class);
+        intent.putExtra("Address", address);
+        intent.putExtra("Service", description);
+        intent.putExtra("Time", time);
+        intent.putExtra("Number", number);
+        intent.putExtra("PersonT", temp);
+        startActivityForResult(intent,6);
+
+    }
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -720,7 +738,7 @@ public class MainActivity extends AppCompatActivity
                     googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                         public boolean onMarkerClick(Marker marker) {
                             // Check if there is an open info window
-                            if (lastOpened != null) {
+                           /* if (lastOpened != null) {
                                 // Close the info window
                                 lastOpened.hideInfoWindow();
 
@@ -737,7 +755,8 @@ public class MainActivity extends AppCompatActivity
                             marker.showInfoWindow();
                             // Re-assign the last opened such that we can close it later
                             lastOpened = marker;
-
+                            */
+                            markerClick(marker);
                             // Event was handled by our code do not launch default behaviour.
                             return true;
                         }
@@ -1114,7 +1133,7 @@ public class MainActivity extends AppCompatActivity
                     googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                         public boolean onMarkerClick(Marker marker) {
                             // Check if there is an open info window
-                            if (lastOpened != null) {
+                            /*if (lastOpened != null) {
                                 // Close the info window
                                 lastOpened.hideInfoWindow();
 
@@ -1131,7 +1150,8 @@ public class MainActivity extends AppCompatActivity
                             marker.showInfoWindow();
                             // Re-assign the last opened such that we can close it later
                             lastOpened = marker;
-
+                            */
+                            markerClick(marker);
                             // Event was handled by our code do not launch default behaviour.
                             return true;
                         }
@@ -1166,7 +1186,7 @@ public class MainActivity extends AppCompatActivity
                     googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                         public boolean onMarkerClick(Marker marker) {
                             // Check if there is an open info window
-                            if (lastOpened != null) {
+                            /*if (lastOpened != null) {
                                 // Close the info window
                                 lastOpened.hideInfoWindow();
 
@@ -1183,7 +1203,8 @@ public class MainActivity extends AppCompatActivity
                             marker.showInfoWindow();
                             // Re-assign the last opened such that we can close it later
                             lastOpened = marker;
-
+                            */
+                            markerClick(marker);
                             // Event was handled by our code do not launch default behaviour.
                             return true;
                         }
@@ -1244,6 +1265,24 @@ public class MainActivity extends AppCompatActivity
                 }else{
                     googleMap.clear();
                 }
+            } else if (requestCode == 6){
+                //From Admin page
+                Log.d("DELETEDPIN","test");
+
+                boolean isDelete = data.getBooleanExtra("IsDelete", false);
+                Person temp = data.getParcelableExtra("Temp");
+                if (isDelete){
+                    temp.delete();
+                    openRequestPins();
+                    double lat = temp.getLattitude();
+                    double lng = temp.getLongitude();
+                    double key = Math.abs(lat * lng);
+                    String keystring = Double.toString(key);
+                    String keystringnew = keystring.replaceAll("\\.", "");
+                    Log.v("E_KEY_ADDED", keystringnew);
+                    personRef.child("test" + keystringnew).setValue(temp);
+                }
+
             }
         }
     }
@@ -1276,7 +1315,9 @@ public class MainActivity extends AppCompatActivity
     //for now add people does nothing
     public void addPeople() {
 
-
+        if (isStaff){
+            openRequestPins();
+        }
         return;
         /*
         googleMap.clear();
