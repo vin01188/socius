@@ -39,26 +39,35 @@ public class AdminActivity extends AppCompatActivity {
 
         current = getIntent().getParcelableExtra("PersonT");
         TextView resolveView = (TextView) findViewById(R.id.resolve);
-        if (current.getIsNotDelete()){
+        /*if (current.getIsNotDelete()){
             resolveView.setText("Not Resolved");
         }else{
             resolveView.setText("Resolved");
-        }
+        }*/
+        resolveView.setText(current.getStatus());
 
     }
 
     public void editFinal(View view) {
         Intent goingBack = new Intent();
         goingBack.putExtra("Temp", current);
-        goingBack.putExtra("isDelete", true);
+        goingBack.putExtra("newStatus", "Resolved");
         setResult(RESULT_OK, goingBack);
         finish();
     }
 
     public void submitFinal(View view) {
         Intent goingBack = new Intent();
-        goingBack.putExtra("isDelete", false);
+        goingBack.putExtra("newStatus",current.getStatus());
         setResult(RESULT_OK, goingBack);
         finish();
+    }
+
+    public void claim(View view){
+        Intent goingBack = new Intent();
+        goingBack.putExtra("newStatus", "Pending");
+        setResult(RESULT_OK, goingBack);
+        finish();
+
     }
 }

@@ -129,7 +129,18 @@
         android:layout_below="@+id/resolve"
         android:layout_marginTop="10dp"/>
 
-
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/claimButton"
+        android:text="Claim"
+        android:onClick="claim"
+        android:background="@color/colorPrimary"
+        android:textColor="#FFFFFF"
+        android:layout_alignBaseline="@+id/editAll"
+        android:layout_alignBottom="@+id/editAll"
+        android:layout_toEndOf="@+id/editAll"
+        android:layout_marginStart="17dp" />
 
 
 </RelativeLayout>

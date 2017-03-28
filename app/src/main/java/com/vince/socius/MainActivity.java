@@ -44,6 +44,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -1271,18 +1272,16 @@ public class MainActivity extends AppCompatActivity
                 // Buggy fix later
                 Log.d("DELETEDPIN","test");
 
-                boolean isDelete = data.getBooleanExtra("isDelete", false);
-                if (isDelete){
-                    currentEdit.delete();
-                    openRequestPins();
-                    double lat = currentEdit.getLattitude();
-                    double lng = currentEdit.getLongitude();
-                    double key = Math.abs(lat * lng);
-                    String keystring = Double.toString(key);
-                    String keystringnew = keystring.replaceAll("\\.", "");
-                    Log.v("E_KEY_ADDED", keystringnew);
-                    personRef.child("test" + keystringnew).setValue(currentEdit);
-                }
+                String status = data.getStringExtra("newStatus");
+                currentEdit.setStatus(status);
+                openRequestPins();
+                double lat = currentEdit.getLattitude();
+                double lng = currentEdit.getLongitude();
+                double key = Math.abs(lat * lng);
+                String keystring = Double.toString(key);
+                String keystringnew = keystring.replaceAll("\\.", "");
+                Log.v("E_KEY_ADDED", keystringnew);
+                personRef.child("test" + keystringnew).setValue(currentEdit);
 
             }
         }
@@ -1304,8 +1303,16 @@ public class MainActivity extends AppCompatActivity
                 String markerTime = "Time posted: " + hour + ":" + min + " " + am + "  " +
                         " Date Posted: " + month + "/" + day;
                 LatLng newLoc = new LatLng(temp.getLattitude(), temp.getLongitude());
+
+                float markerColor = BitmapDescriptorFactory.HUE_RED;
+                if (temp.getStatus().equals("Pending")) {
+                    markerColor = BitmapDescriptorFactory.HUE_YELLOW;
+                }else if(temp.getStatus().equals("Resolved")){
+                    markerColor = BitmapDescriptorFactory.HUE_GREEN;
+                }
+
                 addressMarker = googleMap.addMarker(new MarkerOptions()
-                        .position(newLoc)
+                        .position(newLoc).icon(BitmapDescriptorFactory.defaultMarker(markerColor))
                         .title(temp.getAddress())
                         .snippet(markerTime));
                 addressMarker.setTag(temp);

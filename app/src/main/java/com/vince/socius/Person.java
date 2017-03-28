@@ -15,6 +15,7 @@ public class Person implements Parcelable {
     private String poster;
     public String description;
     private boolean isNotDelete;
+    private String status;
     private int number;
 
     public Person() {
@@ -36,6 +37,7 @@ public class Person implements Parcelable {
         this.isNotDelete = true;
         this.description = description;
         this.number = number;
+        this.status = "Open";
     }
 
 
@@ -71,6 +73,8 @@ public class Person implements Parcelable {
         return isNotDelete;
     }
 
+    public String getStatus() { return status; }
+
     public void setAddress(String address) {
         this.address = address;
     }
@@ -103,6 +107,10 @@ public class Person implements Parcelable {
         this.isNotDelete = bool;
     }
 
+    public void setStatus(String status){
+        this.status = status;
+    }
+
     public void delete() {
         isNotDelete = false;
     }
@@ -116,6 +124,7 @@ public class Person implements Parcelable {
         poster = in.readString();
         description = in.readString();
         isNotDelete = in.readByte() != 0x00;
+        status = in.readString();
         number = in.readInt();
     }
 
@@ -133,6 +142,7 @@ public class Person implements Parcelable {
         dest.writeString(poster);
         dest.writeString(description);
         dest.writeByte((byte) (isNotDelete ? 0x01 : 0x00));
+        dest.writeString(status);
         dest.writeInt(number);
     }
 
