@@ -55,7 +55,10 @@
                         android:layout_marginEnd="11dp"
                         android:layout_marginTop="80dp"
                         android:text="Open"
+                        android:textStyle="bold"
+                        android:textSize="20sp"
                         android:textColor="#ff0000"
+                        android:visibility="invisible"
                         />
 
                     <TextView
@@ -66,7 +69,11 @@
                         android:layout_below="@+id/legendOpenText"
                         android:text="Pending"
                         android:textColor="#ffff00"
-                        android:layout_marginTop="5dp"/>
+                        android:textStyle="bold"
+                        android:textSize="20sp"
+                        android:layout_marginTop="5dp"
+                        android:visibility="invisible"
+                        />
 
                     <TextView
                         android:id="@+id/legendResolvedText"
@@ -76,7 +83,11 @@
                         android:layout_below="@+id/legendPendingText"
                         android:text="Resolved"
                         android:textColor="#00ff00"
-                        android:layout_marginTop="5dp"/>
+                        android:textStyle="bold"
+                        android:textSize="20sp"
+                        android:layout_marginTop="5dp"
+                        android:visibility="invisible"
+                        />
 
                 </com.vince.socius.MapWrapperLayout>
 

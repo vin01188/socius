@@ -127,6 +127,9 @@ public class MainActivity extends AppCompatActivity
     private TextView infoSnippet;
     private TextView infoDescription;
     private TextView infoNumber;
+    private TextView openLegend;
+    private TextView pendingLegend;
+    private TextView resolveLegend;
     private Button infoButton;
     private Button editButton;
 
@@ -153,6 +156,10 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         isStaff = false;
         markerMap = new HashMap<Person, Marker>();
+
+        openLegend = (TextView) findViewById(R.id.legendOpenText);
+        pendingLegend = (TextView) findViewById(R.id.legendPendingText);
+        resolveLegend = (TextView) findViewById(R.id.legendResolvedText);
 
         addressTextview = (TextView) findViewById(R.id.realAddress);
 
@@ -1265,6 +1272,10 @@ public class MainActivity extends AppCompatActivity
                     nav_Menu.findItem(R.id.nav_all).setVisible(true);
                 }else{
                     nav_Menu.findItem(R.id.nav_all).setVisible(false);
+                    openLegend.setVisibility(View.INVISIBLE);
+                    pendingLegend.setVisibility(View.INVISIBLE);
+                    resolveLegend.setVisibility(View.INVISIBLE);
+
                 }
                 boolean isOpenRequest = data.getBooleanExtra("IsOpen", false);
                 if (isOpenRequest) {
@@ -1327,6 +1338,12 @@ public class MainActivity extends AppCompatActivity
                             .snippet(markerTime));
                     addressMarker.setTag(temp);
                     markerMap.put(temp, addressMarker);
+
+
+
+                    openLegend.setVisibility(View.VISIBLE);
+                    pendingLegend.setVisibility(View.VISIBLE);
+                    resolveLegend.setVisibility(View.INVISIBLE);
                 }
             }
         }
@@ -1366,6 +1383,9 @@ public class MainActivity extends AppCompatActivity
                         .snippet(markerTime));
                 addressMarker.setTag(temp);
                 markerMap.put(temp, addressMarker);
+                openLegend.setVisibility(View.VISIBLE);
+                pendingLegend.setVisibility(View.VISIBLE);
+                resolveLegend.setVisibility(View.VISIBLE);
             }
         }
     }
