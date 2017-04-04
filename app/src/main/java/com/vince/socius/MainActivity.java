@@ -55,6 +55,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -808,20 +809,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        } else if (id == R.id.action_logout) {
-            // User logout
-            mFirebaseAuth.signOut();
-            isStaff = false;
-            Auth.GoogleSignInApi.signOut(mGoogleApiClient);
-            mUsername = ANONYMOUS;
 
-            // Show login screen again
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
-            return true;
-        }
 
 
         return super.onOptionsItemSelected(item);
@@ -834,14 +822,30 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_home) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+            Intent intent = new Intent(this, User.class);
+            intent.putExtra(EXTRA_UID, mFirebaseUser.getUid());
+            startActivityForResult(intent, 5);
+
+        } else if (id == R.id.nav_about) {
             startActivity(new Intent(this, AboutActivity.class));
 
         } else if (id == R.id.nav_slideshow) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_all) {
+            allRequestPins();
+        } else if (id == R.id.nav_logout){
+            // User logout
+            mFirebaseAuth.signOut();
+            isStaff = false;
+            Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+            mUsername = ANONYMOUS;
+
+            // Show login screen again
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return true;
 
         }
 
@@ -1260,6 +1264,15 @@ public class MainActivity extends AppCompatActivity
             } else if (requestCode == 5) {
                 //From User Page
                 isStaff = data.getBooleanExtra("IsStaff", false);
+                NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+                Menu nav_Menu = navigationView.getMenu();
+                if (isStaff){
+                    FirebaseMessaging.getInstance().subscribeToTopic("staff");
+
+                    nav_Menu.findItem(R.id.nav_all).setVisible(true);
+                }else{
+                    nav_Menu.findItem(R.id.nav_all).setVisible(false);
+                }
                 boolean isOpenRequest = data.getBooleanExtra("IsOpen", false);
                 if (isOpenRequest) {
                     //add all pins
@@ -1287,7 +1300,50 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /*
+        Displays all the open requests only runs on staff members.
+     */
     public void openRequestPins() {
+        googleMap.clear();
+        for (int i = 0; i < people.size(); i++) {
+            Person temp = people.get(i);
+            String[] times = temp.getTime().split("/");
+            if (times.length >= 5) {
+                String year = times[0];
+                String month = times[1];
+                String day = times[2];
+                String hour = times[3];
+                String min = times[4];
+                String am = times[5];
+
+                String markerTime = "Time posted: " + hour + ":" + min + " " + am + "  " +
+                        " Date Posted: " + month + "/" + day;
+                LatLng newLoc = new LatLng(temp.getLattitude(), temp.getLongitude());
+
+                float markerColor = BitmapDescriptorFactory.HUE_RED;
+                if (temp.getStatus().equals("Pending")) {
+                    markerColor = BitmapDescriptorFactory.HUE_YELLOW;
+                }else if(temp.getStatus().equals("Resolved")){
+                    markerColor = BitmapDescriptorFactory.HUE_GREEN;
+                }
+
+                if (temp.getStatus().equals("Open") || temp.getStatus().equals("Pending")) {
+                    addressMarker = googleMap.addMarker(new MarkerOptions()
+                            .position(newLoc).icon(BitmapDescriptorFactory.defaultMarker(markerColor))
+                            .title(temp.getAddress())
+                            .snippet(markerTime));
+                    addressMarker.setTag(temp);
+                    markerMap.put(temp, addressMarker);
+                }
+            }
+        }
+    }
+
+    /*
+        Displays all the requests: including resolved, pending and open
+
+     */
+    public void allRequestPins() {
         googleMap.clear();
         for (int i = 0; i < people.size(); i++) {
             Person temp = people.get(i);
@@ -1320,41 +1376,14 @@ public class MainActivity extends AppCompatActivity
             }
         }
     }
+
     //for now add people does nothing
     public void addPeople() {
-
         if (isStaff){
             openRequestPins();
+            FirebaseMessaging.getInstance().subscribeToTopic("staff");
         }
         return;
-        /*
-        googleMap.clear();
-        for (int i = 0; i < people.size(); i++) {
-            Person temp = people.get(i);
-            if (temp.getIsNotDelete() && (isStaff || temp.getPoster().equals(mUsername))) {
-                String[] times = temp.getTime().split("/");
-                if (times.length >= 5) {
-                    String year = times[0];
-                    String month = times[1];
-                    String day = times[2];
-                    String hour = times[3];
-                    String min = times[4];
-                    String am = times[5];
-
-                    String markerTime = "Time posted: " + hour + ":"+min+" " + am + "  " +
-                            " Date Posted: " + month + "/" + day;
-                    LatLng newLoc = new LatLng(temp.getLattitude(), temp.getLongitude());
-                    addressMarker = googleMap.addMarker(new MarkerOptions()
-                            .position(newLoc)
-                            .title(temp.getAddress())
-                            .snippet(markerTime));
-                    addressMarker.setTag(temp);
-                    markerMap.put(temp, addressMarker);
-                }
-            }
-        }
-        */
-
     }
 
 //check this

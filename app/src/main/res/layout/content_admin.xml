@@ -137,10 +137,9 @@
         android:onClick="claim"
         android:background="@color/colorPrimary"
         android:textColor="#FFFFFF"
-        android:layout_alignBaseline="@+id/editAll"
         android:layout_alignBottom="@+id/editAll"
-        android:layout_toEndOf="@+id/editAll"
-        android:layout_marginStart="17dp" />
+        android:layout_centerHorizontal="true"
+        android:layout_alignTop="@+id/editAll" />
 
 
 </RelativeLayout>

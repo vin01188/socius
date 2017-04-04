@@ -98,7 +98,7 @@
 
         <activity
             android:name=".AdminActivity"
-            android:label="@string/title_activity_admin"
+            android:label="About"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data

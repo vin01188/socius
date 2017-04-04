@@ -25,38 +25,42 @@
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight=".1">
+
                 <com.vince.socius.MapWrapperLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     xmlns:tools="http://schemas.android.com/tools"
                     android:id="@+id/map_relative_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    tools:context=".MainActivity" >
+                    tools:context=".MainActivity">
+
                     <fragment
-                        android:layout_width="match_parent"
-                        android:layout_height="fill_parent"
                         android:id="@+id/map"
-                        android:name="com.google.android.gms.maps.MapFragment" />
+                        android:name="com.google.android.gms.maps.MapFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent" />
 
                 </com.vince.socius.MapWrapperLayout>
 
-                <ImageView android:id="@+id/image_view"
+                <ImageView
+                    android:id="@+id/image_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:adjustViewBounds="true"
                     android:layout_centerInParent="true"
-                    android:maxWidth="80dp"
+                    android:adjustViewBounds="true"
                     android:maxHeight="80dp"
-                    android:scaleType="fitCenter"
+                    android:maxWidth="80dp"
                     android:paddingBottom="40dp"
+                    android:scaleType="fitCenter"
 
                     android:src="@drawable/pinnew"
 
@@ -67,61 +71,58 @@
                     android:id="@+id/myMapLocationButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:adjustViewBounds="true"
-                    android:layout_centerInParent="true"
-                    android:maxWidth="40dp"
-                    android:maxHeight="100dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/mylocation"
-                    android:contentDescription="My Location"
+                    android:layout_alignParentBottom="true"
                     android:layout_alignParentLeft="true"
+                    android:layout_centerInParent="true"
                     android:layout_marginBottom="25dp"
                     android:layout_marginLeft="20dp"
-                    android:clickable="false"
+                    android:adjustViewBounds="true"
                     android:alpha=".85"
                     android:background="#00000000"
-                    android:layout_alignParentBottom="true"
-                    />
-
-
+                    android:clickable="false"
+                    android:contentDescription="My Location"
+                    android:maxHeight="100dp"
+                    android:maxWidth="40dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/mylocation" />
 
 
             </RelativeLayout>
+
             <RelativeLayout
+                android:id="@+id/bottomLayout"
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
-                android:background="#FFFFFF"
-                android:id="@+id/bottomLayout"
-                >
+                android:background="#FFFFFF">
 
                 <TextView
+                    android:id="@+id/realAddress"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:text="Loading Address"
-                    android:background="#FFFFFF"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="40dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="10dp"
-                    android:textSize="15sp"
                     android:layout_marginStart="40dp"
-                    android:layout_marginEnd="40dp"
+                    android:layout_marginTop="10dp"
+                    android:background="#FFFFFF"
+                    android:text="Loading Address"
 
-                    android:id="@+id/realAddress"/>
+                    android:textSize="15sp" />
+
                 <Button
+                    android:id="@+id/realSubmit"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:text="Submit Address"
-                    android:id="@+id/realSubmit"
-                    android:background="@color/colorPrimary"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:textColor="#FFFFFF"
-                    android:onClick="pinShare"
-                    android:layout_marginEnd="30dp"
-                    android:layout_marginStart="30dp"
                     android:layout_below="@id/realAddress"
-                    />
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginStart="30dp"
+                    android:background="@color/colorPrimary"
+                    android:onClick="pinShare"
+                    android:text="Submit Address"
+                    android:textColor="#FFFFFF" />
             </RelativeLayout>
         </LinearLayout>
 

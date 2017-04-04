@@ -29,7 +29,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Enter Need"
+        android:text="Create new request"
         android:textColor="#FFFFFF"
         android:background="@color/colorPrimary"
         android:layout_centerVertical="true"
@@ -45,7 +45,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Open Requests"
+        android:text="View all unresolved requests"
         android:textColor="#FFFFFF"
         android:background="@color/colorPrimary"
         android:layout_centerVertical="true"
