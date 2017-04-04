@@ -25,42 +25,70 @@
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:orientation="vertical">
-
+            android:orientation="vertical"
+            >
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight=".1">
-
                 <com.vince.socius.MapWrapperLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     xmlns:tools="http://schemas.android.com/tools"
                     android:id="@+id/map_relative_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    tools:context=".MainActivity">
-
+                    tools:context=".MainActivity" >
                     <fragment
-                        android:id="@+id/map"
-                        android:name="com.google.android.gms.maps.MapFragment"
                         android:layout_width="match_parent"
-                        android:layout_height="fill_parent" />
+                        android:layout_height="fill_parent"
+                        android:id="@+id/map"
+                        android:name="com.google.android.gms.maps.MapFragment" />
+
+                    <TextView
+                        android:id="@+id/legendOpenText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginEnd="11dp"
+                        android:layout_marginTop="80dp"
+                        android:text="Open"
+                        android:textColor="#ff0000"
+                        />
+
+                    <TextView
+                        android:id="@+id/legendPendingText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignEnd="@+id/legendOpenText"
+                        android:layout_below="@+id/legendOpenText"
+                        android:text="Pending"
+                        android:textColor="#ffff00"
+                        android:layout_marginTop="5dp"/>
+
+                    <TextView
+                        android:id="@+id/legendResolvedText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignEnd="@+id/legendPendingText"
+                        android:layout_below="@+id/legendPendingText"
+                        android:text="Resolved"
+                        android:textColor="#00ff00"
+                        android:layout_marginTop="5dp"/>
 
                 </com.vince.socius.MapWrapperLayout>
 
-                <ImageView
-                    android:id="@+id/image_view"
+                <ImageView android:id="@+id/image_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
                     android:adjustViewBounds="true"
-                    android:maxHeight="80dp"
+                    android:layout_centerInParent="true"
                     android:maxWidth="80dp"
-                    android:paddingBottom="40dp"
+                    android:maxHeight="80dp"
                     android:scaleType="fitCenter"
+                    android:paddingBottom="40dp"
 
                     android:src="@drawable/pinnew"
 
@@ -71,58 +99,61 @@
                     android:id="@+id/myMapLocationButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentLeft="true"
+                    android:adjustViewBounds="true"
                     android:layout_centerInParent="true"
+                    android:maxWidth="40dp"
+                    android:maxHeight="100dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/mylocation"
+                    android:contentDescription="My Location"
+                    android:layout_alignParentLeft="true"
                     android:layout_marginBottom="25dp"
                     android:layout_marginLeft="20dp"
-                    android:adjustViewBounds="true"
+                    android:clickable="false"
                     android:alpha=".85"
                     android:background="#00000000"
-                    android:clickable="false"
-                    android:contentDescription="My Location"
-                    android:maxHeight="100dp"
-                    android:maxWidth="40dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/mylocation" />
+                    android:layout_alignParentBottom="true"
+                    />
+
+
 
 
             </RelativeLayout>
-
             <RelativeLayout
-                android:id="@+id/bottomLayout"
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
-                android:background="#FFFFFF">
+                android:background="#FFFFFF"
+                android:id="@+id/bottomLayout"
+                >
 
                 <TextView
-                    android:id="@+id/realAddress"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginEnd="40dp"
+                    android:text="Loading Address"
+                    android:background="#FFFFFF"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:layout_marginStart="40dp"
+                    android:layout_marginBottom="10dp"
                     android:layout_marginTop="10dp"
-                    android:background="#FFFFFF"
-                    android:text="Loading Address"
+                    android:textSize="15sp"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginEnd="40dp"
 
-                    android:textSize="15sp" />
-
+                    android:id="@+id/realAddress"/>
                 <Button
-                    android:id="@+id/realSubmit"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:layout_below="@id/realAddress"
-                    android:layout_marginEnd="30dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginStart="30dp"
-                    android:background="@color/colorPrimary"
-                    android:onClick="pinShare"
                     android:text="Submit Address"
-                    android:textColor="#FFFFFF" />
+                    android:id="@+id/realSubmit"
+                    android:background="@color/colorPrimary"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="#FFFFFF"
+                    android:onClick="pinShare"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_below="@id/realAddress"
+                    />
             </RelativeLayout>
         </LinearLayout>
 
