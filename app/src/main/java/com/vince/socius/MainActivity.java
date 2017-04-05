@@ -262,6 +262,13 @@ public class MainActivity extends AppCompatActivity
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 String key = dataSnapshot.getKey();
                 Person p = dataSnapshot.getValue(Person.class);
+
+                //need to somehow remove the other person with the same stuff from this list.
+                people.add(p);
+                if (googleMap != null){
+                    addPeople();
+                }
+
                 Log.v("E_CHILD_ADDED1", Boolean.toString(p.getIsNotDelete()));
             }
 
@@ -269,6 +276,9 @@ public class MainActivity extends AppCompatActivity
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 String key = dataSnapshot.getKey();
                 Person p = dataSnapshot.getValue(Person.class);
+
+
+
                 Log.v("E_CHILD_ADDED2", Boolean.toString(p.getIsNotDelete()));
             }
 
