@@ -125,6 +125,7 @@
         android:onClick="editFinal"
         android:background="@color/colorPrimary"
         android:textColor="#FFFFFF"
+        android:layout_alignStart="@+id/numberTitle"
         android:layout_marginTop="21dp"
         android:layout_below="@+id/claimText"
         android:layout_toEndOf="@+id/resolve" />
@@ -137,9 +138,9 @@
         android:onClick="claim"
         android:background="@color/colorPrimary"
         android:textColor="#FFFFFF"
+        android:layout_alignBaseline="@+id/editAll"
         android:layout_alignBottom="@+id/editAll"
-        android:layout_centerHorizontal="true"
-        android:layout_alignTop="@+id/editAll" />
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:id="@+id/claimText"

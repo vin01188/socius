@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class AdminActivity extends AppCompatActivity {
@@ -50,9 +51,17 @@ public class AdminActivity extends AppCompatActivity {
         //if it has been claimed, show who claimed it as well
         if (current.getStatus().equals("Pending")){
             claimView.setVisibility(View.VISIBLE);
-            claimView.setText(current.getClaimer());
+            claimView.setText("Claimed by: " + current.getClaimer());
         }else{
             claimView.setVisibility(View.GONE);
+        }
+
+        Button resolveButton = (Button) findViewById(R.id.editAll);
+        Button claimButton  = (Button) findViewById(R.id.claimButton);
+
+        if (current.getStatus().equals("Resolved" )) {
+            resolveButton.setVisibility(View.GONE);
+            claimButton.setVisibility(View.GONE);
         }
 
     }
