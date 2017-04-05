@@ -46,6 +46,15 @@ public class AdminActivity extends AppCompatActivity {
         }*/
         resolveView.setText(current.getStatus());
 
+        TextView claimView = (TextView) findViewById(R.id.claimText);
+        //if it has been claimed, show who claimed it as well
+        if (current.getStatus().equals("Pending")){
+            claimView.setVisibility(View.VISIBLE);
+            claimView.setText(current.getClaimer());
+        }else{
+            claimView.setVisibility(View.GONE);
+        }
+
     }
 
     public void editFinal(View view) {

@@ -120,14 +120,14 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="50dp"
         android:id="@+id/editAll"
         android:text="Resolve"
         android:onClick="editFinal"
         android:background="@color/colorPrimary"
         android:textColor="#FFFFFF"
-        android:layout_below="@+id/resolve"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="21dp"
+        android:layout_below="@+id/claimText"
+        android:layout_toEndOf="@+id/resolve" />
 
     <Button
         android:layout_width="wrap_content"
@@ -140,6 +140,17 @@
         android:layout_alignBottom="@+id/editAll"
         android:layout_centerHorizontal="true"
         android:layout_alignTop="@+id/editAll" />
+
+    <TextView
+        android:id="@+id/claimText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Claimed By"
+        android:textSize="24sp"
+        android:layout_alignParentStart="true"
+        android:textColor="@color/colorPrimary"
+        android:layout_below="@+id/resolve"
+        android:visibility="gone"/>
 
 
 </RelativeLayout>

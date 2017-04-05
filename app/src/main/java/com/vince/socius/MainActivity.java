@@ -1291,6 +1291,9 @@ public class MainActivity extends AppCompatActivity
 
                 String status = data.getStringExtra("newStatus");
                 currentEdit.setStatus(status);
+                if (status.equals( "pending")){
+                    currentEdit.setClaimer(mUsername);
+                }
                 openRequestPins();
                 double lat = currentEdit.getLattitude();
                 double lng = currentEdit.getLongitude();

@@ -17,6 +17,7 @@ public class Person implements Parcelable {
     private boolean isNotDelete;
     private String status;
     private int number;
+    private String claimer;
 
     public Person() {
         address = "";
@@ -26,6 +27,8 @@ public class Person implements Parcelable {
         poster = "";
         isNotDelete = true;
         number = 0;
+        status = "";
+        claimer = "";
     }
 
     public Person(String address, double lattitude, double longitude, String time, String poster, String description, int number) {
@@ -38,6 +41,7 @@ public class Person implements Parcelable {
         this.description = description;
         this.number = number;
         this.status = "Open";
+        this.claimer = "";
     }
 
 
@@ -75,6 +79,8 @@ public class Person implements Parcelable {
 
     public String getStatus() { return status; }
 
+    public String getClaimer() {return claimer; }
+
     public void setAddress(String address) {
         this.address = address;
     }
@@ -111,6 +117,8 @@ public class Person implements Parcelable {
         this.status = status;
     }
 
+    public void setClaimer(String claimer) {this.claimer = claimer; }
+
     public void delete() {
         isNotDelete = false;
     }
@@ -126,6 +134,7 @@ public class Person implements Parcelable {
         isNotDelete = in.readByte() != 0x00;
         status = in.readString();
         number = in.readInt();
+        claimer = in.readString();
     }
 
     @Override
@@ -144,6 +153,7 @@ public class Person implements Parcelable {
         dest.writeByte((byte) (isNotDelete ? 0x01 : 0x00));
         dest.writeString(status);
         dest.writeInt(number);
+        dest.writeString(claimer);
     }
 
     @SuppressWarnings("unused")
