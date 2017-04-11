@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity
     private static String mUsername;
 
     private ArrayList<Person> people;
+    private HashMap<String,Person> peopleMap;
 
     private ViewGroup infoWindow;
     private TextView infoTitle;
@@ -243,6 +244,8 @@ public class MainActivity extends AppCompatActivity
 
         personRef = mFirebaseDatabaseReference.child("People");
         people = new ArrayList<Person>();
+        peopleMap = new HashMap<String, Person>();
+
 
         personRef.addChildEventListener(new ChildEventListener() {
             @Override
@@ -251,7 +254,7 @@ public class MainActivity extends AppCompatActivity
                 Person p = dataSnapshot.getValue(Person.class);
 
                 people.add(p);
-
+                peopleMap.put(key,p);
                 if (googleMap != null) {
                     addPeople();
                 }
@@ -265,6 +268,7 @@ public class MainActivity extends AppCompatActivity
 
                 //need to somehow remove the other person with the same stuff from this list.
                 people.add(p);
+                peopleMap.put(key,p);
                 if (googleMap != null){
                     addPeople();
                 }
@@ -1322,8 +1326,9 @@ public class MainActivity extends AppCompatActivity
      */
     public void openRequestPins() {
         googleMap.clear();
-        for (int i = 0; i < people.size(); i++) {
-            Person temp = people.get(i);
+        //for (int i = 0; i < people.size(); i++) {
+        //    Person temp = people.get(i);
+        for (Person temp : peopleMap.values()){
             String[] times = temp.getTime().split("/");
             if (times.length >= 5) {
                 String year = times[0];
@@ -1368,8 +1373,9 @@ public class MainActivity extends AppCompatActivity
      */
     public void allRequestPins() {
         googleMap.clear();
-        for (int i = 0; i < people.size(); i++) {
-            Person temp = people.get(i);
+        //for (int i = 0; i < people.size(); i++) {
+        //    Person temp = people.get(i);
+        for (Person temp : peopleMap.values()){
             String[] times = temp.getTime().split("/");
             if (times.length >= 5) {
                 String year = times[0];
