@@ -38,11 +38,10 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
 
     boolean food;
     boolean clothes;
-    boolean physicalHealth;
-    boolean mentalHealth;
-    boolean dentalHealth;
+    boolean campingSupplies;
+    boolean transportation;
+    boolean medical;
     boolean toilet;
-    boolean dontknow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,10 +51,9 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
         food = false;
         toilet = false;
         clothes = false;
-        physicalHealth = false;
-        mentalHealth = false;
-        dentalHealth = false;
-        dontknow = false;
+        campingSupplies = false;
+        transportation = false;
+        medical = false;
 
 
         String hour = "1";
@@ -153,11 +151,10 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
         String desc = "";
         if(food) desc += "Food \n";
         if(clothes) desc += "Clothes \n";
-        if(physicalHealth) desc += "Physical Health \n";
-        if(mentalHealth) desc += "Mental Health \n";
-        if(dentalHealth) desc += "Dental Health \n";
+        if(campingSupplies) desc += "Camp Supplies \n";
+        if(transportation) desc += "Transportation \n";
+        if(medical) desc += "Dental Health \n";
         if(toilet) desc += "Toiletries \n";
-        if(dontknow) desc += "Do not know \n";
         if(!description.getText().toString().equals("")) desc += description.getText().toString();
         //else if(desc.length() > 3) desc = desc.substring(0,desc.length() - 3);
         String temp = amorpm;
@@ -208,23 +205,23 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
                 else
                     food = false;
                 break;
-            case R.id.physicalHealthBox:
+            case R.id.campBox:
                 if(checked)
-                    physicalHealth = true;
+                    campingSupplies = true;
                 else
-                    physicalHealth = false;
+                    campingSupplies = false;
                 break;
-            case R.id.mentalHealthBox:
+            case R.id.transportationBox:
                 if(checked)
-                    mentalHealth = true;
+                    transportation = true;
                 else
-                    mentalHealth = false;
+                    transportation = false;
                 break;
-            case R.id.dentalHealthBox:
+            case R.id.medicalBox:
                 if(checked)
-                    dentalHealth = true;
+                    medical = true;
                 else
-                    dentalHealth = false;
+                    medical = false;
                 break;
             case R.id.clothesBox:
                 if(checked)
@@ -237,12 +234,6 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
                     toilet = true;
                 else
                     toilet = false;
-                break;
-            case R.id.idk:
-                if(checked)
-                    dontknow = true;
-                else
-                    dontknow = false;
                 break;
         }
     }
@@ -260,11 +251,10 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
                     String desc = "";
                     if(food) desc += "Food | ";
                     if(clothes) desc += "Clothes | ";
-                    if(physicalHealth) desc += "Physical Health | ";
-                    if(mentalHealth) desc += "Mental Health | ";
-                    if(dentalHealth) desc += "Dental Health | ";
+                    if(campingSupplies) desc += "Camp Supplies | ";
+                    if(transportation) desc += "Transportation | ";
+                    if(medical) desc += "Medical | ";
                     if(toilet) desc += "Toiletries | ";
-                    if(dontknow) desc += "Do not know | ";
                     if(!description.getText().toString().equals("")) desc += description.getText().toString();
                     else if(desc.length() > 3) desc = desc.substring(0,desc.length() - 3);
                     String temp = amorpm;

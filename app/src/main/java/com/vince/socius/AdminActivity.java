@@ -63,6 +63,9 @@ public class AdminActivity extends AppCompatActivity {
             resolveButton.setVisibility(View.GONE);
             claimButton.setVisibility(View.GONE);
         }
+        if (current.getStatus().equals("Pending")){
+            claimButton.setVisibility(View.GONE);
+        }
 
     }
 

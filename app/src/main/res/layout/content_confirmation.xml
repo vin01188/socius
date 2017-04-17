@@ -136,7 +136,7 @@
             android:layout_alignParentEnd="true"
             android:layout_toRightOf="@+id/checkBoxOther"
             android:textSize="24sp"
-            android:layout_below="@+id/idk"
+            android:layout_below="@+id/firstAidBox"
             android:padding="5dp"/>
 
         <CheckBox
@@ -144,61 +144,468 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/clothesBox"
-            android:layout_below="@+id/foodBox"
+            android:layout_below="@+id/granolaBox"
             android:onClick="onCheckBoxClicked"
             android:textSize="24sp"
             android:textColor="#424242"/>
 
         <CheckBox
+            android:text="Jeans"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/jeansBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/clothesBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text="Socks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/socksBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/jeansBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text="Coats"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/coatsBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/socksBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text="Hats"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/hatsBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/coatsBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text="Gloves"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/glovesBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/hatsBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text="Blankets"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/blanketsBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/glovesBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text="Shoes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/shoesBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/blanketsBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text="Boots"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/bootsBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/shoesBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text="Underwear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/underwearBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/bootsBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
             android:text="Toiletries"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/clothesBox"
+            android:layout_below="@+id/underwearBox"
             android:id="@+id/toiletBox"
             android:onClick="onCheckBoxClicked"
             android:textSize="24sp"
             android:textColor="#424242"/>
 
         <CheckBox
-            android:text="Physical Health"
+            android:text="Wet wipes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/physicalHealthBox"
+            android:id="@+id/wetWipesBox"
+            android:onClick="onCheckBoxClicked"
             android:layout_below="@+id/toiletBox"
-            android:onClick="onCheckBoxClicked"
-            android:textSize="24sp"
-            android:textColor="#424242"/>
-
-        <CheckBox
-            android:text="Mental Health"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/mentalHealthBox"
-            android:layout_below="@+id/physicalHealthBox"
-            android:onClick="onCheckBoxClicked"
-            android:textSize="24sp"
-            android:textColor="#424242"/>
-
-        <CheckBox
-            android:text="Dental Health"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/dentalHealthBox"
-            android:layout_below="@+id/mentalHealthBox"
-            android:onClick="onCheckBoxClicked"
-            android:textSize="24sp"
-            android:textColor="#424242"/>
-
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Do not know"
-            android:id="@+id/idk"
-            android:onClick="onCheckBoxClicked"
-            android:layout_below="@+id/dentalHealthBox"
             android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text="Feminine Care Products"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/feminineBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/wetWipesBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text="Hand Sanitizer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/handSanitizerBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/feminineBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text="Soap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/soapBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/handSanitizerBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text="Deodorant"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/deodorantBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/soapBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text="Shampoo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/shampooBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/deodorantBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text="Lotion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/lotionBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/shampooBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text="Toilet Paper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/toiletPaperBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/lotionBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text="Camp Supplies"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/campBox"
+            android:layout_below="@+id/toiletPaperBox"
+            android:onClick="onCheckBoxClicked"
             android:textSize="24sp"
             android:textColor="#424242"/>
+
+        <CheckBox
+            android:text="Trash Bags"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/trashBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/campBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text="Tents"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tentBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/trashBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text="Sleeping Bags"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/sleepingBagBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/tentBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text="Rope"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ropeBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/sleepingBagBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text="Tarps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tarpsBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/ropeBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text="Tools"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/toolsBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/tarpsBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text="Flash Lights"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/flashLightBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/toolsBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text="Batteries"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/batteriesBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/flashLightBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+
+        <CheckBox
+            android:text="Transportation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/transportationBox"
+            android:layout_below="@+id/batteriesBox"
+            android:onClick="onCheckBoxClicked"
+            android:textSize="24sp"
+            android:textColor="#424242"/>
+
+
+        <CheckBox
+            android:text="Bikes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/bikesBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/transportationBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text="Bus tickets"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/busTicketsBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/bikesBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text="Rides"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ridesBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/busTicketsBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text="Medical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/medicalBox"
+            android:layout_below="@+id/ridesBox"
+            android:onClick="onCheckBoxClicked"
+            android:textSize="24sp"
+            android:textColor="#424242"/>
+
+        <CheckBox
+            android:text="Pregnancy Care"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/pregnancyBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/medicalBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text="Prescription Medication"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/prescriptionBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/pregnancyBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text="Non-prescription Medication"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/nonPrescriptionMedicationBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/prescriptionBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text="First Aid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/firstAidBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/nonPrescriptionMedicationBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
 
         <CheckBox
             android:text="Food"
@@ -213,11 +620,89 @@
             />
 
         <CheckBox
+            android:text="Coffee"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/coffeeBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/foodBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text="Canned goods"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cannedGoodsBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/coffeeBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text="Sandwiches"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/sandwichesBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/cannedGoodsBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text="Fruit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/fruitBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/sandwichesBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text="Water"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/waterBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/fruitBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
+            android:text="Granola Bars"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/granolaBox"
+            android:onClick="onCheckBoxClicked"
+            android:layout_below="@+id/waterBox"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:textColor="#424242"
+            />
+
+        <CheckBox
             android:text=""
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/checkBoxOther"
-            android:layout_below="@+id/idk"
+            android:layout_below="@+id/firstAidBox"
             android:layout_alignParentStart="true" />
     <!--
         <EditText
