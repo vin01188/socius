@@ -1333,8 +1333,13 @@ public class MainActivity extends AppCompatActivity
         googleMap.clear();
         //for (int i = 0; i < people.size(); i++) {
         //    Person temp = people.get(i);
+        boolean atLeastOneOpenPin = false;
+        int max = 0;
+        LatLng maxCoordinate = new LatLng(0,0);
+
         for (Person temp : peopleMap.values()){
             String[] times = temp.getTime().split("/");
+
             if (times.length >= 5) {
                 String year = times[0];
                 String month = times[1];
@@ -1362,13 +1367,36 @@ public class MainActivity extends AppCompatActivity
                     addressMarker.setTag(temp);
                     markerMap.put(temp, addressMarker);
 
+                    atLeastOneOpenPin = true;
+                    int yearInt = Integer.valueOf(year);
+                    int monthInt = Integer.valueOf(month);
+                    int dayInt = Integer.valueOf(day);
+                    int hourInt = Integer.valueOf(hour);
+                    int minuteInt = Integer.valueOf(min);
 
+                    //calculate the minutes
+                    int minutes = (yearInt - 2017) * 525600 + monthInt * 43800 + dayInt * 1440 +
+                                        minuteInt;
+                    if (am.equals("PM")){
+                        minutes += 720;
+                    }
+
+                    if (minutes > max) {
+                        max = minutes;
+                        maxCoordinate = newLoc;
+                    }
 
                     openLegend.setVisibility(View.VISIBLE);
                     pendingLegend.setVisibility(View.VISIBLE);
                     resolveLegend.setVisibility(View.INVISIBLE);
                 }
             }
+        }
+
+        //move map to most recent open pin if there is one
+        if(atLeastOneOpenPin){
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(maxCoordinate, 18.0f));
+
         }
     }
 

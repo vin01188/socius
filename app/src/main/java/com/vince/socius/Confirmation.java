@@ -127,13 +127,13 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (charSequence.length() > 0){
+                /*if (charSequence.length() > 0){
                     CheckBox checkBox = (CheckBox) findViewById(R.id.checkBoxOther);
                     checkBox.setChecked(true);
                 }else{
                     CheckBox checkBox = (CheckBox) findViewById(R.id.checkBoxOther);
                     checkBox.setChecked(false);
-                }
+                }*/
             }
 
             @Override

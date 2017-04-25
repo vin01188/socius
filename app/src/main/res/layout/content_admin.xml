@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="false"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="60dp"
             android:text="Submit"
             android:layout_marginBottom="0dp"
             android:id="@+id/cancelButton"

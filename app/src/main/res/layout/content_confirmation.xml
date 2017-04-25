@@ -132,9 +132,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/description"
-            android:hint="Other"
+            android:hint="Comments"
             android:layout_alignParentEnd="true"
-            android:layout_toRightOf="@+id/checkBoxOther"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="10dp"
             android:textSize="24sp"
             android:layout_below="@+id/firstAidBox"
             android:padding="5dp"/>
@@ -736,6 +737,7 @@
             android:visibility="gone"
             />
 
+        <!--
         <CheckBox
             android:text=""
             android:layout_width="wrap_content"
@@ -743,7 +745,7 @@
             android:id="@+id/checkBoxOther"
             android:layout_below="@+id/firstAidBox"
             android:layout_alignParentStart="true" />
-    <!--
+
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
