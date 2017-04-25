@@ -846,7 +846,9 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(this, AboutActivity.class));
 
         } else if (id == R.id.nav_slideshow) {
-
+            googleMap.clear();
+        } else if (id == R.id.nav_unresolved){
+            openRequestPins();
         } else if (id == R.id.nav_all) {
             allRequestPins();
         } else if (id == R.id.nav_logout){
@@ -1284,8 +1286,11 @@ public class MainActivity extends AppCompatActivity
                     FirebaseMessaging.getInstance().subscribeToTopic("staff");
 
                     nav_Menu.findItem(R.id.nav_all).setVisible(true);
+                    nav_Menu.findItem(R.id.nav_unresolved).setVisible(true);
                 }else{
                     nav_Menu.findItem(R.id.nav_all).setVisible(false);
+                    nav_Menu.findItem(R.id.nav_unresolved).setVisible(false);
+
                     openLegend.setVisibility(View.INVISIBLE);
                     pendingLegend.setVisibility(View.INVISIBLE);
                     resolveLegend.setVisibility(View.INVISIBLE);

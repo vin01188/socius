@@ -251,12 +251,206 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
 
         int newMin = Integer.parseInt(hour);
         String desc = "";
-        if(food) desc += "Food \n";
-        if(clothes) desc += "Clothes \n";
-        if(campingSupplies) desc += "Camp Supplies \n";
-        if(transportation) desc += "Transportation \n";
-        if(medical) desc += "Dental Health \n";
-        if(toilet) desc += "Toiletries \n";
+        if(food){
+            desc += "Food: ";
+            boolean isOneSubChecked = false;
+
+            if (coffee.isChecked()){
+                desc += "Coffee, ";
+                isOneSubChecked = true;
+            }
+            if (cannedGoods.isChecked()){
+                desc += "Canned Goods, ";
+                isOneSubChecked = true;
+            }
+            if (sandwiches.isChecked()){
+                desc += "Sandwiches, ";
+                isOneSubChecked = true;
+            }
+            if (fruit.isChecked()){
+                desc += "Fruits, ";
+                isOneSubChecked = true;
+            }
+            if (water.isChecked()){
+                desc += "Water, ";
+                isOneSubChecked = true;
+            }
+            if (granolaBars.isChecked()){
+                desc += "Granola Bars, ";
+                isOneSubChecked = true;
+            }
+            desc = desc.substring(0, desc.length() - 2);
+
+            desc += "\n\n";
+
+        }
+        if(clothes){
+            desc += "Clothes: ";
+            boolean isOneSubChecked = false;
+            if (jeans.isChecked()){
+                desc += "Jeans, ";
+                isOneSubChecked = true;
+            }
+            if (socks.isChecked()){
+                desc += "Socks, ";
+                isOneSubChecked = true;
+            }
+            if (coats.isChecked()){
+                desc += "Coats, ";
+                isOneSubChecked = true;
+            }
+            if (hats.isChecked()){
+                desc += "Hats, ";
+                isOneSubChecked = true;
+            }
+            if (gloves.isChecked()){
+                desc += "Gloves, ";
+                isOneSubChecked = true;
+            }
+            if (blankets.isChecked()){
+                desc += "Blankets, ";
+                isOneSubChecked = true;
+            }
+            if (shoes.isChecked()){
+                desc += "Shoes, ";
+                isOneSubChecked = true;
+            }
+            if (boots.isChecked()){
+                desc += "Boots, ";
+                isOneSubChecked = true;
+            }
+            if (underwear.isChecked()){
+                desc += "Underwear, ";
+                isOneSubChecked = true;
+            }
+            desc = desc.substring(0, desc.length() - 2);
+
+            desc += "\n\n";
+        }
+        if(toilet){
+            desc += "Toiletries: ";
+            boolean isOneSubChecked = false;
+            if (wetWipes.isChecked()){
+                desc += "Wet Wipes, ";
+                isOneSubChecked = true;
+            }
+            if (feminineCareProducts.isChecked()){
+                desc += "Feminine Care Products, ";
+                isOneSubChecked = true;
+            }
+            if (handSanitizer.isChecked()){
+                desc += "Hand Sanitizer, ";
+                isOneSubChecked = true;
+            }
+            if (soap.isChecked()){
+                desc += "Soap, ";
+                isOneSubChecked = true;
+            }
+            if (deodorant.isChecked()){
+                desc += "Deodorant, ";
+                isOneSubChecked = true;
+            }
+            if (shampoo.isChecked()){
+                desc += "Shampoo, ";
+                isOneSubChecked = true;
+            }
+            if (lotion.isChecked()){
+                desc += "Lotion, ";
+                isOneSubChecked = true;
+            }
+            if (toiletPaper.isChecked()){
+                desc += "Toilet Paper, ";
+                isOneSubChecked = true;
+            }
+            desc = desc.substring(0, desc.length() - 2);
+
+            desc += "\n\n";
+        }
+
+        if(campingSupplies){
+            desc += "Camp Supplies: ";
+            boolean isOneSubChecked = false;
+            if (trashBags.isChecked()){
+                desc += "Trash Bags, ";
+                isOneSubChecked = true;
+            }
+            if (tents.isChecked()){
+                desc += "Tents, ";
+                isOneSubChecked = true;
+            }
+            if (sleepingBags.isChecked()){
+                desc += "Sleeping Bags, ";
+                isOneSubChecked = true;
+            }
+            if (rope.isChecked()){
+                desc += "Rope, ";
+                isOneSubChecked = true;
+            }
+            if (tarps.isChecked()){
+                desc += "Tarps, ";
+                isOneSubChecked = true;
+            }
+            if (tools.isChecked()){
+                desc += "Tools, ";
+                isOneSubChecked = true;
+            }
+            if (flashlights.isChecked()){
+                desc += "Flash Lights, ";
+                isOneSubChecked = true;
+            }
+            if (batteries.isChecked()){
+                desc += "Batteries, ";
+                isOneSubChecked = true;
+            }
+            desc = desc.substring(0, desc.length() - 2);
+
+            desc += "\n\n";
+
+        }
+
+        if(transportation){
+            desc += "Transportation: ";
+            boolean isOneSubChecked = false;
+            if (bikes.isChecked()){
+                desc += "Bikes, ";
+                isOneSubChecked = true;
+            }
+            if (busTickets.isChecked()){
+                desc += "Bus Tickets, ";
+                isOneSubChecked = true;
+            }
+            if (rides.isChecked()){
+                desc += "Rides, ";
+                isOneSubChecked = true;
+            }
+            desc = desc.substring(0, desc.length() - 2);
+
+            desc += "\n\n";
+        }
+        if(medical){
+            desc += "Medical: ";
+            boolean isOneSubChecked = false;
+            if (pregnancyCare.isChecked()){
+                desc += "Pregnancy Care, ";
+                isOneSubChecked = true;
+            }
+            if (prescriptionMedication.isChecked()){
+                desc += "Prescription Medication, ";
+                isOneSubChecked = true;
+            }
+            if (nonPrescriptionMedication.isChecked()){
+                desc += "Non-prescription Medication, ";
+                isOneSubChecked = true;
+            }
+            if (firstAid.isChecked()){
+                desc += "First Aid, ";
+                isOneSubChecked = true;
+            }
+            desc = desc.substring(0, desc.length() - 2);
+
+            desc += "\n";
+        }
+
         if(!description.getText().toString().equals("")) desc += description.getText().toString();
         //else if(desc.length() > 3) desc = desc.substring(0,desc.length() - 3);
         String temp = amorpm;
@@ -437,14 +631,207 @@ public class Confirmation extends AppCompatActivity implements AdapterView.OnIte
                     int newMin = Integer.parseInt(hour);
                     String newMinReal = String.copyValueOf(minute.toCharArray());
                     String desc = "";
-                    if(food) desc += "Food | ";
-                    if(clothes) desc += "Clothes | ";
-                    if(campingSupplies) desc += "Camp Supplies | ";
-                    if(transportation) desc += "Transportation | ";
-                    if(medical) desc += "Medical | ";
-                    if(toilet) desc += "Toiletries | ";
+                    if(food){
+                        desc += "Food: ";
+                        boolean isOneSubChecked = false;
+
+                        if (coffee.isChecked()){
+                            desc += "Coffee, ";
+                            isOneSubChecked = true;
+                        }
+                        if (cannedGoods.isChecked()){
+                            desc += "Canned Goods, ";
+                            isOneSubChecked = true;
+                        }
+                        if (sandwiches.isChecked()){
+                            desc += "Sandwiches, ";
+                            isOneSubChecked = true;
+                        }
+                        if (fruit.isChecked()){
+                            desc += "Fruits, ";
+                            isOneSubChecked = true;
+                        }
+                        if (water.isChecked()){
+                            desc += "Water, ";
+                            isOneSubChecked = true;
+                        }
+                        if (granolaBars.isChecked()){
+                            desc += "Granola Bars, ";
+                            isOneSubChecked = true;
+                        }
+                        desc = desc.substring(0, desc.length() - 2);
+
+                        desc += "\n\n";
+
+                    }
+                    if(clothes){
+                        desc += "Clothes: ";
+                        boolean isOneSubChecked = false;
+                        if (jeans.isChecked()){
+                            desc += "Jeans, ";
+                            isOneSubChecked = true;
+                        }
+                        if (socks.isChecked()){
+                            desc += "Socks, ";
+                            isOneSubChecked = true;
+                        }
+                        if (coats.isChecked()){
+                            desc += "Coats, ";
+                            isOneSubChecked = true;
+                        }
+                        if (hats.isChecked()){
+                            desc += "Hats, ";
+                            isOneSubChecked = true;
+                        }
+                        if (gloves.isChecked()){
+                            desc += "Gloves, ";
+                            isOneSubChecked = true;
+                        }
+                        if (blankets.isChecked()){
+                            desc += "Blankets, ";
+                            isOneSubChecked = true;
+                        }
+                        if (shoes.isChecked()){
+                            desc += "Shoes, ";
+                            isOneSubChecked = true;
+                        }
+                        if (boots.isChecked()){
+                            desc += "Boots, ";
+                            isOneSubChecked = true;
+                        }
+                        if (underwear.isChecked()){
+                            desc += "Underwear, ";
+                            isOneSubChecked = true;
+                        }
+                        desc = desc.substring(0, desc.length() - 2);
+
+                        desc += "\n\n";
+                    }
+                    if(toilet){
+                        desc += "Toiletries: ";
+                        boolean isOneSubChecked = false;
+                        if (wetWipes.isChecked()){
+                            desc += "Wet Wipes, ";
+                            isOneSubChecked = true;
+                        }
+                        if (feminineCareProducts.isChecked()){
+                            desc += "Feminine Care Products, ";
+                            isOneSubChecked = true;
+                        }
+                        if (handSanitizer.isChecked()){
+                            desc += "Hand Sanitizer, ";
+                            isOneSubChecked = true;
+                        }
+                        if (soap.isChecked()){
+                            desc += "Soap, ";
+                            isOneSubChecked = true;
+                        }
+                        if (deodorant.isChecked()){
+                            desc += "Deodorant, ";
+                            isOneSubChecked = true;
+                        }
+                        if (shampoo.isChecked()){
+                            desc += "Shampoo, ";
+                            isOneSubChecked = true;
+                        }
+                        if (lotion.isChecked()){
+                            desc += "Lotion, ";
+                            isOneSubChecked = true;
+                        }
+                        if (toiletPaper.isChecked()){
+                            desc += "Toilet Paper, ";
+                            isOneSubChecked = true;
+                        }
+                        desc = desc.substring(0, desc.length() - 2);
+
+                        desc += "\n\n";
+                    }
+
+                    if(campingSupplies){
+                        desc += "Camp Supplies: ";
+                        boolean isOneSubChecked = false;
+                        if (trashBags.isChecked()){
+                            desc += "Trash Bags, ";
+                            isOneSubChecked = true;
+                        }
+                        if (tents.isChecked()){
+                            desc += "Tents, ";
+                            isOneSubChecked = true;
+                        }
+                        if (sleepingBags.isChecked()){
+                            desc += "Sleeping Bags, ";
+                            isOneSubChecked = true;
+                        }
+                        if (rope.isChecked()){
+                            desc += "Rope, ";
+                            isOneSubChecked = true;
+                        }
+                        if (tarps.isChecked()){
+                            desc += "Tarps, ";
+                            isOneSubChecked = true;
+                        }
+                        if (tools.isChecked()){
+                            desc += "Tools, ";
+                            isOneSubChecked = true;
+                        }
+                        if (flashlights.isChecked()){
+                            desc += "Flash Lights, ";
+                            isOneSubChecked = true;
+                        }
+                        if (batteries.isChecked()){
+                            desc += "Batteries, ";
+                            isOneSubChecked = true;
+                        }
+                        desc = desc.substring(0, desc.length() - 2);
+
+                        desc += "\n\n";
+
+                    }
+
+                    if(transportation){
+                        desc += "Transportation: ";
+                        boolean isOneSubChecked = false;
+                        if (bikes.isChecked()){
+                            desc += "Bikes, ";
+                            isOneSubChecked = true;
+                        }
+                        if (busTickets.isChecked()){
+                            desc += "Bus Tickets, ";
+                            isOneSubChecked = true;
+                        }
+                        if (rides.isChecked()){
+                            desc += "Rides, ";
+                            isOneSubChecked = true;
+                        }
+                        desc = desc.substring(0, desc.length() - 2);
+
+                        desc += "\n\n";
+                    }
+                    if(medical){
+                        desc += "Medical: ";
+                        boolean isOneSubChecked = false;
+                        if (pregnancyCare.isChecked()){
+                            desc += "Pregnancy Care, ";
+                            isOneSubChecked = true;
+                        }
+                        if (prescriptionMedication.isChecked()){
+                            desc += "Prescription Medication, ";
+                            isOneSubChecked = true;
+                        }
+                        if (nonPrescriptionMedication.isChecked()){
+                            desc += "Non-prescription Medication, ";
+                            isOneSubChecked = true;
+                        }
+                        if (firstAid.isChecked()){
+                            desc += "First Aid, ";
+                            isOneSubChecked = true;
+                        }
+                        desc = desc.substring(0, desc.length() - 2);
+                        desc += "\n";
+                    }
+
                     if(!description.getText().toString().equals("")) desc += description.getText().toString();
-                    else if(desc.length() > 3) desc = desc.substring(0,desc.length() - 3);
+                    //else if(desc.length() > 3) desc = desc.substring(0,desc.length() - 3);
                     String temp = amorpm;
 
                     Intent goingBack = new Intent();
