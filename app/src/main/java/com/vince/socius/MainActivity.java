@@ -748,6 +748,11 @@ public class MainActivity extends AppCompatActivity
 
                         @Override
                         public void onClick(View v) {
+                            /*
+                                Add here popup window code.
+                             */
+
+
                             getMyLocation();
 
                         }
