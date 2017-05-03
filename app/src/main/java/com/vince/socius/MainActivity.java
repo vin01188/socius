@@ -24,14 +24,16 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -133,6 +135,9 @@ public class MainActivity extends AppCompatActivity
     private TextView resolveLegend;
     private Button infoButton;
     private Button editButton;
+    private boolean locationSetting;
+
+    private PopupWindow mPopupWindow;
 
     private TextView addressTextview;
 
@@ -140,6 +145,10 @@ public class MainActivity extends AppCompatActivity
     private OnInfoWindowElemTouchListener editButtonListener;
 
     private Person currentEdit;
+
+    private Context mContext;
+    private DrawerLayout mRelativeLayout;
+
 
     private Boolean isStaff;
 
@@ -152,9 +161,16 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+
+        locationSetting = false;
         isInitialLocation = false;
 
         setContentView(R.layout.activity_main);
+        mRelativeLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mContext = getApplicationContext();
+
+
         isStaff = false;
         markerMap = new HashMap<Person, Marker>();
 
@@ -752,7 +768,6 @@ public class MainActivity extends AppCompatActivity
                                 Add here popup window code.
                              */
 
-
                             getMyLocation();
 
                         }
@@ -1052,53 +1067,6 @@ public class MainActivity extends AppCompatActivity
                     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,0,locationListener);
                     locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0,0,locationListener);
 
-                    //location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
-
-
-
-                    /*
-                    locationManager = (LocationManager)getApplicationContext().getSystemService(LOCATION_SERVICE);
-                    List<String> providers = locationManager.getProviders(true);
-                    Location bestLocation = null;
-                    for (String provider : providers) {
-                        Location l = locationManager.getLastKnownLocation(provider);
-                        if (l == null) {
-                            continue;
-                        }
-                        if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
-                            // Found best last known location: %s", l);
-                            bestLocation = l;
-                        }
-                    }
-                    */
-                    /*
-                    Location location =null;
-
-                    locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                    locationManager.requestLocationUpdates(
-                            LocationManager.GPS_PROVIDER,
-                            0,
-                            0, this);
-                    Log.d("GPS", "GPS Enabled");
-
-                    while (locationManager != null && location ==null) {
-                        location = locationManager
-                                .getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                        if (location != null) {
-                            latitude = location.getLatitude();
-                            longitude = location.getLongitude();
-                        }
-                    }*/
-
-                    // waits for a location from the location Manager
-                    //infinite loop here?
-                    //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0, 0, (LocationListener) this);
-//                    while (location == null) {
-                        //location = LocationServices.FusedLocationApi.getLastLocation(
-                        //        lGoogleApiClient)
-
-
-                    //location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
                     double lat;
                     double lng;
                     if (location == null){
@@ -1108,7 +1076,6 @@ public class MainActivity extends AppCompatActivity
                         lat = location.getLatitude();
                         lng = location.getLongitude();
                     }
-                    //Toast.makeText(getApplicationContext(), "Latitude " + lat + " Longitude " + lng,Toast.LENGTH_SHORT ).show();
 
                     LatLng coordinate = new LatLng(lat, lng);
 
@@ -1145,6 +1112,7 @@ public class MainActivity extends AppCompatActivity
 
                         @Override
                         public void onClick(View v) {
+
                             getMyLocation();
 
                         }
@@ -1186,8 +1154,8 @@ public class MainActivity extends AppCompatActivity
                     addPeople();
                 } else {
 
-                    ImageButton curLocButton = (ImageButton) findViewById(R.id.myMapLocationButton);
-                    curLocButton.setVisibility(View.INVISIBLE);
+                    //ImageButton curLocButton = (ImageButton) findViewById(R.id.myMapLocationButton);
+                    //curLocButton.setVisibility(View.INVISIBLE);
                     double lat = data.getDoubleExtra("Lat", 0);
                     double lng = data.getDoubleExtra("Long", 0);
                     //Toast.makeText(getApplicationContext(), "Latitude " + lat + " Longitude " + lng,Toast.LENGTH_SHORT ).show();
@@ -1200,6 +1168,72 @@ public class MainActivity extends AppCompatActivity
 
                     googleMap.setTrafficEnabled(false);
 
+                    imgMyLocation = (ImageView) findViewById(R.id.myMapLocationButton);
+
+                    imgMyLocation.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+                            if (!locationSetting) {
+                                //open popup window here
+                                LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+                                View customView = inflater.inflate(R.layout.popup, null);
+                                /*
+                                public PopupWindow (View contentView, int width, int height)
+                                    Create a new non focusable popup window which can display the contentView.
+                                    The dimension of the window must be passed to this constructor.
+
+                                    The popup does not provide any background. This should be handled by
+                                    the content view.
+
+                                    Parameters
+                                        contentView : the popup's content
+                                        width : the popup's width
+                                        height : the popup's height
+                                */
+                                // Initialize a new instance of popup window
+                                mPopupWindow = new PopupWindow(
+                                        customView,
+                                        500,
+                                        500
+                                );
+                                mPopupWindow.setOutsideTouchable(true);
+                                mPopupWindow.setFocusable(true);
+
+                                Button noThanks = (Button) customView.findViewById(R.id.noThanksButton);
+
+                                noThanks.setOnClickListener(new View.OnClickListener(){
+                                    @Override
+                                    public void onClick(View view) {
+                                        mPopupWindow.dismiss();
+                                    }
+                                });
+                                /*
+                                    public void showAtLocation (View parent, int gravity, int x, int y)
+                                        Display the content view in a popup window at the specified location. If the
+                                        popup window cannot fit on screen, it will be clipped.
+                                        Learn WindowManager.LayoutParams for more information on how gravity and the x
+                                        and y parameters are related. Specifying a gravity of NO_GRAVITY is similar
+                                        to specifying Gravity.LEFT | Gravity.TOP.
+
+                                    Parameters
+                                        parent : a parent view to get the getWindowToken() token from
+                                        gravity : the gravity which controls the placement of the popup window
+                                        x : the popup's x location offset
+                                        y : the popup's y location offset
+                                */
+                                // Finally, show the popup window at the center location of root relative layout
+
+                                Log.v("E_REACHED_HERE", "test");
+
+                                mPopupWindow.showAtLocation(mRelativeLayout, Gravity.CENTER,0,0);
+
+                            } else {
+                                getMyLocation();
+                            }
+
+                        }
+                    });
 
                     googleMap.setIndoorEnabled(false);
 
