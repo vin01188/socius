@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -405,6 +406,63 @@ public class MainActivity extends AppCompatActivity
     public void onResume() {
         super.onResume();
         resetDisconnectTimer();
+        LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
+        boolean enabledGPS = service
+                .isProviderEnabled(LocationManager.GPS_PROVIDER);
+        if(enabledGPS){
+
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                ActivityCompat.requestPermissions(this,
+                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+                return;
+            }
+            locationSetting = true;
+            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            // Define the criteria how to select the locatioin provider -> use
+            // default
+            //Criteria criteria = new Criteria();
+            //provider = locationManager.getBestProvider(criteria, true);
+
+            LocationListener locationListener = new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location1) {
+                    //called when a new location is found by the network location provider.
+                    Log.d("Location", "Location Found");
+                    location = location1;
+                    if (!isInitialLocation) {
+                        getMyLocation();
+                        isInitialLocation = true;
+                    }
+                }
+
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                }
+
+                @Override
+                public void onProviderEnabled(String provider) {
+
+                }
+
+                @Override
+                public void onProviderDisabled(String provider) {
+
+                }
+            };
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,0,locationListener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0,0,locationListener);
+            if (googleMap != null) googleMap.setMyLocationEnabled(true);
+        }
+
     }
 
     protected void onStart() {
@@ -1208,6 +1266,18 @@ public class MainActivity extends AppCompatActivity
                                         mPopupWindow.dismiss();
                                     }
                                 });
+
+                                Button openSettings = (Button) customView.findViewById(R.id.goToSettingsButton);
+
+                                openSettings.setOnClickListener(new View.OnClickListener(){
+                                    @Override
+                                    public void onClick(View view) {
+                                        mPopupWindow.dismiss();
+                                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                        startActivity(intent);
+                                    }
+                                });
+
                                 /*
                                     public void showAtLocation (View parent, int gravity, int x, int y)
                                         Display the content view in a popup window at the specified location. If the
