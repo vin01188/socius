@@ -670,7 +670,75 @@ public class MainActivity extends AppCompatActivity
 
                     @Override
                     public void onClick(View v) {
-                        getMyLocation();
+                        if (!locationSetting) {
+                            //open popup window here
+                            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+                            View customView = inflater.inflate(R.layout.popup, null);
+                                /*
+                                public PopupWindow (View contentView, int width, int height)
+                                    Create a new non focusable popup window which can display the contentView.
+                                    The dimension of the window must be passed to this constructor.
+
+                                    The popup does not provide any background. This should be handled by
+                                    the content view.
+
+                                    Parameters
+                                        contentView : the popup's content
+                                        width : the popup's width
+                                        height : the popup's height
+                                */
+                            // Initialize a new instance of popup window
+                            mPopupWindow = new PopupWindow(
+                                    customView,
+                                    500,
+                                    500
+                            );
+                            mPopupWindow.setOutsideTouchable(true);
+                            mPopupWindow.setFocusable(true);
+
+                            Button noThanks = (Button) customView.findViewById(R.id.noThanksButton);
+
+                            noThanks.setOnClickListener(new View.OnClickListener(){
+                                @Override
+                                public void onClick(View view) {
+                                    mPopupWindow.dismiss();
+                                }
+                            });
+
+                            Button openSettings = (Button) customView.findViewById(R.id.goToSettingsButton);
+
+                            openSettings.setOnClickListener(new View.OnClickListener(){
+                                @Override
+                                public void onClick(View view) {
+                                    mPopupWindow.dismiss();
+                                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                    startActivity(intent);
+                                }
+                            });
+
+                                /*
+                                    public void showAtLocation (View parent, int gravity, int x, int y)
+                                        Display the content view in a popup window at the specified location. If the
+                                        popup window cannot fit on screen, it will be clipped.
+                                        Learn WindowManager.LayoutParams for more information on how gravity and the x
+                                        and y parameters are related. Specifying a gravity of NO_GRAVITY is similar
+                                        to specifying Gravity.LEFT | Gravity.TOP.
+
+                                    Parameters
+                                        parent : a parent view to get the getWindowToken() token from
+                                        gravity : the gravity which controls the placement of the popup window
+                                        x : the popup's x location offset
+                                        y : the popup's y location offset
+                                */
+                            // Finally, show the popup window at the center location of root relative layout
+
+                            Log.v("E_REACHED_HERE", "test");
+
+                            mPopupWindow.showAtLocation(mRelativeLayout, Gravity.CENTER,0,0);
+
+                        } else {
+                            getMyLocation();
+                        }
 
                     }
                 });
@@ -822,11 +890,75 @@ public class MainActivity extends AppCompatActivity
 
                         @Override
                         public void onClick(View v) {
-                            /*
-                                Add here popup window code.
-                             */
+                            if (!locationSetting) {
+                                //open popup window here
+                                LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+                                View customView = inflater.inflate(R.layout.popup, null);
+                                /*
+                                public PopupWindow (View contentView, int width, int height)
+                                    Create a new non focusable popup window which can display the contentView.
+                                    The dimension of the window must be passed to this constructor.
 
-                            getMyLocation();
+                                    The popup does not provide any background. This should be handled by
+                                    the content view.
+
+                                    Parameters
+                                        contentView : the popup's content
+                                        width : the popup's width
+                                        height : the popup's height
+                                */
+                                // Initialize a new instance of popup window
+                                mPopupWindow = new PopupWindow(
+                                        customView,
+                                        500,
+                                        500
+                                );
+                                mPopupWindow.setOutsideTouchable(true);
+                                mPopupWindow.setFocusable(true);
+
+                                Button noThanks = (Button) customView.findViewById(R.id.noThanksButton);
+
+                                noThanks.setOnClickListener(new View.OnClickListener(){
+                                    @Override
+                                    public void onClick(View view) {
+                                        mPopupWindow.dismiss();
+                                    }
+                                });
+
+                                Button openSettings = (Button) customView.findViewById(R.id.goToSettingsButton);
+
+                                openSettings.setOnClickListener(new View.OnClickListener(){
+                                    @Override
+                                    public void onClick(View view) {
+                                        mPopupWindow.dismiss();
+                                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                        startActivity(intent);
+                                    }
+                                });
+
+                                /*
+                                    public void showAtLocation (View parent, int gravity, int x, int y)
+                                        Display the content view in a popup window at the specified location. If the
+                                        popup window cannot fit on screen, it will be clipped.
+                                        Learn WindowManager.LayoutParams for more information on how gravity and the x
+                                        and y parameters are related. Specifying a gravity of NO_GRAVITY is similar
+                                        to specifying Gravity.LEFT | Gravity.TOP.
+
+                                    Parameters
+                                        parent : a parent view to get the getWindowToken() token from
+                                        gravity : the gravity which controls the placement of the popup window
+                                        x : the popup's x location offset
+                                        y : the popup's y location offset
+                                */
+                                // Finally, show the popup window at the center location of root relative layout
+
+                                Log.v("E_REACHED_HERE", "test");
+
+                                mPopupWindow.showAtLocation(mRelativeLayout, Gravity.CENTER,0,0);
+
+                            } else {
+                                getMyLocation();
+                            }
 
                         }
                     });
@@ -1170,8 +1302,75 @@ public class MainActivity extends AppCompatActivity
 
                         @Override
                         public void onClick(View v) {
+                            if (!locationSetting) {
+                                //open popup window here
+                                LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+                                View customView = inflater.inflate(R.layout.popup, null);
+                                /*
+                                public PopupWindow (View contentView, int width, int height)
+                                    Create a new non focusable popup window which can display the contentView.
+                                    The dimension of the window must be passed to this constructor.
 
-                            getMyLocation();
+                                    The popup does not provide any background. This should be handled by
+                                    the content view.
+
+                                    Parameters
+                                        contentView : the popup's content
+                                        width : the popup's width
+                                        height : the popup's height
+                                */
+                                // Initialize a new instance of popup window
+                                mPopupWindow = new PopupWindow(
+                                        customView,
+                                        500,
+                                        500
+                                );
+                                mPopupWindow.setOutsideTouchable(true);
+                                mPopupWindow.setFocusable(true);
+
+                                Button noThanks = (Button) customView.findViewById(R.id.noThanksButton);
+
+                                noThanks.setOnClickListener(new View.OnClickListener(){
+                                    @Override
+                                    public void onClick(View view) {
+                                        mPopupWindow.dismiss();
+                                    }
+                                });
+
+                                Button openSettings = (Button) customView.findViewById(R.id.goToSettingsButton);
+
+                                openSettings.setOnClickListener(new View.OnClickListener(){
+                                    @Override
+                                    public void onClick(View view) {
+                                        mPopupWindow.dismiss();
+                                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                        startActivity(intent);
+                                    }
+                                });
+
+                                /*
+                                    public void showAtLocation (View parent, int gravity, int x, int y)
+                                        Display the content view in a popup window at the specified location. If the
+                                        popup window cannot fit on screen, it will be clipped.
+                                        Learn WindowManager.LayoutParams for more information on how gravity and the x
+                                        and y parameters are related. Specifying a gravity of NO_GRAVITY is similar
+                                        to specifying Gravity.LEFT | Gravity.TOP.
+
+                                    Parameters
+                                        parent : a parent view to get the getWindowToken() token from
+                                        gravity : the gravity which controls the placement of the popup window
+                                        x : the popup's x location offset
+                                        y : the popup's y location offset
+                                */
+                                // Finally, show the popup window at the center location of root relative layout
+
+                                Log.v("E_REACHED_HERE", "test");
+
+                                mPopupWindow.showAtLocation(mRelativeLayout, Gravity.CENTER,0,0);
+
+                            } else {
+                                getMyLocation();
+                            }
 
                         }
                     });
