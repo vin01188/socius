@@ -145,6 +145,9 @@ public class MainActivity extends AppCompatActivity
     private OnInfoWindowElemTouchListener infoButtonListener;
     private OnInfoWindowElemTouchListener editButtonListener;
 
+    private double notificationLat;
+    private double notificationLong;
+
     private Person currentEdit;
 
     private Context mContext;
@@ -158,11 +161,19 @@ public class MainActivity extends AppCompatActivity
     //map to store markers
     private Map<Person, Marker> markerMap;
 
+    boolean firstMove;
+    boolean firstPinFromNotification;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
 
+        notificationLat = 0.0;
+        notificationLong = 0.0;
+
+        firstMove = false;
+        firstPinFromNotification = false;
 
         locationSetting = false;
         isInitialLocation = false;
@@ -218,6 +229,21 @@ public class MainActivity extends AppCompatActivity
         });
 
 
+        // Data from notification
+        String customValue = "asdf";
+
+        String latitude = "asdf";
+        String longitude = "qwer";
+        Intent startingIntent = getIntent();
+        if (startingIntent != null) {
+            latitude = startingIntent.getStringExtra("latitude"); // Retrieve the id
+            longitude = startingIntent.getStringExtra("longitude");
+            customValue = startingIntent.getStringExtra("customvalue");
+            Log.v("E_TEST_IN", "REACHED HERE");
+        }
+
+
+
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
         if (mFirebaseUser == null) {
@@ -238,20 +264,35 @@ public class MainActivity extends AppCompatActivity
                 isStaff = false;
             }*/
         }
-        Intent intent = new Intent(this, User.class);
-        intent.putExtra(EXTRA_UID, mFirebaseUser.getUid());
-        startActivityForResult(intent, 5);
 
-        // Data from notification
-        String customValue = "";
+        if (latitude != null && longitude != null) {
+            Log.v("E_LAT_DATA", latitude);
+            Log.v("E_LONG_DATA", longitude);
+            isInitialLocation = true;
+            firstPinFromNotification = true;
 
-        Intent startingIntent = getIntent();
-        if (startingIntent != null) {
-            customValue = startingIntent.getStringExtra("customKey"); // Retrieve the id
+            firstMove = true;
+
+            isStaff = true;
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            Menu nav_Menu = navigationView.getMenu();
+            FirebaseMessaging.getInstance().subscribeToTopic("staff");
+
+            nav_Menu.findItem(R.id.nav_all).setVisible(true);
+            nav_Menu.findItem(R.id.nav_unresolved).setVisible(true);
+
+            notificationLat = Double.parseDouble(latitude);
+            notificationLong = Double.parseDouble(longitude);
+
+        }else{
+            Intent intent = new Intent(this, User.class);
+            intent.putExtra(EXTRA_UID, mFirebaseUser.getUid());
+            startActivityForResult(intent, 5);
         }
+        if (customValue != null) {
+            Log.v("E_CUSTOM_VALUE", customValue);
 
-
-        Log.v("E_NOTIFICATION_DATA", customValue);
+        }
 
 
         if (lGoogleApiClient == null) {
@@ -418,6 +459,8 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
         resetDisconnectTimer();
         LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+
         boolean enabledGPS = service
                 .isProviderEnabled(LocationManager.GPS_PROVIDER);
         if(enabledGPS){
@@ -474,7 +517,21 @@ public class MainActivity extends AppCompatActivity
             if (googleMap != null) googleMap.setMyLocationEnabled(true);
         }
 
+        if(firstMove && googleMap != null){
+            double lat = 40.4406;
+            double lng = -79.9959;
+            if (notificationLat != 0 && notificationLong != 0.0){
+                lat = notificationLat;
+                lng = notificationLong;
+            }
+            LatLng coordinate = new LatLng(lat, lng);
+
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 18.0f));
+            firstMove = false;
+        }
+
     }
+
 
     protected void onStart() {
         mGoogleApiClient.connect();
@@ -593,6 +650,10 @@ public class MainActivity extends AppCompatActivity
         if (!enabledGPS) {
             double lat = 40.4406;
             double lng = -79.9959;
+            if (notificationLat != 0 && notificationLong != 0.0){
+                lat = notificationLat;
+                lng = notificationLong;
+            }
             LatLng coordinate = new LatLng(lat, lng);
 
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 18.0f));
@@ -782,6 +843,10 @@ public class MainActivity extends AppCompatActivity
                 double lat = location == null ? 40.4406 : location.getLatitude();
                 double lng = location == null ? -79.9959 : location.getLongitude();
 
+                if (notificationLong != 0 && notificationLat != 0.0) {
+                    lat = notificationLat;
+                    lng = notificationLong;
+                }
                 //Toast.makeText(getApplicationContext(), "Latitude " + lat + " Longitude " + lng,Toast.LENGTH_SHORT ).show();
 
                 LatLng coordinate = new LatLng(lat, lng);
@@ -2094,8 +2159,9 @@ public class MainActivity extends AppCompatActivity
         }
 
         //move map to most recent open pin if there is one
-        if(atLeastOneOpenPin){
+        if(atLeastOneOpenPin && !firstPinFromNotification){
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(maxCoordinate, 18.0f));
+            firstPinFromNotification = false;
 
         }
     }
@@ -2186,7 +2252,9 @@ public class MainActivity extends AppCompatActivity
         double lng = location.getLongitude();
         //Toast.makeText(getApplicationContext(), "Latitude " + lat + " Longitude " + lng,Toast.LENGTH_SHORT ).show();
 
+
         LatLng coordinate = new LatLng(lat, lng);
+
 
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 18.0f));
 
