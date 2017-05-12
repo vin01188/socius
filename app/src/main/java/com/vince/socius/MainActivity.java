@@ -580,8 +580,133 @@ public class MainActivity extends AppCompatActivity
         boolean enabledGPS = service
                 .isProviderEnabled(LocationManager.GPS_PROVIDER);
         if (!enabledGPS) {
-            Intent intent = new Intent(this, noGPS.class);
-            startActivityForResult(intent, 3);
+            double lat = 40.4406;
+            double lng = -79.9959;
+            LatLng coordinate = new LatLng(lat, lng);
+
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 18.0f));
+
+            googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+            googleMap.setTrafficEnabled(false);
+
+            imgMyLocation = (ImageView) findViewById(R.id.myMapLocationButton);
+
+            imgMyLocation.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    if (!locationSetting) {
+                        //open popup window here
+                        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+                        View customView = inflater.inflate(R.layout.popup, null);
+                                /*
+                                public PopupWindow (View contentView, int width, int height)
+                                    Create a new non focusable popup window which can display the contentView.
+                                    The dimension of the window must be passed to this constructor.
+
+                                    The popup does not provide any background. This should be handled by
+                                    the content view.
+
+                                    Parameters
+                                        contentView : the popup's content
+                                        width : the popup's width
+                                        height : the popup's height
+                                */
+                        // Initialize a new instance of popup window
+                        mPopupWindow = new PopupWindow(
+                                customView,
+                                500,
+                                500
+                        );
+                        mPopupWindow.setOutsideTouchable(true);
+                        mPopupWindow.setFocusable(true);
+
+                        Button noThanks = (Button) customView.findViewById(R.id.noThanksButton);
+
+                        noThanks.setOnClickListener(new View.OnClickListener(){
+                            @Override
+                            public void onClick(View view) {
+                                mPopupWindow.dismiss();
+                            }
+                        });
+
+                        Button openSettings = (Button) customView.findViewById(R.id.goToSettingsButton);
+
+                        openSettings.setOnClickListener(new View.OnClickListener(){
+                            @Override
+                            public void onClick(View view) {
+                                mPopupWindow.dismiss();
+                                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                startActivity(intent);
+                            }
+                        });
+
+                                /*
+                                    public void showAtLocation (View parent, int gravity, int x, int y)
+                                        Display the content view in a popup window at the specified location. If the
+                                        popup window cannot fit on screen, it will be clipped.
+                                        Learn WindowManager.LayoutParams for more information on how gravity and the x
+                                        and y parameters are related. Specifying a gravity of NO_GRAVITY is similar
+                                        to specifying Gravity.LEFT | Gravity.TOP.
+
+                                    Parameters
+                                        parent : a parent view to get the getWindowToken() token from
+                                        gravity : the gravity which controls the placement of the popup window
+                                        x : the popup's x location offset
+                                        y : the popup's y location offset
+                                */
+                        // Finally, show the popup window at the center location of root relative layout
+
+                        Log.v("E_REACHED_HERE", "test");
+
+                        mPopupWindow.showAtLocation(mRelativeLayout, Gravity.CENTER,0,0);
+
+                    } else {
+                        getMyLocation();
+                    }
+
+                }
+            });
+
+            googleMap.setIndoorEnabled(false);
+
+            googleMap.setBuildingsEnabled(false);
+
+            googleMap.getUiSettings().setZoomControlsEnabled(true);
+            googleMap.getUiSettings().setRotateGesturesEnabled(false);
+            googleMap.getUiSettings().setTiltGesturesEnabled(false);
+
+
+            googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                public boolean onMarkerClick(Marker marker) {
+                    // Check if there is an open info window
+                            /*if (lastOpened != null) {
+                                // Close the info window
+                                lastOpened.hideInfoWindow();
+
+                                // Is the marker the same marker that was already open
+                                if (lastOpened.equals(marker)) {
+                                    // Nullify the lastOpened object
+                                    lastOpened = null;
+                                    // Return so that the info window isn't opened again
+                                    return true;
+                                }
+                            }
+
+                            // Open the info window for the marker
+                            marker.showInfoWindow();
+                            // Re-assign the last opened such that we can close it later
+                            lastOpened = marker;
+                            */
+                    markerClick(marker);
+                    // Event was handled by our code do not launch default behaviour.
+                    return true;
+                }
+            });
+            addPeople();
+            //Intent intent = new Intent(this, noGPS.class);
+            //startActivityForResult(intent, 3);
         } else {
 
 
@@ -737,8 +862,71 @@ public class MainActivity extends AppCompatActivity
                             mPopupWindow.showAtLocation(mRelativeLayout, Gravity.CENTER,0,0);
 
                         } else {
-                            getMyLocation();
-                        }
+                            if (ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                // TODO: Consider calling
+                                //    ActivityCompat#requestPermissions
+                                // here to request the missing permissions, and then overriding
+                                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                //                                          int[] grantResults)
+                                // to handle the case where the user grants the permission. See the documentation
+                                // for ActivityCompat#requestPermissions for more details.
+                                ActivityCompat.requestPermissions(getParent(),
+                                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                                        MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+                                return;
+                            }
+                            locationSetting = true;
+                            locationSetting = true;
+                            //getMyLocation();
+                            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                            // Define the criteria how to select the locatioin provider -> use
+                            // default
+                            //Criteria criteria = new Criteria();
+                            //provider = locationManager.getBestProvider(criteria, true);
+
+                            LocationListener locationListener = new LocationListener() {
+                                @Override
+                                public void onLocationChanged(Location location1) {
+                                    //called when a new location is found by the network location provider.
+                                    Log.d("Location", "Location Found");
+                                    location = location1;
+                                    if (!isInitialLocation) {
+                                        getMyLocation();
+                                        isInitialLocation = true;
+                                    }
+                                }
+
+                                @Override
+                                public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                                }
+
+                                @Override
+                                public void onProviderEnabled(String provider) {
+
+                                }
+
+                                @Override
+                                public void onProviderDisabled(String provider) {
+
+                                }
+                            };
+                            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,0,locationListener);
+                            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0,0,locationListener);
+
+                            double lat;
+                            double lng;
+                            if (location == null){
+                                lat = 40.4406;
+                                lng = -79.9959;
+                            }else {
+                                lat = location.getLatitude();
+                                lng = location.getLongitude();
+                            }
+
+                            LatLng coordinate = new LatLng(lat, lng);
+
+                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 18.0f));                        }
 
                     }
                 });
@@ -957,7 +1145,71 @@ public class MainActivity extends AppCompatActivity
                                 mPopupWindow.showAtLocation(mRelativeLayout, Gravity.CENTER,0,0);
 
                             } else {
-                                getMyLocation();
+                                if (ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                    // TODO: Consider calling
+                                    //    ActivityCompat#requestPermissions
+                                    // here to request the missing permissions, and then overriding
+                                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                    //                                          int[] grantResults)
+                                    // to handle the case where the user grants the permission. See the documentation
+                                    // for ActivityCompat#requestPermissions for more details.
+                                    ActivityCompat.requestPermissions(getParent(),
+                                            new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                                            MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+                                    return;
+                                }
+                                locationSetting = true;
+                                locationSetting = true;
+                                //getMyLocation();
+                                locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                                // Define the criteria how to select the locatioin provider -> use
+                                // default
+                                //Criteria criteria = new Criteria();
+                                //provider = locationManager.getBestProvider(criteria, true);
+
+                                LocationListener locationListener = new LocationListener() {
+                                    @Override
+                                    public void onLocationChanged(Location location1) {
+                                        //called when a new location is found by the network location provider.
+                                        Log.d("Location", "Location Found");
+                                        location = location1;
+                                        if (!isInitialLocation) {
+                                            getMyLocation();
+                                            isInitialLocation = true;
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                                    }
+
+                                    @Override
+                                    public void onProviderEnabled(String provider) {
+
+                                    }
+
+                                    @Override
+                                    public void onProviderDisabled(String provider) {
+
+                                    }
+                                };
+                                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,0,locationListener);
+                                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0,0,locationListener);
+
+                                double lat;
+                                double lng;
+                                if (location == null){
+                                    lat = 40.4406;
+                                    lng = -79.9959;
+                                }else {
+                                    lat = location.getLatitude();
+                                    lng = location.getLongitude();
+                                }
+
+                                LatLng coordinate = new LatLng(lat, lng);
+
+                                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 18.0f));
                             }
 
                         }
@@ -1004,8 +1256,8 @@ public class MainActivity extends AppCompatActivity
 
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
-                    Intent intent = new Intent(this, noGPS.class);
-                    startActivityForResult(intent, 3);
+                    //Intent intent = new Intent(this, noGPS.class);
+                    //startActivityForResult(intent, 3);
                 }
                 return;
             }
@@ -1369,7 +1621,71 @@ public class MainActivity extends AppCompatActivity
                                 mPopupWindow.showAtLocation(mRelativeLayout, Gravity.CENTER,0,0);
 
                             } else {
-                                getMyLocation();
+                                if (ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                    // TODO: Consider calling
+                                    //    ActivityCompat#requestPermissions
+                                    // here to request the missing permissions, and then overriding
+                                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                    //                                          int[] grantResults)
+                                    // to handle the case where the user grants the permission. See the documentation
+                                    // for ActivityCompat#requestPermissions for more details.
+                                    ActivityCompat.requestPermissions(getParent(),
+                                            new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                                            MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+                                    return;
+                                }
+                                locationSetting = true;
+                                locationSetting = true;
+                                //getMyLocation();
+                                locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                                // Define the criteria how to select the locatioin provider -> use
+                                // default
+                                //Criteria criteria = new Criteria();
+                                //provider = locationManager.getBestProvider(criteria, true);
+
+                                LocationListener locationListener = new LocationListener() {
+                                    @Override
+                                    public void onLocationChanged(Location location1) {
+                                        //called when a new location is found by the network location provider.
+                                        Log.d("Location", "Location Found");
+                                        location = location1;
+                                        if (!isInitialLocation) {
+                                            getMyLocation();
+                                            isInitialLocation = true;
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                                    }
+
+                                    @Override
+                                    public void onProviderEnabled(String provider) {
+
+                                    }
+
+                                    @Override
+                                    public void onProviderDisabled(String provider) {
+
+                                    }
+                                };
+                                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,0,locationListener);
+                                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0,0,locationListener);
+
+                                double lat;
+                                double lng;
+                                if (location == null){
+                                    lat = 40.4406;
+                                    lng = -79.9959;
+                                }else {
+                                    lat = location.getLatitude();
+                                    lng = location.getLongitude();
+                                }
+
+                                LatLng coordinate = new LatLng(lat, lng);
+
+                                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 18.0f));
                             }
 
                         }
@@ -1498,7 +1814,72 @@ public class MainActivity extends AppCompatActivity
                                 mPopupWindow.showAtLocation(mRelativeLayout, Gravity.CENTER,0,0);
 
                             } else {
-                                getMyLocation();
+                                if (ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                    // TODO: Consider calling
+                                    //    ActivityCompat#requestPermissions
+                                    // here to request the missing permissions, and then overriding
+                                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                    //                                          int[] grantResults)
+                                    // to handle the case where the user grants the permission. See the documentation
+                                    // for ActivityCompat#requestPermissions for more details.
+                                    ActivityCompat.requestPermissions(getParent(),
+                                            new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                                            MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+                                    return;
+                                }
+                                locationSetting = true;
+                                locationSetting = true;
+                                //getMyLocation();
+                                locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                                // Define the criteria how to select the locatioin provider -> use
+                                // default
+                                //Criteria criteria = new Criteria();
+                                //provider = locationManager.getBestProvider(criteria, true);
+
+                                LocationListener locationListener = new LocationListener() {
+                                    @Override
+                                    public void onLocationChanged(Location location1) {
+                                        //called when a new location is found by the network location provider.
+                                        Log.d("Location", "Location Found");
+                                        location = location1;
+                                        if (!isInitialLocation) {
+                                            getMyLocation();
+                                            isInitialLocation = true;
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                                    }
+
+                                    @Override
+                                    public void onProviderEnabled(String provider) {
+
+                                    }
+
+                                    @Override
+                                    public void onProviderDisabled(String provider) {
+
+                                    }
+                                };
+                                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,0,locationListener);
+                                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0,0,locationListener);
+
+                                double lat;
+                                double lng;
+                                if (location == null){
+                                    lat = 40.4406;
+                                    lng = -79.9959;
+                                }else {
+                                    lat = location.getLatitude();
+                                    lng = location.getLongitude();
+                                }
+
+                                LatLng coordinate = new LatLng(lat, lng);
+
+                                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 18.0f));
+                                //getMyLocation();
                             }
 
                         }

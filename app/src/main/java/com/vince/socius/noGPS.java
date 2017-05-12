@@ -55,6 +55,7 @@ public class noGPS extends AppCompatActivity {
 
     }
 
+
     public void onResume(){
         super.onResume();
         LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
