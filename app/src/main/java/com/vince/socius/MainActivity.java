@@ -242,6 +242,17 @@ public class MainActivity extends AppCompatActivity
         intent.putExtra(EXTRA_UID, mFirebaseUser.getUid());
         startActivityForResult(intent, 5);
 
+        // Data from notification
+        String customValue = "";
+
+        Intent startingIntent = getIntent();
+        if (startingIntent != null) {
+            customValue = startingIntent.getStringExtra("customKey"); // Retrieve the id
+        }
+
+
+        Log.v("E_NOTIFICATION_DATA", customValue);
+
 
         if (lGoogleApiClient == null) {
             lGoogleApiClient = new GoogleApiClient.Builder(this)

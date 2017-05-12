@@ -41,7 +41,14 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:label="Select Location" />
+            android:label="Select Location"
+            >
+            <intent-filter>
+                <action android:name="ACTIVITY_MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".Confirmation"
             android:label="Enter additional information"
