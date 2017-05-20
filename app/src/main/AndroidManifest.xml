@@ -41,14 +41,13 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:label="Select Location"
-            >
+            android:label="Select Location">
             <intent-filter>
                 <action android:name="ACTIVITY_MAIN" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".Confirmation"
             android:label="Enter additional information"
@@ -90,27 +89,37 @@
         <activity
             android:name=".AboutActivity"
             android:label="@string/title_activity_about"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="com.vince.socius.OPEN_ACTIVITY_1"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="com.vince.socius.OPEN_ACTIVITY_1" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
         <service android:name=".MyFirebaseInstanceIdService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"></action>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
         <service android:name=".MyFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"></action>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
         <activity
             android:name=".AdminActivity"
             android:label="About"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.vince.socius.MainActivity" />
+        </activity>
+        <activity
+            android:name=".ListActivity"
+            android:label="Request List"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data

@@ -280,6 +280,7 @@ public class MainActivity extends AppCompatActivity
 
             nav_Menu.findItem(R.id.nav_all).setVisible(true);
             nav_Menu.findItem(R.id.nav_unresolved).setVisible(true);
+            nav_Menu.findItem(R.id.nav_list).setVisible(true);
 
             notificationLat = Double.parseDouble(latitude);
             notificationLong = Double.parseDouble(longitude);
@@ -1389,6 +1390,12 @@ public class MainActivity extends AppCompatActivity
             openRequestPins();
         } else if (id == R.id.nav_all) {
             allRequestPins();
+        } else if (id == R.id.nav_list){
+            Intent intent = new Intent(this,ListActivity.class);
+            ArrayList<Person> peopleList = new ArrayList<Person>(peopleMap.values());
+
+            intent.putExtra("peopleList",peopleList);
+            startActivityForResult(intent,7);
         } else if (id == R.id.nav_logout){
             // User logout
             mFirebaseAuth.signOut();
@@ -2052,9 +2059,13 @@ public class MainActivity extends AppCompatActivity
 
                     nav_Menu.findItem(R.id.nav_all).setVisible(true);
                     nav_Menu.findItem(R.id.nav_unresolved).setVisible(true);
+                    nav_Menu.findItem(R.id.nav_list).setVisible(true);
+
                 }else{
                     nav_Menu.findItem(R.id.nav_all).setVisible(false);
                     nav_Menu.findItem(R.id.nav_unresolved).setVisible(false);
+                    nav_Menu.findItem(R.id.nav_list).setVisible(false);
+
 
                     openLegend.setVisibility(View.INVISIBLE);
                     pendingLegend.setVisibility(View.INVISIBLE);
@@ -2087,6 +2098,14 @@ public class MainActivity extends AppCompatActivity
                 Log.v("E_KEY_ADDED", keystringnew);
                 personRef.child("test" + keystringnew).setValue(currentEdit);
 
+            } else if (requestCode == 7){
+                double lat = data.getDoubleExtra("lat", 0);
+                double lng = data.getDoubleExtra("long", 0);
+                if (lat != 0 && lng != 0){
+                    LatLng coordinate = new LatLng(lat, lng);
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 18.0f));
+                }
+                allRequestPins();
             }
         }
     }
